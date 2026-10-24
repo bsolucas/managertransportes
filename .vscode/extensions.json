@@ -1,0 +1,6 @@
+{
+  // Extensões recomendadas: o VS Code oferece instalar ao abrir a pasta.
+  "recommendations": [
+    "ritwickdey.LiveServer"
+  ]
+}

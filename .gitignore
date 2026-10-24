@@ -1,0 +1,14 @@
+# Arquivos que o Git NÃO deve guardar
+
+# Lixo do sistema operacional
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Dependências (se um dia usar npm)
+node_modules/
+
+# Arquivos temporários e de editor
+*.log
+*.tmp
+*.swp

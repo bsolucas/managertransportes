@@ -1,0 +1,156 @@
+/* =============================================================================
+   layout.css — ESTRUTURA DAS PÁGINAS (onde cada bloco fica na tela)
+   -----------------------------------------------------------------------------
+   • .topo .................. barra superior fixa (logo, usuário, sair)
+   • .menu-lateral .......... menu à esquerda (painel do gestor)
+   • .conteudo .............. área principal
+   • .abas-topo ............. abas horizontais (motorista e cliente)
+   • .grade-* ............... divisões em colunas
+   ============================================================================= */
+
+/* --- Barra superior -------------------------------------------------------- */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: var(--altura-topo);
+  display: flex;
+  align-items: center;
+  gap: var(--espaco);
+  padding: 0 20px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.2px;
+}
+
+/* Quadradinho azul com a letra do logo */
+.marca-icone {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--azul);
+  color: var(--texto-sobre-azul);
+  font-weight: 800;
+}
+
+.topo-perfil {
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--azul-suave);
+  color: var(--azul-claro);
+}
+
+/* Empurra os itens seguintes para a direita */
+.topo-espaco { flex: 1; }
+
+.topo-usuario { display: flex; align-items: center; gap: 10px; }
+
+/* --- Página com menu lateral (gestor) -------------------------------------- */
+.pagina-com-menu {
+  display: grid;
+  grid-template-columns: var(--largura-menu) 1fr;
+  min-height: calc(100vh - var(--altura-topo));
+}
+
+.menu-lateral {
+  background: var(--superficie);
+  border-right: 1px solid var(--borda);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--raio-pequeno);
+  background: transparent;
+  color: var(--texto-suave);
+  text-align: left;
+  cursor: pointer;
+}
+.menu-item:hover { background: var(--superficie-2); color: var(--texto); }
+.menu-item.ativo { background: var(--azul-suave); color: var(--texto); box-shadow: inset 3px 0 0 var(--azul); }
+.menu-icone { width: 20px; text-align: center; }
+
+/* Contador (ex.: corridas aguardando) ao lado do item do menu */
+.menu-contador {
+  margin-left: auto;
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: var(--azul);
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.menu-rodape { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--borda); }
+
+/* --- Área de conteúdo ------------------------------------------------------ */
+.conteudo {
+  padding: 22px 26px 40px;
+  min-width: 0; /* evita que tabelas largas estourem a grade */
+}
+
+.cabecalho-secao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco);
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.cabecalho-secao p { margin: 0; }
+
+/* --- Abas horizontais (motorista e cliente) -------------------------------- */
+.abas-topo {
+  display: flex;
+  gap: 4px;
+  padding: 10px 20px 0;
+  border-bottom: 1px solid var(--borda);
+  background: var(--superficie);
+}
+.aba {
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+.aba:hover { color: var(--texto); }
+.aba.ativo { color: var(--texto); border-bottom-color: var(--azul); }
+
+/* --- Grades (colunas) ------------------------------------------------------ */
+.grade-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espaco); }
+.grade-mapa-lateral { display: grid; grid-template-columns: 1fr 380px; gap: var(--espaco); }
+.grade-lateral-mapa { display: grid; grid-template-columns: 400px 1fr; gap: var(--espaco); }
+.pilha { display: flex; flex-direction: column; gap: var(--espaco); }
+
+/* Telas menores: as colunas viram uma embaixo da outra */
+@media (max-width: 1100px) {
+  .grade-mapa-lateral, .grade-lateral-mapa, .grade-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .pagina-com-menu { grid-template-columns: 1fr; }
+  .menu-lateral { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--borda); }
+  .menu-rodape { display: none; }
+  .conteudo { padding: 16px; }
+}

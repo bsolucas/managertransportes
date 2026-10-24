@@ -1,0 +1,51 @@
+/* =============================================================================
+   paginas/gestor.css — VISUAL EXCLUSIVO DO PAINEL DO GESTOR
+   ============================================================================= */
+
+/* Mapa da visão geral ocupa boa parte da tela */
+.mapa-painel { height: 520px; }
+
+/* Cores da legenda do mapa */
+.legenda-disponivel { background: var(--cor-andamento); }
+.legenda-corrida { background: var(--azul); }
+.legenda-offline { background: var(--cor-concluida); }
+
+/* Barra de filtros acima da tabela de corridas */
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr 220px 240px;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 900px) { .filtros { grid-template-columns: 1fr; } }
+
+.campo-estreito { width: 220px; }
+
+/* Cartões de motoristas */
+.grade-motoristas { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: var(--espaco); }
+.cartao-motorista { display: flex; flex-direction: column; gap: 12px; }
+.cartao-motorista-topo { display: flex; align-items: center; gap: 12px; }
+.cartao-motorista-topo h3 { margin: 0; }
+.cartao-motorista-numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.numero-bloco { background: var(--superficie-2); border-radius: var(--raio-pequeno); padding: 8px; }
+.numero-bloco strong { display: block; font-size: 1.05rem; }
+.numero-bloco span { font-size: 0.75rem; color: var(--texto-suave); }
+.cartao-motorista-acoes { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Tabelas com campos de digitação (tarifas) */
+.tabela-campos td { padding: 6px 8px; }
+.tabela-campos .campo { padding: 6px 8px; min-width: 80px; }
+.cartao-espacado { margin-top: var(--espaco); }
+
+/* Aba de chat: lista de conversas à esquerda, conversa à direita */
+.grade-lateral-chat { display: grid; grid-template-columns: 340px 1fr; gap: var(--espaco); min-height: 520px; }
+@media (max-width: 900px) { .grade-lateral-chat { grid-template-columns: 1fr; } }
+
+/* Janela de detalhes da corrida */
+.detalhe-corrida { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 900px) { .detalhe-corrida { grid-template-columns: 1fr; } }
+.detalhe-bloco { margin-bottom: 18px; }
+.detalhe-bloco h3 { color: var(--texto-suave); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.extras-linha { display: grid; grid-template-columns: 1fr 120px 32px; gap: 8px; margin-bottom: 8px; }
+.acoes-corrida { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.chat-no-detalhe { height: 420px; }

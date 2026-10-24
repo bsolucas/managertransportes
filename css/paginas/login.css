@@ -1,0 +1,56 @@
+/* =============================================================================
+   paginas/login.css — VISUAL EXCLUSIVO DA TELA INICIAL (index.html)
+   ============================================================================= */
+
+/* Fundo com um brilho azul suave no alto */
+.pagina-login {
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(0, 71, 255, 0.35), transparent 70%),
+    var(--preto);
+  min-height: 100vh;
+}
+
+.login {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 60px 20px 40px;
+}
+
+.login-cabecalho { text-align: center; margin-bottom: 40px; }
+.login-cabecalho p { max-width: 520px; margin: 12px auto 0; }
+
+.marca-grande { justify-content: center; font-size: 1.6rem; }
+.marca-grande .marca-icone { width: 44px; height: 44px; font-size: 1.3rem; border-radius: 12px; }
+
+/* Três cartões lado a lado (um embaixo do outro em telas pequenas) */
+.perfis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 900px) { .perfis { grid-template-columns: 1fr; } }
+
+.perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.perfil:hover { border-color: var(--azul); transform: translateY(-2px); }
+.perfil h2 { margin: 0; }
+.perfil p { flex: 1; }
+.perfil-icone {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: grid; place-items: center; font-size: 1.6rem;
+  background: var(--azul-suave);
+}
+
+.login-rodape {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}

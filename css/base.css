@@ -1,0 +1,81 @@
+/* =============================================================================
+   base.css — CORES, FONTES E REGRAS BÁSICAS (carregado em TODAS as páginas)
+   -----------------------------------------------------------------------------
+   As cores do app ficam todas aqui, como "variáveis" (--nome-da-cor).
+   Para mudar a cor do app inteiro, basta alterar os valores abaixo.
+   Paleta atual: AZUL FORTE + PRETO.
+   ============================================================================= */
+
+:root {
+  /* --- Cores principais ---------------------------------------------------- */
+  --azul: #0047ff;            /* azul forte: botões, destaques, links         */
+  --azul-escuro: #0033c2;     /* azul ao passar o mouse / pressionado         */
+  --azul-claro: #4d7fff;      /* azul em textos sobre fundo preto             */
+  --azul-suave: rgba(0, 71, 255, 0.14); /* fundo azulado de itens ativos     */
+
+  --preto: #07080b;           /* fundo da página                              */
+  --superficie: #101218;      /* fundo de cartões e painéis                   */
+  --superficie-2: #171a22;    /* fundo de campos, linhas de tabela            */
+  --superficie-3: #20242e;    /* passar o mouse em linhas / botões            */
+  --borda: #272c38;           /* linhas divisórias                            */
+
+  --texto: #f1f3f8;           /* texto principal                              */
+  --texto-suave: #9aa3b6;     /* texto secundário (legendas, datas)           */
+  --texto-sobre-azul: #ffffff;
+
+  /* --- Cores de status (situação das corridas/motoristas) ----------------- */
+  --cor-aguardando: #f5a524;  /* amarelo: esperando motorista                 */
+  --cor-aceita: #4d7fff;      /* azul: motorista a caminho                    */
+  --cor-andamento: #22c55e;   /* verde: em andamento / disponível             */
+  --cor-concluida: #8b95a9;   /* cinza: concluída                             */
+  --cor-cancelada: #ef4444;   /* vermelho: cancelada / erro                   */
+
+  /* --- Medidas ------------------------------------------------------------- */
+  --raio: 10px;               /* arredondamento dos cantos                    */
+  --raio-pequeno: 6px;
+  --espaco: 16px;             /* espaçamento padrão                           */
+  --altura-topo: 60px;        /* altura da barra superior                     */
+  --largura-menu: 230px;      /* largura do menu lateral do gestor            */
+  --sombra: 0 10px 30px rgba(0, 0, 0, 0.45);
+
+  /* --- Fonte --------------------------------------------------------------- */
+  --fonte: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --- "Reset": deixa o navegador sem margens/estilos estranhos ------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; height: 100%; }
+
+body {
+  font-family: var(--fonte);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--texto);
+  background: var(--preto);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { margin: 0 0 0.5em; line-height: 1.2; font-weight: 600; }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: 1.02rem; }
+p { margin: 0 0 0.75em; }
+
+a { color: var(--azul-claro); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Elementos com o atributo "hidden" ficam realmente escondidos. */
+[hidden] { display: none !important; }
+
+/* Barra de rolagem escura (Chrome/Edge). */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--preto); }
+::-webkit-scrollbar-thumb { background: var(--superficie-3); border-radius: 10px; }
+
+/* Texto auxiliar */
+.texto-suave { color: var(--texto-suave); }
+.texto-pequeno { font-size: 0.85rem; }
+.numero { font-variant-numeric: tabular-nums; }

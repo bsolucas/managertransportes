@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     index.html — TELA INICIAL (escolha de perfil)
+     -----------------------------------------------------------------------------
+     Ponto de entrada do app. Aqui você escolhe com qual perfil quer testar:
+       • Gestor ...... painel da empresa (corridas, motoristas, tarifas, mapa)
+       • Motorista ... tela do motorista (aceitar e fazer corridas)
+       • Cliente ..... portal do cliente (pedir corrida, acompanhar, chat)
+     Não há senha: os usuários são de TESTE.
+     Dica: abra uma aba para cada perfil para testar o fluxo completo.
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrar</title>
+
+  <!-- Estilos (CSS) — cada arquivo tem uma responsabilidade -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/componentes.css" />
+  <link rel="stylesheet" href="css/paginas/login.css" />
+  <link rel="stylesheet" href="css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
+</head>
+<body class="pagina-login">
+
+  <main class="login">
+    <!-- Cabeçalho com o nome do app (preenchido pelo JavaScript a partir do config.js) -->
+    <header class="login-cabecalho">
+      <div class="marca marca-grande">
+        <span class="marca-icone">T</span>
+        <span id="nome-app">Transporte App</span>
+      </div>
+      <p class="texto-suave">Gestão de corridas, motoristas e clientes — versão de demonstração com dados de teste.</p>
+    </header>
+
+    <!-- Três cartões, um para cada perfil -->
+    <section class="perfis" aria-label="Escolha como entrar">
+
+      <!-- GESTOR -->
+      <article class="cartao perfil">
+        <div class="perfil-icone">🧭</div>
+        <h2>Gestor</h2>
+        <p class="texto-suave">Acompanha tudo em tempo real: corridas, motoristas no mapa, valores e tarifas.</p>
+        <button class="botao botao-primario botao-largo" id="entrar-gestor">Entrar como gestor</button>
+      </article>
+
+      <!-- MOTORISTA -->
+      <article class="cartao perfil">
+        <div class="perfil-icone">🚗</div>
+        <h2>Motorista</h2>
+        <p class="texto-suave">Recebe corridas, aceita, navega até o cliente e conversa pelo chat.</p>
+        <label class="rotulo" for="escolha-motorista">Motorista de teste</label>
+        <select class="campo" id="escolha-motorista"></select>
+        <button class="botao botao-primario botao-largo" id="entrar-motorista">Entrar como motorista</button>
+      </article>
+
+      <!-- CLIENTE -->
+      <article class="cartao perfil">
+        <div class="perfil-icone">👤</div>
+        <h2>Cliente</h2>
+        <p class="texto-suave">Pede uma corrida, vê o preço antes, acompanha o motorista e conversa no chat.</p>
+        <label class="rotulo" for="escolha-cliente">Cliente de teste</label>
+        <select class="campo" id="escolha-cliente"></select>
+        <button class="botao botao-primario botao-largo" id="entrar-cliente">Entrar como cliente</button>
+      </article>
+    </section>
+
+    <!-- Rodapé com o botão de recomeçar os testes -->
+    <footer class="login-rodape">
+      <span class="texto-suave texto-pequeno">Os dados de teste ficam salvos neste navegador.</span>
+      <button class="botao botao-secundario botao-pequeno" id="resetar-dados">Resetar dados de teste</button>
+    </footer>
+  </main>
+
+  <!-- Scripts (JavaScript) — a ORDEM importa: config primeiro, a página por último -->
+  <script src="js/config.js"></script>
+  <script src="js/utilitarios.js"></script>
+  <script src="js/dados-teste.js"></script>
+  <script src="js/precos.js"></script>
+  <script src="js/banco-local.js"></script>
+  <script src="js/simulacao.js"></script>
+  <script src="js/sessao.js"></script>
+  <script src="js/interface.js"></script>
+  <script src="js/paginas/login.js"></script>
+</body>
+</html>

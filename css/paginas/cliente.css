@@ -1,0 +1,37 @@
+/* =============================================================================
+   paginas/cliente.css — VISUAL EXCLUSIVO DO PORTAL DO CLIENTE
+   ============================================================================= */
+
+/* Select + botão "📍" lado a lado */
+.campo-com-botao { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+
+/* Aviso "clique no mapa" */
+.dica-mapa {
+  padding: 8px 12px;
+  border-radius: var(--raio-pequeno);
+  background: var(--azul-suave);
+  color: var(--azul-claro);
+  font-size: 0.88rem;
+}
+
+/* Caixa com a prévia do preço */
+.previa-preco {
+  margin: 6px 0 16px;
+  padding: 14px;
+  border-radius: var(--raio);
+  background: var(--superficie-2);
+  border: 1px solid var(--borda);
+}
+.previa-preco h3 { margin-bottom: 8px; }
+.previa-aviso { color: var(--cor-aguardando); font-size: 0.85rem; margin-top: 8px; }
+
+/* Aba "Minhas corridas": lista | acompanhamento + mapa | chat */
+.grade-minhas { display: grid; grid-template-columns: 330px 1fr 380px; gap: var(--espaco); align-items: start; }
+@media (max-width: 1300px) { .grade-minhas { grid-template-columns: 300px 1fr; } }
+@media (max-width: 900px) { .grade-minhas { grid-template-columns: 1fr; } }
+
+
+/* Cartão de acompanhamento */
+.acompanhamento-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.acompanhamento-motorista { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+.acompanhamento-previsao { font-size: 1.3rem; font-weight: 700; margin: 6px 0 10px; }

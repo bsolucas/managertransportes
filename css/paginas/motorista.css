@@ -1,0 +1,27 @@
+/* =============================================================================
+   paginas/motorista.css — VISUAL EXCLUSIVO DA TELA DO MOTORISTA
+   ============================================================================= */
+
+/* Três colunas: corridas | mapa | chat */
+.grade-motorista { display: grid; grid-template-columns: 380px 1fr 360px; gap: var(--espaco); align-items: start; }
+@media (max-width: 1300px) { .grade-motorista { grid-template-columns: 360px 1fr; } }
+@media (max-width: 900px) { .grade-motorista { grid-template-columns: 1fr; } }
+
+/* Cartão da corrida atual com borda azul para chamar atenção */
+.corrida-atual-ativa { border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.corrida-atual-etapa { font-size: 1.15rem; font-weight: 700; margin: 8px 0 4px; }
+.corrida-atual-previsao { color: var(--texto-suave); margin-bottom: 10px; }
+
+/* Item de corrida disponível com botão "Aceitar" */
+.item-disponivel { cursor: default; }
+.item-disponivel .acoes-corrida { margin-top: 10px; }
+.distancia-ate-cliente { color: var(--azul-claro); font-weight: 600; }
+
+/* Aviso quando o motorista está offline */
+.aviso-offline {
+  padding: 14px;
+  border-radius: var(--raio);
+  border: 1px dashed var(--borda);
+  color: var(--texto-suave);
+  text-align: center;
+}

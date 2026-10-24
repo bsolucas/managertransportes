@@ -1,0 +1,7 @@
+{
+  // Configurações deste projeto no VS Code
+  "files.encoding": "utf8",
+  "editor.tabSize": 2,
+  "liveServer.settings.root": "/",
+  "liveServer.settings.port": 5500
+}

@@ -1,0 +1,273 @@
+/* =============================================================================
+   componentes.css — PEÇAS VISUAIS REUTILIZÁVEIS
+   -----------------------------------------------------------------------------
+   Índice:
+     1. Botões
+     2. Campos de formulário
+     3. Cartões e indicadores (KPIs)
+     4. Tabelas
+     5. Selos de status e avatares
+     6. Listas de corridas
+     7. Modal (janela por cima)
+     8. Avisos (notificações)
+     9. Chat
+   ============================================================================= */
+
+/* ===================== 1. BOTÕES ========================================= */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+.botao:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.botao-primario { background: var(--azul); color: var(--texto-sobre-azul); }
+.botao-primario:hover:not(:disabled) { background: var(--azul-escuro); }
+
+.botao-secundario { background: var(--superficie-2); color: var(--texto); border-color: var(--borda); }
+.botao-secundario:hover:not(:disabled) { background: var(--superficie-3); }
+
+.botao-perigo { background: transparent; color: var(--cor-cancelada); border-color: var(--cor-cancelada); }
+.botao-perigo:hover:not(:disabled) { background: rgba(239, 68, 68, 0.12); }
+
+.botao-sucesso { background: var(--cor-andamento); color: #04140a; }
+.botao-sucesso:hover:not(:disabled) { filter: brightness(0.92); }
+
+.botao-pequeno { padding: 5px 10px; font-size: 0.85rem; }
+.botao-largo { width: 100%; }
+
+.botao-icone {
+  width: 32px; height: 32px;
+  display: inline-grid; place-items: center;
+  border-radius: var(--raio-pequeno);
+  border: 0; background: transparent; color: var(--texto-suave); cursor: pointer;
+}
+.botao-icone:hover { background: var(--superficie-3); color: var(--texto); }
+
+/* ===================== 2. CAMPOS DE FORMULÁRIO =========================== */
+.campo {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--raio-pequeno);
+  border: 1px solid var(--borda);
+  background: var(--superficie-2);
+  color: var(--texto);
+  outline: none;
+}
+.campo:focus { border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.campo:disabled { opacity: 0.55; }
+textarea.campo { resize: vertical; min-height: 70px; }
+
+.rotulo { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--texto-suave); }
+.grupo-campo { margin-bottom: 14px; }
+.linha-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Caixinhas de marcar (ocasiões de preço) em formato de "pílula" */
+.opcoes-pilula { display: flex; flex-wrap: wrap; gap: 8px; }
+.pilula {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px;
+  border: 1px solid var(--borda); background: var(--superficie-2);
+  cursor: pointer; font-size: 0.88rem; user-select: none;
+}
+.pilula input { accent-color: var(--azul); }
+.pilula:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
+
+/* Interruptor liga/desliga */
+.interruptor { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+.interruptor input { display: none; }
+.interruptor-trilho {
+  width: 42px; height: 24px; border-radius: 20px; background: var(--superficie-3);
+  position: relative; transition: background 0.2s;
+}
+.interruptor-trilho::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; transition: transform 0.2s;
+}
+.interruptor input:checked + .interruptor-trilho { background: var(--azul); }
+.interruptor input:checked + .interruptor-trilho::after { transform: translateX(18px); }
+
+/* ===================== 3. CARTÕES E INDICADORES ========================== */
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 16px 18px;
+}
+.cartao-cabecalho {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-bottom: 12px;
+}
+.cartao-cabecalho h2, .cartao-cabecalho h3 { margin: 0; }
+
+/* Linha de indicadores (KPIs) do painel */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--espaco); margin-bottom: var(--espaco); }
+.indicador { position: relative; overflow: hidden; }
+.indicador::before { /* filete azul à esquerda */
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--azul);
+}
+.indicador-rotulo { font-size: 0.82rem; color: var(--texto-suave); }
+.indicador-valor { font-size: 1.6rem; font-weight: 700; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.indicador-detalhe { font-size: 0.8rem; color: var(--texto-suave); margin-top: 2px; }
+
+/* Bloco "label: valor" usado nos detalhes */
+.lista-dados { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+.lista-dados dt { color: var(--texto-suave); font-size: 0.88rem; }
+.lista-dados dd { margin: 0; }
+
+/* Composição do preço (linhas + total) */
+.composicao-preco { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.composicao-preco td { padding: 4px 0; }
+.composicao-preco td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.composicao-preco .linha-total td { border-top: 1px solid var(--borda); padding-top: 8px; font-weight: 700; font-size: 1.05rem; }
+
+/* ===================== 4. TABELAS ======================================== */
+.tabela-container { overflow-x: auto; border: 1px solid var(--borda); border-radius: var(--raio); }
+.tabela { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tabela th {
+  text-align: left; font-weight: 600; color: var(--texto-suave); font-size: 0.8rem;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  padding: 10px 12px; background: var(--superficie); border-bottom: 1px solid var(--borda);
+}
+.tabela td { padding: 10px 12px; border-bottom: 1px solid var(--borda); background: var(--superficie-2); }
+.tabela tr:last-child td { border-bottom: 0; }
+.tabela tbody tr.clicavel { cursor: pointer; }
+.tabela tbody tr.clicavel:hover td { background: var(--superficie-3); }
+.tabela .direita { text-align: right; }
+.tabela-vazia { padding: 26px; text-align: center; color: var(--texto-suave); }
+
+/* ===================== 5. SELOS DE STATUS E AVATARES ===================== */
+.selo {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+  white-space: nowrap; border: 1px solid currentColor;
+}
+.selo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.status-aguardando   { color: var(--cor-aguardando); }
+.status-aceita       { color: var(--cor-aceita); }
+.status-andamento    { color: var(--cor-andamento); }
+.status-concluida    { color: var(--cor-concluida); }
+.status-cancelada    { color: var(--cor-cancelada); }
+.motorista-disponivel { color: var(--cor-andamento); }
+.motorista-em-corrida { color: var(--cor-aceita); }
+.motorista-offline    { color: var(--cor-concluida); }
+
+.avatar {
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--azul); color: #fff; font-weight: 700; font-size: 0.8rem;
+}
+.avatar-grande { width: 52px; height: 52px; font-size: 1.05rem; }
+
+/* ===================== 6. LISTAS DE CORRIDAS ============================= */
+.lista-corridas { display: flex; flex-direction: column; gap: 10px; }
+.item-corrida {
+  padding: 12px 14px; border-radius: var(--raio);
+  background: var(--superficie-2); border: 1px solid var(--borda);
+  cursor: pointer; transition: border-color 0.15s;
+}
+.item-corrida:hover { border-color: var(--azul-claro); }
+.item-corrida.selecionado { border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.item-corrida-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+.item-corrida-codigo { font-weight: 700; }
+.item-corrida-rota { font-size: 0.9rem; }
+.item-corrida-rota span { color: var(--texto-suave); }
+.item-corrida-rodape { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.85rem; color: var(--texto-suave); }
+.item-corrida-valor { color: var(--texto); font-weight: 700; }
+.lista-rolavel { max-height: 600px; overflow-y: auto; padding-right: 4px; } /* lista com rolagem própria */
+.detalhe-espacado { margin: 12px 0; }
+
+/* Célula "trajeto" das tabelas: origem em cima, destino embaixo */
+.trajeto-celula { font-size: 0.85rem; line-height: 1.35; }
+.trajeto-celula span { color: var(--texto-suave); }
+
+.lista-vazia { padding: 22px; text-align: center; color: var(--texto-suave); border: 1px dashed var(--borda); border-radius: var(--raio); }
+
+/* Bolinha vermelha de mensagens não lidas */
+.contador-nao-lidas {
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 20px; background: var(--cor-cancelada); color: #fff; font-size: 0.72rem; font-weight: 700;
+}
+
+/* Barra de progresso do trajeto */
+.progresso { height: 6px; border-radius: 6px; background: var(--superficie-3); overflow: hidden; margin: 6px 0 12px; }
+.progresso-barra { height: 100%; background: var(--azul); transition: width 0.9s linear; }
+
+/* Linha do tempo (histórico de status) */
+.linha-tempo { list-style: none; margin: 0; padding: 0; }
+.linha-tempo li { position: relative; padding: 0 0 12px 20px; font-size: 0.88rem; }
+.linha-tempo li::before {
+  content: ""; position: absolute; left: 4px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--azul);
+}
+.linha-tempo li::after {
+  content: ""; position: absolute; left: 7px; top: 16px; bottom: 0; width: 2px; background: var(--borda);
+}
+.linha-tempo li:last-child::after { display: none; }
+
+/* ===================== 7. MODAL ========================================== */
+.modal-fundo {
+  position: fixed; inset: 0; z-index: 2000;
+  display: grid; place-items: center; padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+}
+.modal {
+  width: min(720px, 100%); max-height: calc(100vh - 40px); overflow: auto;
+  background: var(--superficie); border: 1px solid var(--borda);
+  border-radius: var(--raio); box-shadow: var(--sombra);
+}
+.modal-pequeno { width: min(420px, 100%); }
+.modal-grande { width: min(1000px, 100%); }
+.modal-cabecalho {
+  position: sticky; top: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--borda); background: var(--superficie);
+}
+.modal-cabecalho h2 { margin: 0; }
+.modal-corpo { padding: 18px; }
+.texto-modal { margin-bottom: 18px; }
+.acoes-modal { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+
+/* ===================== 8. AVISOS ========================================= */
+.area-avisos { position: fixed; right: 20px; bottom: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.aviso {
+  min-width: 260px; max-width: 380px; padding: 12px 16px; border-radius: var(--raio);
+  background: var(--superficie-2); border-left: 4px solid var(--azul); box-shadow: var(--sombra);
+  animation: aviso-entrar 0.25s ease-out;
+}
+.aviso-sucesso { border-left-color: var(--cor-andamento); }
+.aviso-erro { border-left-color: var(--cor-cancelada); }
+.aviso-saindo { opacity: 0; transform: translateY(8px); transition: all 0.4s; }
+@keyframes aviso-entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ===================== 9. CHAT =========================================== */
+.chat {
+  display: flex; flex-direction: column; min-height: 360px; height: 100%;
+  background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); overflow: hidden;
+}
+.chat-cabecalho { display: flex; align-items: baseline; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--borda); }
+.chat-titulo { font-weight: 700; }
+.chat-subtitulo { color: var(--texto-suave); font-size: 0.85rem; }
+.chat-mensagens { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-height: 220px; max-height: 460px; }
+.chat-vazio { margin: auto; color: var(--texto-suave); text-align: center; }
+.chat-formulario { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--borda); }
+
+.mensagem { max-width: 82%; padding: 8px 12px; border-radius: 12px; }
+.mensagem-minha { align-self: flex-end; background: var(--azul); color: #fff; border-bottom-right-radius: 4px; }
+.mensagem-outro { align-self: flex-start; background: var(--superficie-3); border-bottom-left-radius: 4px; }
+.mensagem-sistema {
+  align-self: center; max-width: 92%; background: transparent; color: var(--texto-suave);
+  font-size: 0.82rem; text-align: center; border: 1px dashed var(--borda);
+}
+.mensagem-autor { font-size: 0.75rem; font-weight: 700; opacity: 0.85; margin-bottom: 2px; }
+.mensagem-papel { font-weight: 400; opacity: 0.8; }
+.mensagem-texto { white-space: pre-wrap; word-wrap: break-word; }
+.mensagem-hora { font-size: 0.7rem; opacity: 0.7; text-align: right; margin-top: 2px; }

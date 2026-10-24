@@ -1,0 +1,127 @@
+/* =============================================================================
+   responsivo.css — AJUSTES PARA CELULAR E TELAS PEQUENAS
+   -----------------------------------------------------------------------------
+   Carregado POR ÚLTIMO em todas as páginas, para sobrescrever o que for
+   preciso. Tudo aqui só vale em telas estreitas; no computador nada muda.
+
+   Pontos de quebra usados:
+     • até 900px ... tablet: colunas viram uma embaixo da outra (já feito nos
+                     arquivos de layout e de cada página)
+     • até 640px ... celular: topo compacto, tabelas viram cartões, janelas
+                     ocupam a tela toda, campos maiores para o toque
+     • até 380px ... celulares bem pequenos: mais um aperto nos espaços
+
+   Índice:
+     1. Topo
+     2. Menus e abas
+     3. Espaçamentos e textos
+     4. Formulários e botões (toque)
+     5. Mapas e chat
+     6. Tabelas viram cartões
+     7. Janela (modal) e avisos
+   ============================================================================= */
+
+/* Itens marcados com esta classe somem no celular (nome do app, nome do usuário...) */
+@media (max-width: 640px) {
+  .oculto-celular { display: none !important; }
+}
+
+@media (max-width: 640px) {
+
+  /* ======================= 1. TOPO ======================= */
+  .topo { padding: 0 12px; gap: 8px; }
+  .topo-usuario { gap: 8px; }
+  .topo-perfil { font-size: 0.72rem; padding: 3px 8px; }
+
+  /* ======================= 2. MENUS E ABAS ======================= */
+  /* Menu do gestor: faixa que rola para o lado, sem barra de rolagem visível */
+  .menu-lateral { padding: 8px; gap: 6px; scrollbar-width: none; }
+  .menu-lateral::-webkit-scrollbar { display: none; }
+  .menu-item { width: auto; flex-shrink: 0; white-space: nowrap; padding: 9px 12px; }
+  .menu-item.ativo { box-shadow: inset 0 -3px 0 var(--azul); }
+
+  .abas-topo { padding: 6px 8px 0; overflow-x: auto; scrollbar-width: none; }
+  .abas-topo::-webkit-scrollbar { display: none; }
+  .aba { flex-shrink: 0; white-space: nowrap; padding: 10px 14px; }
+
+  /* ======================= 3. ESPAÇAMENTOS E TEXTOS ======================= */
+  .conteudo { padding: 14px 12px 32px; }
+  h1 { font-size: 1.3rem; }
+  .cartao { padding: 14px; }
+  .cartao-cabecalho { flex-wrap: wrap; }
+  .cabecalho-secao { margin-bottom: 12px; }
+
+  /* Indicadores: dois por linha */
+  .indicadores { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .indicador-valor { font-size: 1.25rem; }
+  .indicador-rotulo, .indicador-detalhe { font-size: 0.74rem; }
+
+  /* Campos "label + valor" empilhados */
+  .lista-dados { grid-template-columns: 1fr; gap: 0; }
+  .lista-dados dt { margin-top: 8px; }
+
+  .linha-campos { grid-template-columns: 1fr; }
+  .campo-estreito { width: 100%; }
+
+  /* ======================= 4. FORMULÁRIOS E BOTÕES (TOQUE) ======================= */
+  /* 16px evita que o iPhone dê zoom automático ao tocar num campo */
+  .campo { font-size: 16px; padding: 11px 12px; }
+  .botao { min-height: 44px; }
+  .botao-pequeno { min-height: 40px; padding: 8px 12px; }
+  .botao-icone { width: 40px; height: 40px; }
+  .pilula { padding: 9px 14px; }
+  .acoes-corrida .botao, .acoes-modal .botao { flex: 1 1 140px; }
+
+  /* ======================= 5. MAPAS E CHAT ======================= */
+  .mapa, .mapa-alto, .mapa-painel { height: 340px; min-height: 0; }
+  .chat { min-height: 320px; }
+  .chat-mensagens { max-height: 320px; min-height: 180px; }
+  .mensagem { max-width: 90%; }
+  .chat-no-detalhe { height: 380px; }
+  .lista-rolavel { max-height: 420px; }
+
+  /* ======================= 6. TABELAS VIRAM CARTÕES ======================= */
+  /* Tabelas com a classe "tabela-cartoes" mostram cada linha como um cartão,
+     com o nome da coluna ao lado de cada valor (vem do atributo data-rotulo). */
+  .tabela-container:has(.tabela-cartoes) { border: 0; overflow: visible; }
+  .tabela-cartoes, .tabela-cartoes tbody, .tabela-cartoes tr, .tabela-cartoes td { display: block; width: 100%; }
+  .tabela-cartoes thead { display: none; }
+  .tabela-cartoes tr {
+    margin-bottom: 10px; padding: 6px 0;
+    background: var(--superficie-2); border: 1px solid var(--borda); border-radius: var(--raio);
+  }
+  .tabela-cartoes td {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+    padding: 6px 12px; border: 0; background: transparent; text-align: right;
+  }
+  .tabela-cartoes td::before {
+    content: attr(data-rotulo);
+    flex-shrink: 0; text-align: left;
+    font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave);
+  }
+  .tabela-cartoes .tabela-vazia { text-align: center; justify-content: center; }
+  /* "Trajeto" tem duas linhas (De / Para): rótulo em cima e texto alinhado à esquerda */
+  .tabela-cartoes td.trajeto-celula { display: block; text-align: left; }
+  .tabela-cartoes td.trajeto-celula::before { display: block; margin-bottom: 4px; }
+
+  /* ======================= 7. JANELA (MODAL) E AVISOS ======================= */
+  .modal-fundo { padding: 0; align-items: stretch; }
+  .modal, .modal-grande, .modal-pequeno { width: 100%; max-height: 100vh; border-radius: 0; border: 0; }
+  .modal-pequeno { align-self: center; border-radius: var(--raio); max-width: calc(100% - 24px); margin: 0 auto; }
+  .modal-corpo { padding: 14px; }
+  .extras-linha { grid-template-columns: 1fr 100px 40px; }
+
+  .area-avisos { left: 12px; right: 12px; bottom: 12px; }
+  .aviso { min-width: 0; max-width: none; }
+
+  /* Tela inicial */
+  .login { padding: 32px 14px 24px; }
+  .perfil { padding: 18px; }
+}
+
+@media (max-width: 380px) {
+  .topo { padding: 0 8px; }
+  .conteudo { padding: 12px 8px 28px; }
+  .indicadores { grid-template-columns: 1fr; }
+  .extras-linha { grid-template-columns: 1fr 84px 40px; }
+}

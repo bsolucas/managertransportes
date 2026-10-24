@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     paginas/motorista.html — TELA DO MOTORISTA
+     -----------------------------------------------------------------------------
+     Duas abas:
+       • Corridas ... corrida atual (iniciar/concluir), corridas disponíveis
+                      para aceitar, mapa com a sua posição e o chat
+       • Ganhos ..... corridas concluídas e soma dos valores
+     Enquanto esta tela está aberta, a simulação automática NÃO controla este
+     motorista: quem decide é você.
+     O comportamento está em js/paginas/motorista.js.
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Motorista</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/componentes.css" />
+  <link rel="stylesheet" href="../css/mapa.css" />
+  <link rel="stylesheet" href="../css/paginas/motorista.css" />
+  <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
+</head>
+<body>
+
+  <!-- ======================= TOPO ======================= -->
+  <header class="topo">
+    <div class="marca"><span class="marca-icone">T</span><span id="nome-app" class="oculto-celular">Transporte App</span></div>
+    <span class="topo-perfil">Motorista</span>
+    <div class="topo-espaco"></div>
+
+    <!-- Disponível / Offline -->
+    <label class="interruptor" title="Ficar disponível para receber corridas">
+      <input type="checkbox" id="disponibilidade" />
+      <span class="interruptor-trilho"></span>
+      <span class="texto-pequeno" id="disponibilidade-texto">Offline</span>
+    </label>
+
+    <div class="topo-usuario">
+      <span class="avatar" id="usuario-avatar">M</span>
+      <span id="usuario-nome" class="oculto-celular">Motorista</span>
+      <button class="botao botao-secundario botao-pequeno" id="botao-sair">Sair</button>
+    </div>
+  </header>
+
+  <!-- ======================= ABAS ======================= -->
+  <nav class="abas-topo" aria-label="Seções do motorista">
+    <button class="aba ativo" data-aba="corridas">Corridas <span class="contador-nao-lidas" id="contador-disponiveis" hidden>0</span></button>
+    <button class="aba" data-aba="ganhos">Ganhos</button>
+  </nav>
+
+  <main class="conteudo">
+
+    <!-- ===================== ABA: CORRIDAS ===================== -->
+    <section data-painel="corridas">
+      <div class="grade-motorista">
+
+        <!-- Coluna 1: corrida atual + corridas disponíveis -->
+        <div class="pilha">
+          <div class="cartao" id="corrida-atual"></div>
+          <div class="cartao">
+            <div class="cartao-cabecalho">
+              <h2>Corridas disponíveis</h2>
+              <span class="texto-suave texto-pequeno" id="servicos-motorista"></span>
+            </div>
+            <div class="lista-corridas" id="lista-disponiveis"></div>
+          </div>
+        </div>
+
+        <!-- Coluna 2: mapa -->
+        <div class="cartao">
+          <div class="cartao-cabecalho">
+            <h2>Meu mapa</h2>
+            <span class="texto-suave texto-pequeno" id="veiculo-motorista"></span>
+          </div>
+          <div class="mapa mapa-alto" id="mapa-motorista"></div>
+        </div>
+
+        <!-- Coluna 3: chat da corrida atual -->
+        <div id="chat-motorista"></div>
+      </div>
+    </section>
+
+    <!-- ===================== ABA: GANHOS ===================== -->
+    <section data-painel="ganhos" hidden>
+      <div class="cabecalho-secao">
+        <div>
+          <h1>Meus ganhos</h1>
+          <p class="texto-suave">Soma das corridas concluídas (valor + extras).</p>
+        </div>
+      </div>
+      <div class="indicadores" id="indicadores-ganhos"></div>
+      <div class="tabela-container">
+        <table class="tabela tabela-cartoes">
+          <thead>
+            <tr><th>Corrida</th><th>Concluída</th><th>Trajeto</th><th class="direita">Valor</th><th class="direita">Extras</th><th class="direita">Total</th></tr>
+          </thead>
+          <tbody id="tabela-ganhos"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utilitarios.js"></script>
+  <script src="../js/dados-teste.js"></script>
+  <script src="../js/precos.js"></script>
+  <script src="../js/banco-local.js"></script>
+  <script src="../js/simulacao.js"></script>
+  <script src="../js/sessao.js"></script>
+  <script src="../js/interface.js"></script>
+  <script src="../js/mapa.js"></script>
+  <script src="../js/chat.js"></script>
+  <script src="../js/paginas/motorista.js"></script>
+</body>
+</html>

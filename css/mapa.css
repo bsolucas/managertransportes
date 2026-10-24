@@ -1,0 +1,79 @@
+/* =============================================================================
+   mapa.css — VISUAL DO MAPA E DOS MARCADORES
+   -----------------------------------------------------------------------------
+   • .mapa ................... caixa onde o mapa é desenhado
+   • .marcador-motorista ..... bolinha do motorista (cor muda pelo status)
+   • .marcador-ponto ......... alfinetes "A" (origem) e "B" (destino)
+   • .linha-corrida .......... linha tracejada entre origem e destino
+   O comportamento (mover, clicar) está em js/mapa.js.
+   ============================================================================= */
+
+.mapa {
+  width: 100%;
+  height: 460px;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  overflow: hidden;
+  background: var(--superficie-2);
+}
+.mapa-alto { height: calc(100vh - var(--altura-topo) - 150px); min-height: 420px; }
+
+/* Escurece levemente o mapa claro do OpenStreetMap para combinar com o tema. */
+.mapa .leaflet-tile-pane { filter: saturate(0.85) brightness(0.92); }
+
+.mapa-indisponivel {
+  height: 100%; display: grid; place-items: center; padding: 20px;
+  color: var(--texto-suave); text-align: center;
+}
+
+/* Legenda do mapa (bolinhas coloridas) */
+.legenda-mapa { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.82rem; color: var(--texto-suave); margin-top: 8px; }
+.legenda-item { display: inline-flex; align-items: center; gap: 6px; }
+.legenda-cor { width: 10px; height: 10px; border-radius: 50%; }
+
+/* --- Marcador do motorista ------------------------------------------------- */
+.marcador-motorista {
+  display: grid !important;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--preto);
+  border: 3px solid var(--cor-concluida);
+  color: #fff;
+  font: 700 12px/1 var(--fonte);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s;
+}
+.marcador-motorista.motorista-disponivel { border-color: var(--cor-andamento); }
+.marcador-motorista.motorista-em-corrida { border-color: var(--azul); background: var(--azul); }
+.marcador-motorista.motorista-offline    { opacity: 0.55; }
+.marcador-destaque { transform: scale(1.25); z-index: 1000 !important; box-shadow: 0 0 0 4px rgba(0, 71, 255, 0.45); }
+
+.marcador-emoji {
+  position: absolute; right: -8px; bottom: -6px;
+  font-size: 13px; line-height: 1;
+}
+
+/* --- Alfinetes de origem/destino ------------------------------------------- */
+.marcador-ponto span {
+  display: grid; place-items: center;
+  width: 28px; height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  color: #fff; font: 700 12px/1 var(--fonte);
+  border: 2px solid #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+.marcador-ponto b { transform: rotate(45deg); } /* desfaz a rotação só na letra */
+.ponto-origem span { background: var(--cor-andamento); }
+.ponto-destino span { background: var(--azul); }
+.ponto-escolha span { background: var(--cor-aguardando); }
+
+/* --- Linha da corrida ------------------------------------------------------ */
+.linha-corrida { stroke: var(--azul); stroke-width: 4; stroke-dasharray: 8 8; fill: none; }
+
+/* Dicas (tooltips) do mapa no tema escuro */
+.leaflet-tooltip {
+  background: var(--superficie); color: var(--texto);
+  border: 1px solid var(--borda); box-shadow: var(--sombra);
+}
+.leaflet-tooltip-top::before { border-top-color: var(--borda); }

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     paginas/gestor.html — PAINEL DO GESTOR
+     -----------------------------------------------------------------------------
+     Estrutura da página (o conteúdo das listas/tabelas é preenchido pelo
+     arquivo js/paginas/gestor.js):
+       • Topo ........... nome do app, usuário, botão Sair
+       • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
+                          Tarifas | Chat
+       • Seções ......... uma <section data-painel="..."> para cada item do menu
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestor</title>
+
+  <!-- Biblioteca de mapas Leaflet (vem da internet) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+
+  <!-- Estilos do app -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/componentes.css" />
+  <link rel="stylesheet" href="../css/mapa.css" />
+  <link rel="stylesheet" href="../css/paginas/gestor.css" />
+  <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
+</head>
+<body>
+
+  <!-- ======================= TOPO ======================= -->
+  <header class="topo">
+    <div class="marca"><span class="marca-icone">T</span><span id="nome-app" class="oculto-celular">Transporte App</span></div>
+    <span class="topo-perfil">Gestor</span>
+    <div class="topo-espaco"></div>
+
+    <!-- Liga/desliga os motoristas automáticos da simulação -->
+    <label class="interruptor" title="Motoristas de teste aceitam e fazem corridas sozinhos">
+      <input type="checkbox" id="simulacao-automatica" />
+      <span class="interruptor-trilho"></span>
+      <span class="texto-pequeno oculto-celular">Simulação automática</span>
+    </label>
+
+    <div class="topo-usuario">
+      <span class="avatar" id="usuario-avatar">G</span>
+      <span id="usuario-nome" class="oculto-celular">Gestor</span>
+      <button class="botao botao-secundario botao-pequeno" id="botao-sair">Sair</button>
+    </div>
+  </header>
+
+  <div class="pagina-com-menu">
+
+    <!-- ======================= MENU LATERAL ======================= -->
+    <nav class="menu-lateral" aria-label="Seções do painel">
+      <button class="menu-item ativo" data-aba="visao"><span class="menu-icone">📍</span>Visão geral</button>
+      <button class="menu-item" data-aba="corridas"><span class="menu-icone">📋</span>Corridas
+        <span class="menu-contador" id="contador-aguardando" hidden>0</span></button>
+      <button class="menu-item" data-aba="motoristas"><span class="menu-icone">🚗</span>Motoristas</button>
+      <button class="menu-item" data-aba="financeiro"><span class="menu-icone">💰</span>Financeiro</button>
+      <button class="menu-item" data-aba="tarifas"><span class="menu-icone">🏷️</span>Tarifas</button>
+      <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
+        <span class="menu-contador" id="contador-chat" hidden>0</span></button>
+      <div class="menu-rodape">
+        <button class="menu-item" id="botao-resetar"><span class="menu-icone">↺</span>Resetar dados de teste</button>
+      </div>
+    </nav>
+
+    <main class="conteudo">
+
+      <!-- ===================== SEÇÃO: VISÃO GERAL ===================== -->
+      <section data-painel="visao">
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Visão geral</h1>
+            <p class="texto-suave">Motoristas e corridas em tempo real.</p>
+          </div>
+        </div>
+
+        <!-- Indicadores do dia (preenchidos pelo JS) -->
+        <div class="indicadores" id="indicadores"></div>
+
+        <div class="grade-mapa-lateral">
+          <div class="cartao">
+            <div class="cartao-cabecalho">
+              <h2>Mapa ao vivo</h2>
+              <button class="botao botao-secundario botao-pequeno" id="enquadrar-todos">Ver todos</button>
+            </div>
+            <div class="mapa mapa-painel" id="mapa-gestor"></div>
+            <div class="legenda-mapa">
+              <span class="legenda-item"><span class="legenda-cor legenda-disponivel"></span>Disponível</span>
+              <span class="legenda-item"><span class="legenda-cor legenda-corrida"></span>Em corrida</span>
+              <span class="legenda-item"><span class="legenda-cor legenda-offline"></span>Offline</span>
+            </div>
+          </div>
+
+          <div class="cartao">
+            <div class="cartao-cabecalho">
+              <h2>Corridas ativas</h2>
+              <span class="texto-suave texto-pequeno" id="total-ativas"></span>
+            </div>
+            <div class="lista-corridas lista-rolavel" id="lista-ativas"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SEÇÃO: CORRIDAS ===================== -->
+      <section data-painel="corridas" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Corridas</h1>
+            <p class="texto-suave">Clique numa corrida para ver detalhes, designar motorista, ajustar valores ou conversar.</p>
+          </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtros">
+          <input class="campo" type="search" id="filtro-busca" placeholder="Buscar por código, cliente ou endereço" />
+          <select class="campo" id="filtro-status"></select>
+          <select class="campo" id="filtro-servico"></select>
+        </div>
+
+        <div class="tabela-container">
+          <table class="tabela tabela-cartoes">
+            <thead>
+              <tr>
+                <th>Corrida</th><th>Cliente</th><th>Trajeto</th><th>Serviço</th>
+                <th>Motorista</th><th>Status</th><th class="direita">Total</th><th>Pedida</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-corridas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================== SEÇÃO: MOTORISTAS ===================== -->
+      <section data-painel="motoristas" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Motoristas</h1>
+            <p class="texto-suave">Situação, veículo e ganhos de hoje de cada motorista.</p>
+          </div>
+        </div>
+        <div class="grade-motoristas" id="lista-motoristas"></div>
+      </section>
+
+      <!-- ===================== SEÇÃO: FINANCEIRO ===================== -->
+      <section data-painel="financeiro" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Financeiro</h1>
+            <p class="texto-suave">Soma dos valores das corridas concluídas (valor da corrida + extras).</p>
+          </div>
+          <select class="campo campo-estreito" id="periodo-financeiro">
+            <option value="hoje">Hoje</option>
+            <option value="7">Últimos 7 dias</option>
+            <option value="30">Últimos 30 dias</option>
+            <option value="tudo">Todo o período</option>
+          </select>
+        </div>
+
+        <div class="indicadores" id="indicadores-financeiro"></div>
+
+        <div class="grade-2">
+          <div class="cartao">
+            <h2>Por motorista</h2>
+            <div class="tabela-container">
+              <table class="tabela">
+                <thead><tr><th>Motorista</th><th class="direita">Corridas</th><th class="direita">Extras</th><th class="direita">Total</th></tr></thead>
+                <tbody id="financeiro-motoristas"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pilha">
+            <div class="cartao">
+              <h2>Por serviço</h2>
+              <div class="tabela-container">
+                <table class="tabela">
+                  <thead><tr><th>Serviço</th><th class="direita">Corridas</th><th class="direita">Total</th></tr></thead>
+                  <tbody id="financeiro-servicos"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="cartao">
+              <h2>Por tipo de preço</h2>
+              <div class="tabela-container">
+                <table class="tabela">
+                  <thead><tr><th>Tipo</th><th class="direita">Corridas</th><th class="direita">Total</th></tr></thead>
+                  <tbody id="financeiro-modos"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SEÇÃO: TARIFAS ===================== -->
+      <section data-painel="tarifas" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Tarifas</h1>
+            <p class="texto-suave">Regras de preço usadas no cálculo automático das corridas.</p>
+          </div>
+          <button class="botao botao-primario" id="salvar-tarifas">Salvar tarifas</button>
+        </div>
+
+        <div class="grade-2">
+          <!-- Preço variável por serviço -->
+          <div class="cartao">
+            <h2>Preço variável por serviço</h2>
+            <p class="texto-suave texto-pequeno">Valor = base + km × preço/km + minutos × preço/min (respeitando o mínimo).</p>
+            <div class="tabela-container">
+              <table class="tabela tabela-campos">
+                <thead><tr><th>Serviço</th><th>Base</th><th>Por km</th><th>Por min</th><th>Mínimo</th></tr></thead>
+                <tbody id="tarifas-servicos"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Ocasiões (multiplicadores) -->
+          <div class="cartao">
+            <h2>Ocasiões (preço volátil)</h2>
+            <p class="texto-suave texto-pequeno">Multiplicam o valor variável. Ex.: 1,30 = +30%.</p>
+            <div class="tabela-container">
+              <table class="tabela tabela-campos">
+                <thead><tr><th>Ocasião</th><th>Multiplicador</th></tr></thead>
+                <tbody id="tarifas-ocasioes"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabela de valores fixos -->
+        <div class="cartao cartao-espacado">
+          <div class="cartao-cabecalho">
+            <div>
+              <h2>Valores fixos por trajeto</h2>
+              <p class="texto-suave texto-pequeno">Usados quando a corrida é pedida no modo "valor fixo". Valem também para o trajeto de volta.</p>
+            </div>
+            <button class="botao botao-secundario botao-pequeno" id="adicionar-fixo">+ Adicionar trajeto</button>
+          </div>
+          <div class="tabela-container">
+            <table class="tabela tabela-campos">
+              <thead><tr><th>Origem</th><th>Destino</th><th>Serviço</th><th>Valor</th><th></th></tr></thead>
+              <tbody id="tarifas-fixas"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SEÇÃO: CHAT ===================== -->
+      <section data-painel="chat" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Chat</h1>
+            <p class="texto-suave">Conversas das corridas aceitas e em andamento (com cliente e motorista).</p>
+          </div>
+        </div>
+        <div class="grade-lateral-chat">
+          <div class="cartao">
+            <h2>Conversas</h2>
+            <div class="lista-corridas lista-rolavel" id="lista-conversas"></div>
+          </div>
+          <div id="chat-gestor"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Bibliotecas externas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+  <!-- Scripts do app (ordem importa) -->
+  <script src="../js/config.js"></script>
+  <script src="../js/utilitarios.js"></script>
+  <script src="../js/dados-teste.js"></script>
+  <script src="../js/precos.js"></script>
+  <script src="../js/banco-local.js"></script>
+  <script src="../js/simulacao.js"></script>
+  <script src="../js/sessao.js"></script>
+  <script src="../js/interface.js"></script>
+  <script src="../js/mapa.js"></script>
+  <script src="../js/chat.js"></script>
+  <script src="../js/paginas/gestor.js"></script>
+</body>
+</html>

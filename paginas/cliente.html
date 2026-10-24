@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     paginas/cliente.html — PORTAL DO CLIENTE
+     -----------------------------------------------------------------------------
+     Duas abas:
+       • Pedir corrida ..... escolhe origem/destino (lista ou clique no mapa),
+                             serviço e tipo de preço; vê o valor ANTES de pedir
+       • Minhas corridas ... acompanha o motorista no mapa e conversa no chat
+     O comportamento está em js/paginas/cliente.js.
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cliente</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/componentes.css" />
+  <link rel="stylesheet" href="../css/mapa.css" />
+  <link rel="stylesheet" href="../css/paginas/cliente.css" />
+  <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
+</head>
+<body>
+
+  <!-- ======================= TOPO ======================= -->
+  <header class="topo">
+    <div class="marca"><span class="marca-icone">T</span><span id="nome-app" class="oculto-celular">Transporte App</span></div>
+    <span class="topo-perfil">Portal do cliente</span>
+    <div class="topo-espaco"></div>
+    <div class="topo-usuario">
+      <span class="avatar" id="usuario-avatar">C</span>
+      <span id="usuario-nome" class="oculto-celular">Cliente</span>
+      <button class="botao botao-secundario botao-pequeno" id="botao-sair">Sair</button>
+    </div>
+  </header>
+
+  <!-- ======================= ABAS ======================= -->
+  <nav class="abas-topo" aria-label="Seções do portal">
+    <button class="aba ativo" data-aba="pedir">Pedir corrida</button>
+    <button class="aba" data-aba="minhas">Minhas corridas <span class="contador-nao-lidas" id="contador-cliente" hidden>0</span></button>
+  </nav>
+
+  <main class="conteudo">
+
+    <!-- ===================== ABA: PEDIR CORRIDA ===================== -->
+    <section data-painel="pedir">
+      <div class="grade-lateral-mapa">
+
+        <!-- Formulário do pedido -->
+        <form class="cartao" id="formulario-pedido" autocomplete="off">
+          <h2>Nova corrida</h2>
+
+          <div class="grupo-campo">
+            <label class="rotulo" for="pedido-origem">Origem (de onde sair)</label>
+            <div class="campo-com-botao">
+              <select class="campo" id="pedido-origem"></select>
+              <button type="button" class="botao botao-secundario" data-marcar="origem" title="Clicar no mapa para escolher">📍</button>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <label class="rotulo" for="pedido-destino">Destino (para onde ir)</label>
+            <div class="campo-com-botao">
+              <select class="campo" id="pedido-destino"></select>
+              <button type="button" class="botao botao-secundario" data-marcar="destino" title="Clicar no mapa para escolher">📍</button>
+            </div>
+          </div>
+
+          <p class="dica-mapa" id="dica-mapa" hidden>Clique no mapa para marcar o ponto.</p>
+
+          <div class="grupo-campo">
+            <span class="rotulo">Serviço</span>
+            <div class="opcoes-pilula" id="pedido-servicos"></div>
+          </div>
+
+          <div class="grupo-campo">
+            <span class="rotulo">Tipo de preço</span>
+            <div class="opcoes-pilula">
+              <label class="pilula"><input type="radio" name="modo" value="variavel" checked /> Variável (calculado)</label>
+              <label class="pilula"><input type="radio" name="modo" value="fixo" /> Valor fixo (tabela)</label>
+            </div>
+          </div>
+
+          <div class="grupo-campo">
+            <span class="rotulo">Ocasião</span>
+            <div class="opcoes-pilula" id="pedido-ocasioes"></div>
+            <p class="texto-suave texto-pequeno" id="ocasioes-automaticas"></p>
+          </div>
+
+          <div class="grupo-campo">
+            <label class="rotulo" for="pedido-observacoes">Observações (opcional)</label>
+            <textarea class="campo" id="pedido-observacoes" maxlength="300" placeholder="Ex.: veículo não liga, precisa de plataforma; levar 2 malas..."></textarea>
+          </div>
+
+          <!-- Prévia do preço -->
+          <div class="previa-preco" id="previa-preco"></div>
+
+          <button class="botao botao-primario botao-largo" type="submit" id="botao-pedir">Solicitar corrida</button>
+        </form>
+
+        <!-- Mapa para ver/escolher os pontos -->
+        <div class="cartao">
+          <div class="mapa mapa-alto" id="mapa-pedido"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ABA: MINHAS CORRIDAS ===================== -->
+    <section data-painel="minhas" hidden>
+      <div class="grade-minhas">
+
+        <!-- Lista das corridas do cliente -->
+        <div class="cartao">
+          <h2>Minhas corridas</h2>
+          <div class="lista-corridas lista-rolavel" id="lista-minhas"></div>
+        </div>
+
+        <!-- Acompanhamento da corrida selecionada -->
+        <div class="pilha">
+          <div class="cartao" id="acompanhamento"></div>
+          <div class="cartao">
+            <div class="mapa" id="mapa-acompanhar"></div>
+          </div>
+        </div>
+
+        <!-- Chat da corrida selecionada -->
+        <div id="chat-cliente"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utilitarios.js"></script>
+  <script src="../js/dados-teste.js"></script>
+  <script src="../js/precos.js"></script>
+  <script src="../js/banco-local.js"></script>
+  <script src="../js/simulacao.js"></script>
+  <script src="../js/sessao.js"></script>
+  <script src="../js/interface.js"></script>
+  <script src="../js/mapa.js"></script>
+  <script src="../js/chat.js"></script>
+  <script src="../js/paginas/cliente.js"></script>
+</body>
+</html>
