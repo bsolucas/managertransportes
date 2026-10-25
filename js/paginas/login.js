@@ -5,6 +5,8 @@
    2. Preenche as listas de motoristas e clientes de teste.
    3. Ao clicar em "Entrar", guarda o perfil escolhido NESTA aba e abre a
       página correspondente em /paginas.
+   4. "Entrar como gestor" abre uma janela de usuário e senha (acessos
+      provisórios de js/acessos-provisorios.js).
    ============================================================================= */
 
 (function () {
@@ -28,11 +30,40 @@
   preencherListas();
 
   /* --- Botões "Entrar" ----------------------------------------------------- */
-  document.getElementById("entrar-gestor").addEventListener("click", function () {
-    var g = App.banco.obterGestor();
-    App.sessao.entrar({ tipo: "gestor", id: g.id, nome: g.nome });
-    window.location.href = "paginas/gestor.html";
-  });
+  /* Gestor: pede usuário e senha antes de abrir o painel. */
+  document.getElementById("entrar-gestor").addEventListener("click", abrirLoginGestor);
+
+  function abrirLoginGestor() {
+    var empresa = App.banco.obterEmpresa();
+    var corpo = ui.abrirModal("Entrar como gestor",
+      '<form id="form-login-gestor" novalidate>' +
+        '<p class="texto-suave texto-pequeno">Acesso de <strong>' + App.utils.escaparHtml(empresa.nome) + "</strong>.</p>" +
+        '<div class="grupo-campo"><label class="rotulo" for="login-usuario">Usuário</label>' +
+          '<input class="campo" id="login-usuario" autocomplete="username" autocapitalize="none" spellcheck="false" /></div>' +
+        '<div class="grupo-campo"><label class="rotulo" for="login-senha">Senha</label>' +
+          '<input class="campo" id="login-senha" type="password" autocomplete="current-password" /></div>' +
+        '<div class="erro-login" id="erro-login" role="alert"></div>' +
+        '<div class="acoes-modal">' +
+          '<button type="button" class="botao botao-secundario" data-fechar-modal>Cancelar</button>' +
+          '<button type="submit" class="botao botao-primario">Entrar</button>' +
+        "</div>" +
+      "</form>", { classe: "modal-pequeno" });
+
+    corpo.querySelector("#form-login-gestor").addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var acesso = App.acessos.conferir(corpo.querySelector("#login-usuario").value, corpo.querySelector("#login-senha").value);
+      if (!acesso) {
+        corpo.querySelector("#erro-login").textContent = "Usuário ou senha incorretos.";
+        corpo.querySelector("#login-senha").value = "";
+        corpo.querySelector("#login-senha").focus();
+        return;
+      }
+      App.sessao.entrar({ tipo: "gestor", id: acesso.id, nome: acesso.nome });
+      window.location.href = "paginas/gestor.html";
+    });
+
+    corpo.querySelector("#login-usuario").focus();
+  }
 
   document.getElementById("entrar-motorista").addEventListener("click", function () {
     var m = App.banco.buscarMotorista(document.getElementById("escolha-motorista").value);
