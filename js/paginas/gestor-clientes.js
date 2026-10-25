@@ -20,17 +20,24 @@
   /* ==========================================================================
      1. EMPRESA DO GESTOR (topo da página)
      ========================================================================== */
-  var empresa = banco.obterEmpresa();
-  var sigla = document.getElementById("empresa-sigla");
-  if (empresa.logo) {
-    sigla.innerHTML = '<img alt="" src="' + u.escaparHtml(empresa.logo) + '" />';
-  } else {
-    sigla.textContent = empresa.sigla || u.iniciais(empresa.nome);
+  /* A empresa vem do login (guardada na aba) e é atualizada com o que está no banco. */
+  function mostrarEmpresa(empresa) {
+    var logo = empresa.logo_url || empresa.logo;
+    var sigla = document.getElementById("empresa-sigla");
+    if (logo) {
+      sigla.innerHTML = '<img alt="" src="' + u.escaparHtml(logo) + '" />';
+    } else {
+      sigla.textContent = empresa.sigla || u.iniciais(empresa.nome);
+    }
+    document.getElementById("empresa-nome").textContent = empresa.nome;
+    document.getElementById("marca-empresa").title = empresa.nome;
+    ui.$$(".nome-empresa-texto").forEach(function (el) { el.textContent = empresa.nome; });
+    document.title = "Gestor • " + empresa.nome;
   }
-  document.getElementById("empresa-nome").textContent = empresa.nome;
-  document.getElementById("marca-empresa").title = empresa.nome;
-  ui.$$(".nome-empresa-texto").forEach(function (el) { el.textContent = empresa.nome; });
-  document.title = "Gestor • " + empresa.nome;
+
+  var sessaoAtual = App.sessao.atual() || {};
+  mostrarEmpresa(sessaoAtual.empresa || banco.obterEmpresa());
+  App.auth.buscarEmpresa().then(mostrarEmpresa).catch(function () { /* mantém a empresa já mostrada */ });
 
   /* ==========================================================================
      2. MÁSCARAS E VALIDAÇÃO

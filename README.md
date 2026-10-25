@@ -106,6 +106,16 @@ ProjetoAPP/
 **Ordem dos scripts:** cada página carrega `config.js` primeiro e o seu
 `js/paginas/*.js` por último, porque os arquivos do meio dependem dos anteriores.
 
+## Login real e banco de dados (Supabase) — em andamento
+
+- **Etapa 1 (pronta):** o gestor entra com usuário e senha pelo **Supabase Auth**
+  (`js/auth-supabase.js`, `js/config-supabase.js`). O logotipo e o nome da empresa vêm do banco.
+  Sem login válido, o painel volta para a tela inicial.
+- **Próximas etapas:** ligar clientes, motoristas, corridas, tarifas e chat ao banco
+  (hoje ainda usam o `js/banco-local.js`, no navegador). Motorista e cliente ainda entram sem senha.
+- O SQL do banco está em `banco/` (estrutura, segurança por empresa e dados de teste).
+- Em `js/config-supabase.js` ficam só o endereço do projeto e a chave **pública**; segredos nunca entram no código.
+
 ## Empresa do gestor e aba "Clientes"
 
 - **Topo do painel:** mostra o logotipo (sigla em quadradinho azul) e o nome da empresa do gestor.

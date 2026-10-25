@@ -5,8 +5,8 @@
    2. Preenche as listas de motoristas e clientes de teste.
    3. Ao clicar em "Entrar", guarda o perfil escolhido NESTA aba e abre a
       página correspondente em /paginas.
-   4. "Entrar como gestor" abre uma janela de usuário e senha (acessos
-      provisórios de js/acessos-provisorios.js).
+   4. "Entrar como gestor" abre uma janela de usuário e senha e faz o login
+      real no Supabase (js/auth-supabase.js).
    ============================================================================= */
 
 (function () {
@@ -34,10 +34,9 @@
   document.getElementById("entrar-gestor").addEventListener("click", abrirLoginGestor);
 
   function abrirLoginGestor() {
-    var empresa = App.banco.obterEmpresa();
     var corpo = ui.abrirModal("Entrar como gestor",
       '<form id="form-login-gestor" novalidate>' +
-        '<p class="texto-suave texto-pequeno">Acesso de <strong>' + App.utils.escaparHtml(empresa.nome) + "</strong>.</p>" +
+        '<p class="texto-suave texto-pequeno">Acesso do gestor da empresa.</p>' +
         '<div class="grupo-campo"><label class="rotulo" for="login-usuario">Usuário</label>' +
           '<input class="campo" id="login-usuario" autocomplete="username" autocapitalize="none" spellcheck="false" /></div>' +
         '<div class="grupo-campo"><label class="rotulo" for="login-senha">Senha</label>' +
@@ -51,15 +50,23 @@
 
     corpo.querySelector("#form-login-gestor").addEventListener("submit", function (ev) {
       ev.preventDefault();
-      var acesso = App.acessos.conferir(corpo.querySelector("#login-usuario").value, corpo.querySelector("#login-senha").value);
-      if (!acesso) {
-        corpo.querySelector("#erro-login").textContent = "Usuário ou senha incorretos.";
-        corpo.querySelector("#login-senha").value = "";
-        corpo.querySelector("#login-senha").focus();
-        return;
-      }
-      App.sessao.entrar({ tipo: "gestor", id: acesso.id, nome: acesso.nome });
-      window.location.href = "paginas/gestor.html";
+      var erro = corpo.querySelector("#erro-login");
+      var botao = corpo.querySelector('button[type="submit"]');
+      erro.textContent = "";
+      botao.disabled = true;
+      botao.textContent = "Entrando…";
+      App.auth.entrar(corpo.querySelector("#login-usuario").value, corpo.querySelector("#login-senha").value)
+        .then(function (acesso) {
+          App.sessao.entrar({ tipo: "gestor", id: acesso.id, nome: acesso.nome, papel: acesso.papel, empresa: acesso.empresa });
+          window.location.href = "paginas/gestor.html";
+        })
+        .catch(function (e) {
+          erro.textContent = e.message || "Não foi possível entrar.";
+          botao.disabled = false;
+          botao.textContent = "Entrar";
+          corpo.querySelector("#login-senha").value = "";
+          corpo.querySelector("#login-senha").focus();
+        });
     });
 
     corpo.querySelector("#login-usuario").focus();

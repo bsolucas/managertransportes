@@ -29,8 +29,11 @@ App.sessao = {
   },
 
   sair: function () {
+    var u = App.sessao.atual();
     sessionStorage.removeItem(App.sessao.CHAVE);
-    window.location.href = App.sessao.caminhoInicio();
+    var ir = function () { window.location.href = App.sessao.caminhoInicio(); };
+    /* O gestor também encerra o login real no Supabase. */
+    if (u && u.tipo === "gestor" && App.auth) App.auth.sair().then(ir, ir); else ir();
   },
 
   /* Garante que a página só abre para o tipo certo de usuário.
