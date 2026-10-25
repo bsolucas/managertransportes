@@ -152,3 +152,9 @@ Planilhas `.xls` antigas precisam ser salvas como `.xlsx` antes.
 - Login de verdade com senha, no lugar de `js/sessao.js`.
 - GPS real do celular do motorista, no lugar de `js/simulacao.js`.
 - Chat em tempo real pelo servidor (WebSocket).
+
+## Landing page (Manager Transportes)
+
+Página de apresentação e venda, em `landing/`. Fica em um endereço separado
+(`seu-site.vercel.app/landing/`); a página principal do app (`index.html`) não foi alterada.
+Para trocar o número de WhatsApp, o nome da marca ou o link do sistema, edite `landing/js/config.js`.

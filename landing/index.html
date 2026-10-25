@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     index.html — LANDING PAGE DO SISTEMA DE TRANSPORTES
+     Página de apresentação e venda. Fica separada do app que já está no ar.
+     Estilos em css/landing.css e comportamento em js/landing.js.
+     Para trocar nome da marca, WhatsApp e link do sistema: edite js/config.js
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manager Transportes — gestão de corridas e motoristas</title>
+  <meta name="description" content="Sistema para empresas de transporte: acompanhe corridas e motoristas e converta a planilha da empresa em XLSX já somada, em segundos.">
+  <meta name="theme-color" content="#07080b">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+  <!-- ===== TOPO ===== -->
+  <header class="topo">
+    <div class="conteudo topo-interno">
+      <a class="marca" href="#inicio"><span class="marca-logo">M</span><span data-marca>Manager Transportes</span></a>
+      <nav class="menu" id="menu" aria-label="Seções">
+        <a href="#recursos">Recursos</a>
+        <a href="#planilhas">Planilhas</a>
+        <a href="#planos">Planos</a>
+        <a href="#duvidas">Dúvidas</a>
+      </nav>
+      <a class="botao botao-pequeno" data-whatsapp href="#">Falar no WhatsApp</a>
+      <button class="menu-botao" id="menu-botao" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main id="inicio">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="conteudo hero-interno">
+        <div class="hero-texto">
+          <span class="selo">Para empresas de transporte e cooperativas</span>
+          <h1>Controle suas corridas e feche o mês <em>sem planilha bagunçada</em></h1>
+          <p>Acompanhe motoristas e corridas em um painel simples, que funciona no celular. E converta o arquivo que a sua empresa gera em uma planilha XLSX limpa, já com o total em reais.</p>
+          <div class="hero-botoes">
+            <a class="botao" data-whatsapp href="#">Quero testar 14 dias grátis</a>
+            <a class="botao botao-borda" data-sistema href="#">Ver o sistema</a>
+          </div>
+          <ul class="hero-lista">
+            <li>✔ Funciona no celular</li>
+            <li>✔ Sem instalar nada</li>
+            <li>✔ Teste grátis, sem cartão</li>
+          </ul>
+        </div>
+
+        <!-- Ilustração do painel (feita em CSS, não é imagem) -->
+        <div class="painel" aria-hidden="true">
+          <div class="painel-topo"><i></i><i></i><i></i></div>
+          <div class="painel-numeros">
+            <div><small>Corridas</small><strong>297</strong></div>
+            <div><small>Valor total</small><strong>R$ 38.280,50</strong></div>
+          </div>
+          <div class="painel-linhas">
+            <div><span>Motorista A</span><b>R$ 4.120,00</b></div>
+            <div><span>Motorista B</span><b>R$ 3.870,50</b></div>
+            <div><span>Motorista C</span><b>R$ 3.455,00</b></div>
+          </div>
+          <div class="painel-barra"><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROBLEMA ===== -->
+    <section class="secao secao-escura">
+      <div class="conteudo estreito">
+        <h2>Todo fim de mês é a mesma história</h2>
+        <p class="lead">O arquivo que a empresa gera chega com as colunas coladas, os acentos quebrados e valores que o Excel não consegue somar. Alguém precisa arrumar tudo na mão, e ainda corre o risco de errar um número.</p>
+        <div class="comparativo">
+          <div class="cartao cartao-ruim">
+            <h3>Antes</h3>
+            <ul><li>Horas arrumando planilha</li><li>Acentos como "SÃ£o Paulo"</li><li>Km virando data no Excel</li><li>Total conferido na calculadora</li></ul>
+          </div>
+          <div class="cartao cartao-bom">
+            <h3>Com o sistema</h3>
+            <ul><li>Anexa o arquivo e pronto</li><li>Textos corrigidos sozinhos</li><li>Números tratados como números</li><li>Total em reais já somado</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RECURSOS ===== -->
+    <section class="secao" id="recursos">
+      <div class="conteudo">
+        <h2>Tudo o que o gestor precisa, num lugar só</h2>
+        <div class="grade">
+          <article class="cartao"><div class="icone">📊</div><h3>Painel do gestor</h3><p>Veja corridas, motoristas e status em tempo real, com indicadores claros logo na abertura.</p></article>
+          <article class="cartao"><div class="icone">🚗</div><h3>Área do motorista</h3><p>O motorista aceita e acompanha as corridas direto do celular, sem complicação.</p></article>
+          <article class="cartao"><div class="icone">🗺️</div><h3>Mapa</h3><p>Acompanhe a localização das corridas num mapa fácil de entender.</p></article>
+          <article class="cartao"><div class="icone">📱</div><h3>Feito para o celular</h3><p>O gestor resolve tudo da palma da mão, com botões grandes e acesso rápido.</p></article>
+          <article class="cartao"><div class="icone">🔒</div><h3>Seus dados protegidos</h3><p>A conversão de planilha acontece no seu navegador: o arquivo não é enviado a ninguém.</p></article>
+          <article class="cartao"><div class="icone">💬</div><h3>Suporte por WhatsApp</h3><p>Dúvida ou ajuste? Fale direto com a gente, sem fila nem protocolo.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PLANILHAS (destaque) ===== -->
+    <section class="secao secao-escura" id="planilhas">
+      <div class="conteudo planilhas">
+        <div>
+          <span class="selo">Destaque</span>
+          <h2>CSV da empresa para XLSX somado, em 3 passos</h2>
+          <ol class="passos">
+            <li><b>Anexe</b> o arquivo que a empresa gerou, clicando ou arrastando.</li>
+            <li><b>Confira</b> o total em reais, a soma por motorista e a prévia das corridas.</li>
+            <li><b>Baixe</b> a planilha XLSX pronta, com a linha de total e o resumo.</li>
+          </ol>
+          <a class="botao" data-whatsapp href="#">Quero ver funcionando</a>
+        </div>
+        <div class="resultado" aria-hidden="true">
+          <div class="resultado-linha"><span>Corridas</span><b>297</b></div>
+          <div class="resultado-linha"><span>Valor total</span><b>R$ 38.280,50</b></div>
+          <div class="resultado-linha"><span>Valor estimado</span><b>R$ 33.676,89</b></div>
+          <div class="resultado-linha"><span>Km rodados</span><b>10.536,81 km</b></div>
+          <div class="resultado-botao">⬇ Baixar planilha (.xlsx)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PLANOS ===== -->
+    <section class="secao" id="planos">
+      <div class="conteudo">
+        <h2>Planos simples, sem fidelidade</h2>
+        <p class="lead centro">Teste 14 dias grátis. Cancele quando quiser.</p>
+
+        <div class="planos">
+          <article class="plano">
+            <h3>Básico</h3>
+            <p class="plano-para">1 gestor e até 5 motoristas</p>
+            <p class="preco"><span>R$</span> 99<small>/mês</small></p>
+            <ul>
+              <li>Painel do gestor</li>
+              <li>Área do motorista</li>
+              <li>Mapa das corridas</li>
+              <li>Suporte por e-mail</li>
+            </ul>
+            <a class="botao botao-borda" data-whatsapp data-plano="Básico" href="#">Começar teste grátis</a>
+          </article>
+
+          <article class="plano plano-destaque">
+            <span class="plano-faixa">Mais escolhido</span>
+            <h3>Profissional</h3>
+            <p class="plano-para">Até 20 motoristas</p>
+            <p class="preco"><span>R$</span> 149<small>/mês</small></p>
+            <ul>
+              <li>Tudo do plano Básico</li>
+              <li><b>Conversão de planilha CSV → XLSX</b></li>
+              <li>Soma por motorista e por status</li>
+              <li>Suporte por WhatsApp</li>
+            </ul>
+            <a class="botao" data-whatsapp data-plano="Profissional" href="#">Começar teste grátis</a>
+          </article>
+
+          <article class="plano">
+            <h3>Empresa</h3>
+            <p class="plano-para">Frota maior</p>
+            <p class="preco"><span>R$</span> 249<small>/mês</small></p>
+            <ul>
+              <li>Tudo do plano Profissional</li>
+              <li>Motoristas sem limite</li>
+              <li>Suporte prioritário no WhatsApp</li>
+              <li>Ajustes sob medida</li>
+            </ul>
+            <a class="botao botao-borda" data-whatsapp data-plano="Empresa" href="#">Começar teste grátis</a>
+          </article>
+        </div>
+        <p class="nota">Implantação opcional, paga uma única vez. Fale com a gente para combinar.</p>
+      </div>
+    </section>
+
+    <!-- ===== DÚVIDAS ===== -->
+    <section class="secao secao-escura" id="duvidas">
+      <div class="conteudo estreito">
+        <h2>Dúvidas frequentes</h2>
+        <details><summary>Preciso instalar algum programa?</summary><p>Não. O sistema abre no navegador, no computador ou no celular.</p></details>
+        <details><summary>Meu arquivo é enviado para algum servidor?</summary><p>Na conversão de planilha, não. Tudo é feito no seu navegador e o arquivo não sai do seu aparelho.</p></details>
+        <details><summary>Funciona com o arquivo que a minha empresa gera?</summary><p>Foi feito a partir de um arquivo real de corridas, com 16 colunas. Se o seu for diferente, mande um exemplo e a gente confere.</p></details>
+        <details><summary>Posso cancelar quando quiser?</summary><p>Sim. Não há fidelidade, e o teste de 14 dias é grátis.</p></details>
+        <details><summary>E se eu precisar de ajuda?</summary><p>É só chamar no WhatsApp. O plano Empresa tem atendimento prioritário.</p></details>
+      </div>
+    </section>
+
+    <!-- ===== CHAMADA FINAL ===== -->
+    <section class="chamada">
+      <div class="conteudo">
+        <h2>Pronto para fechar o mês em minutos?</h2>
+        <p>Peça seu teste grátis de 14 dias.</p>
+        <a class="botao botao-branco" data-whatsapp href="#">Falar no WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo">
+      <span>© <span id="ano"></span> <span data-marca>Manager Transportes</span>. Todos os direitos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>
