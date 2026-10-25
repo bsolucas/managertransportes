@@ -120,6 +120,7 @@ ul, ol { margin: 0; padding: 0; }
 .plano li { padding: 8px 0 8px 26px; position: relative; color: var(--texto-suave); border-top: 1px solid var(--borda); }
 .plano li::before { content: "✔"; position: absolute; left: 0; color: var(--azul-claro); }
 .plano li b { color: #fff; }
+.nota-plano { color: var(--azul-claro); font-weight: 600; margin-bottom: 14px; }
 .nota { text-align: center; margin-top: 26px; font-size: .92rem; }
 
 /* ---------- Dúvidas ---------- */
@@ -141,7 +142,7 @@ details p { margin: 12px 0 0; }
   .hero-interno, .planilhas { grid-template-columns: 1fr; gap: 36px; }
   .grade { grid-template-columns: 1fr 1fr; }
   .planos { grid-template-columns: 1fr; max-width: 440px; margin-inline: auto; }
-  .plano-destaque { transform: none; order: -1; }
+  .plano-destaque { transform: none; }
   .planilhas h2 { text-align: center; }
 }
 @media (max-width: 720px) {
