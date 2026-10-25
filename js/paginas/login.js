@@ -21,7 +21,7 @@
         return { valor: m.id, texto: m.nome + " — " + m.veiculo.modelo };
       }));
     ui.preencherSelect(document.getElementById("escolha-cliente"),
-      App.banco.listarClientes().map(function (c) {
+      App.banco.listarClientes().filter(function (c) { return c.ativo !== false; }).map(function (c) {
         return { valor: c.id, texto: c.nome + (c.empresa ? " (" + c.empresa + ")" : "") };
       }));
   }

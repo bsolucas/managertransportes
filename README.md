@@ -78,6 +78,7 @@ ProjetoAPP/
 │       ├── login.css
 │       ├── gestor.css
 │       ├── planilhas.css      Aba Planilhas do gestor
+│       ├── clientes.css       Aba Clientes e logotipo da empresa no topo
 │       ├── motorista.css
 │       └── cliente.css
 ├── js/                        COMPORTAMENTO
@@ -96,6 +97,7 @@ ProjetoAPP/
 │       ├── login.js
 │       ├── gestor.js
 │       ├── gestor-planilhas.js   Tela da aba Planilhas (anexar, conferir, baixar)
+│       ├── gestor-clientes.js    Empresa do gestor no topo + aba Clientes (cadastro)
 │       ├── motorista.js
 │       └── cliente.js
 └── .vscode/                   Configurações do VS Code para este projeto
@@ -103,6 +105,16 @@ ProjetoAPP/
 
 **Ordem dos scripts:** cada página carrega `config.js` primeiro e o seu
 `js/paginas/*.js` por último, porque os arquivos do meio dependem dos anteriores.
+
+## Empresa do gestor e aba "Clientes"
+
+- **Topo do painel:** mostra o logotipo (sigla em quadradinho azul) e o nome da empresa do gestor.
+  Hoje é o exemplo **GT — Garcia Transportes**; os dados ficam em `js/dados-teste.js` (`empresa`).
+- **Menu → Clientes** (logo abaixo de "Chat"): cadastro das empresas terceirizadas que contratam o
+  transporte e pedem corridas. Dá para criar, editar, ativar/desativar, excluir e buscar.
+  CNPJ e telefone têm máscara; o CNPJ é validado e não pode repetir. Quem já tem corridas não é
+  excluído (desative em vez disso). Clientes inativos somem da lista de entrada do portal do cliente.
+- Os dados ficam no banco local do navegador (`App.banco.salvarCliente`, `excluirCliente`).
 
 ## Planilhas (gestor → aba "Planilhas")
 

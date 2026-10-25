@@ -18,6 +18,13 @@ App.dadosTeste = {
   gestor: { id: "g1", nome: "Gestor Teste", email: "gestor@teste.com" },
 
   /* ---------------------------------------------------------------------------
+     EMPRESA DO GESTOR (aparece no canto superior esquerdo do painel)
+     Dados fictícios de exemplo. "sigla" é o que aparece dentro do logotipo
+     (quadradinho azul); "logo" pode receber o endereço de uma imagem no futuro.
+     --------------------------------------------------------------------------- */
+  empresa: { nome: "Garcia Transportes", sigla: "GT", logo: "" },
+
+  /* ---------------------------------------------------------------------------
      LOCAIS DE TESTE (pontos reais de Guaíba-RS e de Porto Alegre, a ~20 km)
      Usados nos formulários de "origem" e "destino". Coordenadas conferidas
      no OpenStreetMap; os nomes marcados como "Pátio", "Oficina", "Concessionária"
@@ -86,9 +93,14 @@ App.dadosTeste = {
      CLIENTES DE TESTE (quem pede as corridas pelo portal)
      --------------------------------------------------------------------------- */
   clientes: [
-    { id: "c1", nome: "Paula Mendes",   empresa: "Mendes Consultoria", telefone: "(11) 97777-0001" },
-    { id: "c2", nome: "Ricardo Nunes",  empresa: "Auto Center Nunes",  telefone: "(11) 97777-0002" },
-    { id: "c3", nome: "Juliana Torres", empresa: "",                   telefone: "(11) 97777-0003" }
+    /* nome = pessoa de contato | empresa = empresa cliente da Garcia Transportes.
+       cnpj/email/endereco/observacoes/ativo são opcionais (aba "Clientes" do gestor). */
+    { id: "c1", nome: "Paula Mendes",   empresa: "Mendes Consultoria", telefone: "(51) 97777-0001",
+      cnpj: "11.222.333/0001-81", email: "paula@mendesconsultoria.com.br", endereco: "Av. Iguaçu, 120 — Guaíba/RS", observacoes: "", ativo: true },
+    { id: "c2", nome: "Ricardo Nunes",  empresa: "Auto Center Nunes",  telefone: "(51) 97777-0002",
+      cnpj: "", email: "ricardo@autocenternunes.com.br", endereco: "BR-116, km 310 — Guaíba/RS", observacoes: "Pagamento quinzenal.", ativo: true },
+    { id: "c3", nome: "Juliana Torres", empresa: "",                   telefone: "(51) 97777-0003",
+      cnpj: "", email: "", endereco: "", observacoes: "", ativo: true }
   ],
 
   /* ---------------------------------------------------------------------------

@@ -340,6 +340,29 @@ App.banco = (function () {
     return listarClientes().find(function (c) { return c.id === id; }) || null;
   }
   function obterGestor() { return ler("gestor", App.dadosTeste.gestor); }
+  function obterEmpresa() { return ler("empresa", App.dadosTeste.empresa); }
+
+  /* Cadastro de clientes (empresas terceirizadas que pedem corridas).
+     salvarCliente: se o cliente já tem "id", atualiza; senão, cria um novo.
+     Devolve o cliente gravado. */
+  function salvarCliente(dados) {
+    var lista = listarClientes();
+    var cliente = Object.assign({ ativo: true }, dados);
+    if (cliente.id) {
+      lista = lista.map(function (c) { return c.id === cliente.id ? Object.assign({}, c, cliente) : c; });
+    } else {
+      cliente.id = App.utils.novoId("cli");
+      lista.push(cliente);
+    }
+    gravar("clientes", lista);
+    return buscarCliente(cliente.id);
+  }
+
+  /* Remove o cliente do cadastro. Quem tem corridas não pode ser excluído
+     (o histórico precisa do nome); nesse caso o gestor deve "desativar". */
+  function excluirCliente(id) {
+    gravar("clientes", listarClientes().filter(function (c) { return c.id !== id; }));
+  }
 
   /* Apaga tudo o que o app guardou no navegador (menos a preferência da simulação). */
   function limparTudo() {
@@ -374,6 +397,7 @@ App.banco = (function () {
     enviarMensagemSistema: enviarMensagemSistema, naoLidas: naoLidas, marcarLidas: marcarLidas,
     obterTarifas: obterTarifas, salvarTarifas: salvarTarifas,
     listarLocais: listarLocais, buscarLocal: buscarLocal,
-    listarClientes: listarClientes, buscarCliente: buscarCliente, obterGestor: obterGestor
+    listarClientes: listarClientes, buscarCliente: buscarCliente, obterGestor: obterGestor,
+    obterEmpresa: obterEmpresa, salvarCliente: salvarCliente, excluirCliente: excluirCliente
   };
 })();

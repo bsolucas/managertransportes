@@ -4,9 +4,10 @@
      -----------------------------------------------------------------------------
      Estrutura da página (o conteúdo das listas/tabelas é preenchido pelo
      arquivo js/paginas/gestor.js):
-       • Topo ........... nome do app, usuário, botão Sair
+       • Topo ........... logotipo e nome da empresa do gestor (ex.: GT Garcia
+                          Transportes), usuário, botão Sair
        • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
-                          Planilhas | Tarifas | Chat
+                          Planilhas | Tarifas | Chat | Clientes
        • Seções ......... uma <section data-painel="..."> para cada item do menu
      ============================================================================= -->
 <html lang="pt-BR">
@@ -25,13 +26,18 @@
   <link rel="stylesheet" href="../css/mapa.css" />
   <link rel="stylesheet" href="../css/paginas/gestor.css" />
   <link rel="stylesheet" href="../css/paginas/planilhas.css" />
+  <link rel="stylesheet" href="../css/paginas/clientes.css" />
   <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
 </head>
 <body>
 
   <!-- ======================= TOPO ======================= -->
   <header class="topo">
-    <div class="marca"><span class="marca-icone">T</span><span id="nome-app" class="oculto-celular">Transporte App</span></div>
+    <!-- Identidade da empresa do gestor (preenchida por js/paginas/gestor-clientes.js) -->
+    <div class="marca marca-empresa" id="marca-empresa">
+      <span class="marca-icone" id="empresa-sigla">GT</span>
+      <span id="empresa-nome" class="oculto-celular">Garcia Transportes</span>
+    </div>
     <span class="topo-perfil">Gestor</span>
     <div class="topo-espaco"></div>
 
@@ -65,6 +71,7 @@
       <button class="menu-item" data-aba="tarifas"><span class="menu-icone">🏷️</span>Tarifas</button>
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
+      <button class="menu-item" data-aba="clientes"><span class="menu-icone">🏢</span>Clientes</button>
       <div class="menu-rodape">
         <button class="menu-item" id="botao-resetar"><span class="menu-icone">↺</span>Resetar dados de teste</button>
       </div>
@@ -348,6 +355,42 @@
         </div>
       </section>
 
+      <!-- ===================== SEÇÃO: CLIENTES ===================== -->
+      <!-- Cadastro das empresas terceirizadas que contratam o transporte e pedem
+           corridas (js/paginas/gestor-clientes.js). -->
+      <section data-painel="clientes" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Clientes</h1>
+            <p class="texto-suave">Empresas que contratam os serviços de transporte da <span class="nome-empresa-texto">Garcia Transportes</span> e solicitam as corridas.</p>
+          </div>
+          <button class="botao botao-primario" id="novo-cliente">+ Novo cliente</button>
+        </div>
+
+        <div class="indicadores" id="indicadores-clientes"></div>
+
+        <div class="filtros filtros-clientes">
+          <input class="campo" type="search" id="busca-clientes" placeholder="Buscar empresa, CNPJ ou telefone" />
+          <select class="campo" id="filtro-situacao-clientes">
+            <option value="">Todos</option>
+            <option value="ativo">Somente ativos</option>
+            <option value="inativo">Somente inativos</option>
+          </select>
+        </div>
+
+        <div class="tabela-container">
+          <table class="tabela tabela-cartoes tabela-clientes">
+            <thead>
+              <tr>
+                <th>Empresa</th><th>CNPJ</th><th>Telefone</th>
+                <th class="direita">Corridas</th><th class="direita">Total</th><th>Situação</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="tabela-clientes"></tbody>
+          </table>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -370,5 +413,6 @@
   <script src="../js/planilhas.js"></script>
   <script src="../js/paginas/gestor.js"></script>
   <script src="../js/paginas/gestor-planilhas.js"></script>
+  <script src="../js/paginas/gestor-clientes.js"></script>
 </body>
 </html>
