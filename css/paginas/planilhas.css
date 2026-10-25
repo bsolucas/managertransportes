@@ -1,0 +1,55 @@
+/* =============================================================================
+   paginas/planilhas.css — VISUAL DA ABA "PLANILHAS" DO GESTOR
+   ============================================================================= */
+
+/* Área grande e tracejada onde se clica ou se arrasta o arquivo */
+.area-anexo {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; text-align: center; padding: 34px 18px;
+  border: 2px dashed var(--borda); border-radius: var(--raio);
+  background: var(--superficie-2); cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.area-anexo:hover, .area-anexo.arrastando { border-color: var(--azul); background: var(--azul-suave); }
+.area-anexo-icone { font-size: 2rem; }
+
+/* Botões "Baixar" e "Anexar outro" */
+.acoes-planilha { display: flex; gap: 10px; flex-wrap: wrap; margin: var(--espaco) 0; }
+
+/* Lista do que foi corrigido / problemas encontrados */
+.lista-avisos-planilha { list-style: none; margin: 0 0 var(--espaco); padding: 0; display: grid; gap: 6px; }
+.lista-avisos-planilha li {
+  padding: 8px 12px; border-radius: var(--raio-pequeno); font-size: 0.9rem;
+  background: var(--azul-suave); border: 1px solid var(--azul);
+}
+.lista-avisos-planilha li.problema { background: rgba(245, 165, 36, 0.12); border-color: var(--cor-aguardando); }
+.lista-avisos-planilha li:empty { display: none; }
+
+/* Prévia: rola dentro do cartão e a linha de total fica sempre visível embaixo */
+.tabela-rolavel { max-height: 420px; overflow: auto; }
+.tabela-rolavel thead th { position: sticky; top: 0; background: var(--superficie); z-index: 1; }
+.tabela-rolavel tfoot td { position: sticky; bottom: 0; background: var(--superficie-3); font-weight: 700; }
+.tabela-rolavel td { white-space: nowrap; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+
+/* Cartão de atalho na Visão geral: texto à esquerda, botão à direita */
+.atalho-planilha { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: var(--espaco); }
+.atalho-planilha h2 { margin: 0 0 2px; }
+.atalho-planilha p { margin: 0; }
+
+/* Celular: o atalho do topo ocupa pouco espaço, o cartão vira botão de largura total,
+   e o botão de anexar/baixar fica grande o bastante para o toque. */
+@media (max-width: 640px) {
+  .topo-perfil { display: none; }
+  #atalho-topo-planilhas { padding: 8px 10px; white-space: nowrap; }
+  .atalho-planilha { flex-direction: column; align-items: stretch; }
+  .atalho-planilha .botao, .acoes-planilha .botao { width: 100%; min-height: 48px; }
+  .area-anexo { padding: 28px 14px; }
+}
+
+/* As colunas dos cartões podem encolher (senão a tabela estoura a tela no celular) */
+[data-painel="planilhas"] .grade-2 > * { min-width: 0; }
+[data-painel="planilhas"] .tabela-container { overflow-x: auto; }
+@media (max-width: 640px) {
+  [data-painel="planilhas"] .tabela th, [data-painel="planilhas"] .tabela td { padding: 8px 6px; font-size: 0.85rem; }
+  [data-painel="planilhas"] .tabela th { font-size: 0.68rem; }
+}

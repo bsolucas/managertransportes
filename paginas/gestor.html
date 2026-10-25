@@ -6,7 +6,7 @@
      arquivo js/paginas/gestor.js):
        • Topo ........... nome do app, usuário, botão Sair
        • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
-                          Tarifas | Chat
+                          Planilhas | Tarifas | Chat
        • Seções ......... uma <section data-painel="..."> para cada item do menu
      ============================================================================= -->
 <html lang="pt-BR">
@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="../css/componentes.css" />
   <link rel="stylesheet" href="../css/mapa.css" />
   <link rel="stylesheet" href="../css/paginas/gestor.css" />
+  <link rel="stylesheet" href="../css/paginas/planilhas.css" />
   <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
 </head>
 <body>
@@ -41,6 +42,9 @@
       <span class="texto-pequeno oculto-celular">Simulação automática</span>
     </label>
 
+    <!-- Atalho sempre visível (também no celular) para converter planilhas -->
+    <button class="botao botao-primario botao-pequeno" id="atalho-topo-planilhas" data-atalho-planilhas title="Converter planilha CSV em Excel">📊 Planilhas</button>
+
     <div class="topo-usuario">
       <span class="avatar" id="usuario-avatar">G</span>
       <span id="usuario-nome" class="oculto-celular">Gestor</span>
@@ -57,6 +61,7 @@
         <span class="menu-contador" id="contador-aguardando" hidden>0</span></button>
       <button class="menu-item" data-aba="motoristas"><span class="menu-icone">🚗</span>Motoristas</button>
       <button class="menu-item" data-aba="financeiro"><span class="menu-icone">💰</span>Financeiro</button>
+      <button class="menu-item" data-aba="planilhas"><span class="menu-icone">📊</span>Planilhas</button>
       <button class="menu-item" data-aba="tarifas"><span class="menu-icone">🏷️</span>Tarifas</button>
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
@@ -74,6 +79,15 @@
             <h1>Visão geral</h1>
             <p class="texto-suave">Motoristas e corridas em tempo real.</p>
           </div>
+        </div>
+
+        <!-- Atalho grande para converter a planilha da empresa (útil no celular) -->
+        <div class="cartao atalho-planilha">
+          <div>
+            <h2>Converter planilha da empresa</h2>
+            <p class="texto-suave texto-pequeno">Anexe o arquivo CSV e receba o Excel já somado em reais.</p>
+          </div>
+          <button class="botao botao-primario" id="atalho-visao-planilhas" data-atalho-planilhas>📎 Anexar arquivo</button>
         </div>
 
         <!-- Indicadores do dia (preenchidos pelo JS) -->
@@ -193,6 +207,76 @@
         </div>
       </section>
 
+      <!-- ===================== SEÇÃO: PLANILHAS ===================== -->
+      <!-- Anexa o arquivo "CSV" exportado pelo sistema da empresa, conserta, soma
+           e oferece a planilha pronta para baixar (js/paginas/gestor-planilhas.js). -->
+      <section data-painel="planilhas" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Planilhas</h1>
+            <p class="texto-suave">Anexe o arquivo de corridas exportado pelo sistema da empresa. Eu separo as colunas, conserto os acentos, somo os valores em reais e deixo a planilha pronta para baixar.</p>
+          </div>
+        </div>
+
+        <!-- Área de anexar (clique ou arraste o arquivo para cá) -->
+        <div class="cartao">
+          <label class="area-anexo" id="area-anexo" for="arquivo-planilha">
+            <span class="area-anexo-icone">📎</span>
+            <strong>Anexar arquivo</strong>
+            <span class="texto-suave texto-pequeno">Clique aqui ou arraste o arquivo (.csv, .xlsx ou .xls). Nada é enviado para a internet: a conversão acontece no seu navegador.</span>
+          </label>
+          <input type="file" id="arquivo-planilha" accept=".csv,.xlsx,.xls,.txt" hidden />
+          <p class="texto-suave texto-pequeno" id="estado-planilha" role="status"></p>
+        </div>
+
+        <!-- Resultado (aparece depois de anexar) -->
+        <div id="resultado-planilha" hidden>
+          <div class="acoes-planilha">
+            <button class="botao botao-primario" id="baixar-planilha">⬇ Baixar planilha (.xlsx)</button>
+            <button class="botao botao-secundario" id="anexar-outra">Anexar outro arquivo</button>
+          </div>
+
+          <ul class="lista-avisos-planilha" id="avisos-planilha"></ul>
+
+          <div class="indicadores" id="indicadores-planilha"></div>
+
+          <div class="grade-2">
+            <div class="cartao">
+              <h2>Por motorista</h2>
+              <div class="tabela-container">
+                <table class="tabela">
+                  <thead><tr><th>Motorista</th><th class="direita">Corridas</th><th class="direita oculto-celular">Km</th><th class="direita">Valor total</th></tr></thead>
+                  <tbody id="planilha-motoristas"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="cartao">
+              <h2>Por status</h2>
+              <div class="tabela-container">
+                <table class="tabela">
+                  <thead><tr><th>Status</th><th class="direita">Corridas</th><th class="direita">Valor total</th></tr></thead>
+                  <tbody id="planilha-status"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="cartao cartao-espacado">
+            <div class="cartao-cabecalho">
+              <h2>Prévia das corridas</h2>
+              <span class="texto-suave texto-pequeno" id="planilha-previa-info"></span>
+            </div>
+            <div class="tabela-container tabela-rolavel">
+              <table class="tabela">
+                <thead id="planilha-previa-cabecalho"></thead>
+                <tbody id="planilha-previa"></tbody>
+                <tfoot id="planilha-previa-total"></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- ===================== SEÇÃO: TARIFAS ===================== -->
       <section data-painel="tarifas" hidden>
         <div class="cabecalho-secao">
@@ -269,6 +353,8 @@
 
   <!-- Bibliotecas externas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <!-- ExcelJS: lê e gera planilhas .xlsx dentro do navegador (aba Planilhas) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
 
   <!-- Scripts do app (ordem importa) -->
   <script src="../js/config.js"></script>
@@ -281,6 +367,8 @@
   <script src="../js/interface.js"></script>
   <script src="../js/mapa.js"></script>
   <script src="../js/chat.js"></script>
+  <script src="../js/planilhas.js"></script>
   <script src="../js/paginas/gestor.js"></script>
+  <script src="../js/paginas/gestor-planilhas.js"></script>
 </body>
 </html>

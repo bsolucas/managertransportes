@@ -77,6 +77,7 @@ ProjetoAPP/
 │   └── paginas/               Ajustes exclusivos de cada página
 │       ├── login.css
 │       ├── gestor.css
+│       ├── planilhas.css      Aba Planilhas do gestor
 │       ├── motorista.css
 │       └── cliente.css
 ├── js/                        COMPORTAMENTO
@@ -90,9 +91,11 @@ ProjetoAPP/
 │   ├── interface.js           Avisos, janelas (modal), selos de status
 │   ├── mapa.js                Mapa ao vivo (biblioteca Leaflet)
 │   ├── chat.js                Chat de cada corrida
+│   ├── planilhas.js           Converte o CSV da empresa em planilha .xlsx com os totais
 │   └── paginas/               Comportamento de cada página
 │       ├── login.js
 │       ├── gestor.js
+│       ├── gestor-planilhas.js   Tela da aba Planilhas (anexar, conferir, baixar)
 │       ├── motorista.js
 │       └── cliente.js
 └── .vscode/                   Configurações do VS Code para este projeto
@@ -100,6 +103,23 @@ ProjetoAPP/
 
 **Ordem dos scripts:** cada página carrega `config.js` primeiro e o seu
 `js/paginas/*.js` por último, porque os arquivos do meio dependem dos anteriores.
+
+## Planilhas (gestor → aba "Planilhas")
+
+O sistema da empresa exporta um arquivo `.csv` que na verdade é uma planilha do
+Excel com **cada linha inteira dentro da coluna A** (campos separados por vírgula,
+colados numa célula só). Por isso o Excel não soma e os acentos saem quebrados.
+
+Na aba **Planilhas** o gestor anexa (ou arrasta) o arquivo e o app:
+1. separa as 16 colunas e conserta os acentos (`SÃ£o` → `São`);
+2. transforma Km e valores em número e a data em data de verdade;
+3. soma o **Valor Total** e o **Valor Estimado** (em centavos, sem erro de arredondamento),
+   mostra os totais por motorista e por status e uma prévia das corridas;
+4. entrega o `.xlsx` pronto para baixar, com a linha **TOTAL** (fórmula SOMA) e a aba **Resumo**.
+
+Tudo acontece **no navegador** (o arquivo não é enviado a lugar nenhum), com a
+biblioteca ExcelJS. Também aceita um `.csv` de texto comum (separador `,` ou `;`).
+Planilhas `.xls` antigas precisam ser salvas como `.xlsx` antes.
 
 ## Onde mexer para…
 
@@ -113,6 +133,7 @@ ProjetoAPP/
 | Mudar a regra do preço | `js/precos.js` |
 | Deixar a simulação mais rápida ou mais lenta | `js/config.js` → `VELOCIDADE_SIMULADA_KMH` |
 | Tempo até o motorista de teste aceitar sozinho | `js/config.js` → `AUTO_ACEITE_SEGUNDOS` |
+| Mudar o que a planilha convertida mostra (colunas, totais, abas) | `js/planilhas.js` |
 
 ## Regras de preço
 
