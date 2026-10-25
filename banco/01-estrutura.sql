@@ -19,6 +19,8 @@ create table public.empresas (
   nome               text not null,
   sigla              text not null,                  -- aparece no logotipo (ex.: GT)
   logo_url           text,
+  cidade             text,                       -- cidade de atuação (ex.: Guaíba)
+  uf                 text,
   contador_corridas  integer not null default 1000,  -- numeração amigável das corridas
   criada_em          timestamptz not null default now()
 );
