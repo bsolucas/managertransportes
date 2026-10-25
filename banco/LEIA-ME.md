@@ -5,9 +5,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | Arquivo | O que faz |
 |---|---|
 | `01-estrutura.sql` | Cria as tabelas, a numeração automática das corridas e a segurança (RLS) por empresa |
+| `03-planilhas-fechamento-app-notificacoes.sql` | Fechamento quinzenal/mensal, importação de planilhas, preços por cliente, app Android (dispositivos/versões), notificações, posições em tempo real, logins de motorista e cliente |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01 e depois o 02, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02 e o 03, no SQL Editor do Supabase.
 
 ## Tabelas
 
@@ -27,3 +28,5 @@ Ordem: rode o 01 e depois o 02, no SQL Editor do Supabase.
 Usuário do painel → e-mail interno usado no login: `<usuario>@acesso.managertransportes.test`.
 Há dois: `garciatransportes` e `master`. A senha provisória é igual ao nome do usuário.
 **Troque as senhas antes de usar dados reais.**
+
+Decisões tomadas pelo Claude que você pode mudar: veja `DECISOES.md`.
