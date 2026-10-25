@@ -12,7 +12,7 @@ window.App = window.App || {};
 
 App.config = {
   /* Nome exibido no topo das páginas e no título da aba. */
-  NOME_APP: "Transporte App",
+  NOME_APP: "Manager Transportes",
 
   /* Centro inicial do mapa (Guaíba-RS) e zoom padrão. */
   MAPA_CENTRO: [-30.1139, -51.3294],
