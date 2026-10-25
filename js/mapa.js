@@ -17,6 +17,11 @@ App.mapa = {
   criar: function (idElemento) {
     var u = App.utils;
 
+    /* Com chave do Google em config-mapa.js, usa o Google Maps (mapa-google.js). */
+    if (App.mapaConfig && App.mapaConfig.googleChave && App.mapaGoogle) {
+      return App.mapaGoogle.criar(idElemento);
+    }
+
     /* Se o Leaflet não carregou (sem internet), mostra um aviso no lugar. */
     if (typeof L === "undefined") {
       var el = document.getElementById(idElemento);

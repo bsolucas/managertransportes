@@ -25,7 +25,7 @@
   banco.iniciar();
   var usuario = App.sessao.exigir("gestor");
   if (!usuario) return;
-  App.auth.exigirLogin(); // sem login válido no Supabase, volta para a tela inicial
+  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); }); // sem login válido, volta para o início
   ui.montarTopo();
   document.getElementById("usuario-avatar").textContent = u.iniciais(usuario.nome);
 
