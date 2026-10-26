@@ -26,11 +26,16 @@ window.CONFIG = {
   diasTeste: 14,
 
   /* PLANOS — o preço aparece na landing e na página de pagamento a partir daqui.
-     Valor em reais, com ponto decimal (129.90 = R$ 129,90). */
+     Valor em reais, com ponto decimal (129.90 = R$ 129,90).
+     "limites": empresas clientes e funcionários por empresa (null = ilimitado). Por enquanto
+     é só informativo: o sistema ainda não bloqueia cadastros acima do limite. */
   planos: [
-    { id: "basico",       nome: "Básico",       preco: 129.90, descricao: "1 gestor e até 10 veículos" },
-    { id: "profissional", nome: "Profissional", preco: 249.90, descricao: "Até 20 veículos + conversão de planilha" },
-    { id: "empresarial",  nome: "Empresarial",  preco: 329.90, descricao: "Veículos ilimitados + ajustes sob medida" }
+    { id: "basico",       nome: "Básico",       preco: 129.90, descricao: "Até 5 empresas e 100 funcionários por empresa",
+      limites: { empresas: 5, funcionariosPorEmpresa: 100 } },
+    { id: "profissional", nome: "Profissional", preco: 249.90, descricao: "Até 10 empresas e 1.000 funcionários por empresa + conversão de planilha",
+      limites: { empresas: 10, funcionariosPorEmpresa: 1000 } },
+    { id: "empresarial",  nome: "Empresarial",  preco: 329.90, descricao: "Empresas e funcionários ilimitados + ajustes sob medida",
+      limites: { empresas: null, funcionariosPorEmpresa: null } }
   ],
 
   /* PAGAMENTO — deixe pronto para ligar depois (veja js/pagamento.js).

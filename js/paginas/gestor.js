@@ -9,7 +9,7 @@
                               cancelar e chat
      5. Motoristas .......... cartões com situação e ganhos
      6. Financeiro .......... somas por período, motorista, serviço e tipo
-     7. Tarifas ............. edição das regras de preço
+     7. Trajetos e valores .. lista livre de trajetos com o valor de cada um
      8. Chat ................ lista de conversas + conversa aberta
      9. Atualização ......... o que redesenhar quando os dados mudam
    ============================================================================= */
@@ -528,85 +528,66 @@
   }
 
   /* ==========================================================================
-     7. TARIFAS
+     7. TRAJETOS E VALORES
+     --------------------------------------------------------------------------
+     Lista livre: o gestor escreve o nome do trajeto (ex.: "Guaíba x POA Zona Sul")
+     e o valor. Fica em tarifas.dados.trajetos, no Supabase (js/nuvem.js).
      ========================================================================== */
-  var tarifasEditando = null; // cópia que o gestor edita até clicar em "Salvar"
+  var trajetosEditando = [];  // cópia que o gestor edita até clicar em "Salvar valores"
 
   function desenharTarifas() {
-    tarifasEditando = JSON.parse(JSON.stringify(App.nuvem.tarifas()));
-    var t = tarifasEditando;
-
-    document.getElementById("tarifas-servicos").innerHTML = Object.keys(t.servicos).map(function (s) {
-      var x = t.servicos[s];
-      var campo = function (nome) {
-        return '<td><input class="campo" type="number" step="0.01" min="0" data-servico="' + s + '" data-campo="' + nome + '" value="' + x[nome] + '" /></td>';
-      };
-      return "<tr><td>" + App.SERVICOS[s].icone + " " + App.SERVICOS[s].rotulo + "</td>" +
-             campo("base") + campo("porKm") + campo("porMinuto") + campo("minimo") + "</tr>";
-    }).join("");
-
-    document.getElementById("tarifas-ocasioes").innerHTML = Object.keys(t.ocasioes).map(function (k) {
-      return "<tr><td>" + u.escaparHtml(t.ocasioes[k].rotulo) + "</td>" +
-             '<td><input class="campo" type="number" step="0.05" min="1" data-ocasiao="' + k + '" value="' + t.ocasioes[k].multiplicador + '" /></td></tr>';
-    }).join("");
-
-    desenharFixos();
+    var salvos = App.nuvem.tarifas().trajetos || [];
+    trajetosEditando = JSON.parse(JSON.stringify(salvos));
+    desenharTrajetos();
   }
 
-  function desenharFixos() {
-    var locais = App.nuvem.locais();
-    var opLocais = function (sel) {
-      return locais.map(function (l) {
-        return '<option value="' + l.id + '"' + (l.id === sel ? " selected" : "") + ">" + u.escaparHtml(l.nome) + "</option>";
-      }).join("");
-    };
-    var opServicos = function (sel) {
-      return Object.keys(App.SERVICOS).map(function (s) {
-        return '<option value="' + s + '"' + (s === sel ? " selected" : "") + ">" + App.SERVICOS[s].rotulo + "</option>";
-      }).join("");
-    };
-    document.getElementById("tarifas-fixas").innerHTML = tarifasEditando.tabelaFixa.length ? tarifasEditando.tabelaFixa.map(function (f, i) {
+  function desenharTrajetos() {
+    document.getElementById("tarifas-fixas").innerHTML = trajetosEditando.length ? trajetosEditando.map(function (t, i) {
       return "<tr>" +
-        '<td><select class="campo" data-fixo="' + i + '" data-campo="origemId">' + opLocais(f.origemId) + "</select></td>" +
-        '<td><select class="campo" data-fixo="' + i + '" data-campo="destinoId">' + opLocais(f.destinoId) + "</select></td>" +
-        '<td><select class="campo" data-fixo="' + i + '" data-campo="servico">' + opServicos(f.servico) + "</select></td>" +
-        '<td><input class="campo" type="number" step="0.01" min="0" data-fixo="' + i + '" data-campo="valor" value="' + f.valor + '" /></td>' +
-        '<td><button class="botao-icone" data-remover-fixo="' + i + '" title="Remover">✕</button></td>' +
+        '<td><input class="campo" data-trajeto="' + i + '" data-campo="nome" value="' + u.escaparHtml(t.nome) + '" placeholder="Ex.: Guaíba x POA Zona Sul" autocomplete="off" /></td>' +
+        '<td><input class="campo" type="number" step="0.01" min="0" inputmode="decimal" data-trajeto="' + i + '" data-campo="valor" value="' + (t.valor || "") + '" placeholder="0,00" /></td>' +
+        '<td><button class="botao-icone" data-remover-trajeto="' + i + '" title="Remover" aria-label="Remover trajeto">✕</button></td>' +
       "</tr>";
-    }).join("") : '<tr><td colspan="5" class="tabela-vazia">Nenhum valor fixo cadastrado.</td></tr>';
+    }).join("") : '<tr><td colspan="3" class="tabela-vazia">Nenhum trajeto cadastrado. Clique em "+ Novo trajeto".</td></tr>';
   }
 
-  /* Cada digitação atualiza a cópia em edição. */
-  document.querySelector('[data-painel="tarifas"]').addEventListener("input", function (ev) {
+  /* Cada digitação atualiza a cópia em edição (sem redesenhar, para não perder o cursor). */
+  document.getElementById("tarifas-fixas").addEventListener("input", function (ev) {
     var a = ev.target;
-    if (a.hasAttribute("data-servico")) tarifasEditando.servicos[a.getAttribute("data-servico")][a.getAttribute("data-campo")] = Number(a.value) || 0;
-    if (a.hasAttribute("data-ocasiao")) tarifasEditando.ocasioes[a.getAttribute("data-ocasiao")].multiplicador = Math.max(1, Number(a.value) || 1);
-    if (a.hasAttribute("data-fixo")) {
-      var f = tarifasEditando.tabelaFixa[a.getAttribute("data-fixo")];
-      var campo = a.getAttribute("data-campo");
-      f[campo] = campo === "valor" ? Number(a.value) || 0 : a.value;
-    }
+    if (!a.hasAttribute("data-trajeto")) return;
+    var t = trajetosEditando[a.getAttribute("data-trajeto")];
+    var campo = a.getAttribute("data-campo");
+    t[campo] = campo === "valor" ? Number(a.value) || 0 : a.value;
   });
 
   document.getElementById("tarifas-fixas").addEventListener("click", function (ev) {
-    var b = ev.target.closest("[data-remover-fixo]");
+    var b = ev.target.closest("[data-remover-trajeto]");
     if (!b) return;
-    tarifasEditando.tabelaFixa.splice(Number(b.getAttribute("data-remover-fixo")), 1);
-    desenharFixos();
+    trajetosEditando.splice(Number(b.getAttribute("data-remover-trajeto")), 1);
+    desenharTrajetos();
   });
 
   document.getElementById("adicionar-fixo").addEventListener("click", function () {
-    var locais = App.nuvem.locais();
-    if (locais.length < 2) { ui.aviso("Cadastre ao menos dois locais para criar um valor fixo.", "erro"); return; }
-    tarifasEditando.tabelaFixa.push({ id: u.novoId("tf"), origemId: locais[0].id, destinoId: locais[1].id, servico: "carro", valor: 0 });
-    desenharFixos();
+    trajetosEditando.push({ id: u.novoId("tj"), nome: "", valor: 0 });
+    desenharTrajetos();
+    var campos = document.querySelectorAll('#tarifas-fixas [data-campo="nome"]');
+    campos[campos.length - 1].focus();
   });
 
   document.getElementById("salvar-tarifas").addEventListener("click", function () {
-    var invalido = tarifasEditando.tabelaFixa.some(function (f) { return f.origemId === f.destinoId || !(f.valor > 0); });
-    if (invalido) { ui.aviso("Na tabela fixa, origem e destino devem ser diferentes e o valor maior que zero.", "erro"); return; }
-    App.nuvem.salvarTarifas(tarifasEditando).then(function () {
-      ui.aviso("Tarifas salvas. Valem para as próximas corridas.", "sucesso");
+    var nomes = {};
+    for (var i = 0; i < trajetosEditando.length; i++) {
+      var t = trajetosEditando[i];
+      var nome = String(t.nome || "").trim();
+      if (!nome) { ui.aviso("Dê um nome para cada trajeto (ex.: Guaíba x POA Zona Sul).", "erro"); return; }
+      if (!(t.valor > 0)) { ui.aviso("Informe um valor maior que zero para \"" + nome + "\".", "erro"); return; }
+      if (nomes[nome.toLowerCase()]) { ui.aviso("O trajeto \"" + nome + "\" está repetido.", "erro"); return; }
+      nomes[nome.toLowerCase()] = true;
+      t.nome = nome;
+    }
+    var novas = Object.assign({}, App.nuvem.tarifas(), { trajetos: trajetosEditando });
+    App.nuvem.salvarTarifas(novas).then(function () {
+      ui.aviso("Valores salvos. Valem para as próximas corridas.", "sucesso");
     }).catch(function (e) { ui.aviso(e.message, "erro"); });
   });
 

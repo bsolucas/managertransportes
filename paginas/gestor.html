@@ -7,7 +7,7 @@
        • Topo ........... logotipo e nome da empresa do gestor (ex.: GT Garcia
                           Transportes), usuário, botão Sair
        • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
-                          Planilhas | Tarifas | Chat | Clientes
+                          Planilhas | Trajetos e valores | Chat | Clientes
        • Seções ......... uma <section data-painel="..."> para cada item do menu
      ============================================================================= -->
 <html lang="pt-BR">
@@ -77,7 +77,7 @@
       <button class="menu-item" data-aba="motoristas"><span class="menu-icone">🚗</span>Motoristas</button>
       <button class="menu-item" data-aba="financeiro"><span class="menu-icone">💰</span>Financeiro</button>
       <button class="menu-item" data-aba="planilhas"><span class="menu-icone">📊</span>Planilhas</button>
-      <button class="menu-item" data-aba="tarifas"><span class="menu-icone">🏷️</span>Tarifas</button>
+      <button class="menu-item" data-aba="tarifas"><span class="menu-icone">🏷️</span>Valores</button>
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
       <button class="menu-item" data-aba="clientes"><span class="menu-icone">🏢</span>Clientes</button>
@@ -298,50 +298,23 @@
       <section data-painel="tarifas" hidden>
         <div class="cabecalho-secao">
           <div>
-            <h1>Tarifas</h1>
-            <p class="texto-suave">Regras de preço usadas no cálculo automático das corridas.</p>
+            <h1>Trajetos e valores</h1>
+            <p class="texto-suave">Cadastre cada trajeto com o nome que quiser e o valor da corrida. Ex.: <b>Guaíba x POA Zona Sul</b> — R$ 120,00.</p>
           </div>
-          <button class="botao botao-primario" id="salvar-tarifas">Salvar tarifas</button>
+          <button class="botao botao-primario" id="salvar-tarifas">Salvar valores</button>
         </div>
 
-        <div class="grade-2">
-          <!-- Preço variável por serviço -->
-          <div class="cartao">
-            <h2>Preço variável por serviço</h2>
-            <p class="texto-suave texto-pequeno">Valor = base + km × preço/km + minutos × preço/min (respeitando o mínimo).</p>
-            <div class="tabela-container">
-              <table class="tabela tabela-campos">
-                <thead><tr><th>Serviço</th><th>Base</th><th>Por km</th><th>Por min</th><th>Mínimo</th></tr></thead>
-                <tbody id="tarifas-servicos"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Ocasiões (multiplicadores) -->
-          <div class="cartao">
-            <h2>Ocasiões (preço volátil)</h2>
-            <p class="texto-suave texto-pequeno">Multiplicam o valor variável. Ex.: 1,30 = +30%.</p>
-            <div class="tabela-container">
-              <table class="tabela tabela-campos">
-                <thead><tr><th>Ocasião</th><th>Multiplicador</th></tr></thead>
-                <tbody id="tarifas-ocasioes"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tabela de valores fixos -->
-        <div class="cartao cartao-espacado">
+        <div class="cartao">
           <div class="cartao-cabecalho">
             <div>
-              <h2>Valores fixos por trajeto</h2>
-              <p class="texto-suave texto-pequeno">Usados quando a corrida é pedida no modo "valor fixo". Valem também para o trajeto de volta.</p>
+              <h2>Seus trajetos</h2>
+              <p class="texto-suave texto-pequeno">O valor pode ser ajustado em cada corrida, se precisar negociar ou somar extras (pedágio, espera...).</p>
             </div>
-            <button class="botao botao-secundario botao-pequeno" id="adicionar-fixo">+ Adicionar trajeto</button>
+            <button class="botao botao-secundario botao-pequeno" id="adicionar-fixo">+ Novo trajeto</button>
           </div>
           <div class="tabela-container">
             <table class="tabela tabela-campos">
-              <thead><tr><th>Origem</th><th>Destino</th><th>Serviço</th><th>Valor</th><th></th></tr></thead>
+              <thead><tr><th>Trajeto</th><th>Valor (R$)</th><th></th></tr></thead>
               <tbody id="tarifas-fixas"></tbody>
             </table>
           </div>
