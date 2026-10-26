@@ -10,6 +10,14 @@
   document.querySelectorAll("[data-marca]").forEach(function (el) { el.textContent = cfg.marca; });
   document.title = cfg.marca + " — gestão de corridas e motoristas";
 
+  /* Preços dos planos: vêm de js/config.js (o HTML já traz o mesmo valor como reserva). */
+  (cfg.planos || []).forEach(function (plano) {
+    var el = document.querySelector('[data-preco="' + plano.id + '"]');
+    if (!el) return;
+    var partes = plano.preco.toFixed(2).split(".");
+    el.innerHTML = "<span>R$</span> " + partes[0] + "<small>," + partes[1] + "/mês</small>";
+  });
+
   /* Botões de WhatsApp: abrem a conversa já com uma mensagem pronta.
      Se o botão tiver data-plano, a mensagem cita o plano escolhido. */
   document.querySelectorAll("[data-whatsapp]").forEach(function (a) {

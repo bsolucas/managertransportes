@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     pagamento.html — ASSINATURA E PAGAMENTO
+     Escolha do plano, dados do cliente e forma de pagamento (Pix, cartão, boleto).
+     Funciona no celular (Android) e no computador. O gateway de pagamento ainda
+     NÃO está ligado: veja o bloco "pagamento" em js/config.js e as instruções em
+     js/pagamento.js. Estilos em css/pagamento.css (e css/landing.css).
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assinar — Manager Transportes</title>
+  <meta name="theme-color" content="#07080b">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/pagamento.css">
+</head>
+<body>
+
+  <header class="topo">
+    <div class="conteudo topo-interno">
+      <a class="marca" href="index.html"><span class="marca-logo">M</span><span data-marca>Manager Transportes</span></a>
+      <a class="botao botao-borda botao-pequeno" href="index.html#planos">← Planos</a>
+    </div>
+  </header>
+
+  <main class="conteudo pagamento">
+    <h1>Assinar o <span data-marca>Manager Transportes</span></h1>
+    <p class="lead-pagamento" id="texto-teste"></p>
+
+    <form class="pagamento-grade" id="form-pagamento" novalidate>
+
+      <div class="pagamento-coluna">
+
+        <!-- 1. PLANO -->
+        <fieldset class="bloco">
+          <legend><span class="passo">1</span> Escolha o plano</legend>
+          <div class="opcoes-plano" id="opcoes-plano"></div>
+        </fieldset>
+
+        <!-- 2. DADOS DO CLIENTE -->
+        <fieldset class="bloco">
+          <legend><span class="passo">2</span> Seus dados</legend>
+          <div class="campo-grupo">
+            <label for="pg-nome">Nome completo *</label>
+            <input id="pg-nome" autocomplete="name" />
+            <div class="erro-campo" data-erro="nome"></div>
+          </div>
+          <div class="campo-grupo">
+            <label for="pg-empresa">Empresa (opcional)</label>
+            <input id="pg-empresa" autocomplete="organization" />
+          </div>
+          <div class="campo-linha">
+            <div class="campo-grupo">
+              <label for="pg-email">E-mail *</label>
+              <input id="pg-email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" />
+              <div class="erro-campo" data-erro="email"></div>
+            </div>
+            <div class="campo-grupo">
+              <label for="pg-telefone">WhatsApp / telefone *</label>
+              <input id="pg-telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(51) 99999-9999" />
+              <div class="erro-campo" data-erro="telefone"></div>
+            </div>
+          </div>
+          <div class="campo-grupo">
+            <label for="pg-documento">CPF ou CNPJ *</label>
+            <input id="pg-documento" inputmode="numeric" autocomplete="off" placeholder="Somente números" />
+            <div class="erro-campo" data-erro="documento"></div>
+          </div>
+        </fieldset>
+
+        <!-- 3. FORMA DE PAGAMENTO -->
+        <fieldset class="bloco">
+          <legend><span class="passo">3</span> Forma de pagamento</legend>
+          <div class="opcoes-forma" id="opcoes-forma"></div>
+
+          <!-- ÁREA DO PAGAMENTO: é aqui que o gateway (Mercado Pago, Stripe, Asaas...)
+               pode exibir o QR Code do Pix, o formulário seguro do cartão ou o boleto.
+               Os dados do CARTÃO nunca são digitados em campos desta página. -->
+          <div class="area-pagamento" id="area-pagamento" aria-live="polite"></div>
+        </fieldset>
+      </div>
+
+      <!-- RESUMO DO PEDIDO -->
+      <aside class="resumo" aria-label="Resumo do pedido">
+        <h2>Resumo</h2>
+        <div class="resumo-linha"><span>Plano</span><b id="resumo-plano">—</b></div>
+        <div class="resumo-linha"><span>Forma de pagamento</span><b id="resumo-forma">—</b></div>
+        <div class="resumo-linha" id="linha-teste" hidden><span>Teste grátis</span><b id="resumo-teste"></b></div>
+        <div class="resumo-total"><span>Total por mês</span><strong id="resumo-total">—</strong></div>
+        <button class="botao botao-largo" type="submit" id="botao-pagar">Continuar</button>
+        <div class="mensagem" id="mensagem" role="status"></div>
+        <p class="resumo-nota">Sem fidelidade: cancele quando quiser.</p>
+      </aside>
+    </form>
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo">
+      <span>© <span id="ano"></span> <span data-marca>Manager Transportes</span>. Todos os direitos reservados.</span>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/pagamento.js"></script>
+</body>
+</html>

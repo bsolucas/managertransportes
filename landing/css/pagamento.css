@@ -1,0 +1,69 @@
+/* =============================================================================
+   pagamento.css — ESTILO DA PÁGINA DE PAGAMENTO (pagamento.html)
+   Usa as variáveis de css/landing.css. Organização: base, blocos, plano/forma,
+   resumo, celular. Campos com 16px para o celular não dar zoom ao digitar.
+   ============================================================================= */
+
+.topo .botao-pequeno { display: inline-block; }  /* o botão "Voltar" fica visível também no celular */
+.pagamento { padding-top: 36px; padding-bottom: 64px; }
+.pagamento h1 { text-align: left; font-size: clamp(1.6rem, 4vw, 2.2rem); }
+.lead-pagamento { margin-bottom: 28px; }
+
+.pagamento-grade { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+.pagamento-coluna { display: grid; gap: 18px; }
+
+/* ---------- Blocos numerados ---------- */
+.bloco { margin: 0; min-width: 0; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 22px; }
+.bloco legend { display: flex; align-items: center; gap: 10px; padding: 0 6px; font-weight: 700; font-size: 1.05rem; }
+.passo { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--azul); color: #fff; font-size: .85rem; }
+
+/* ---------- Campos ---------- */
+.campo-grupo { margin-top: 14px; }
+.campo-grupo label { display: block; margin-bottom: 6px; font-size: .9rem; color: var(--texto-suave); }
+.campo-grupo input { width: 100%; background: var(--superficie-2); color: var(--texto); border: 1px solid var(--borda); border-radius: 10px; padding: 13px 14px; font: inherit; font-size: 16px; }
+.campo-grupo input:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.campo-grupo input.invalido { border-color: var(--vermelho); }
+.campo-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.erro-campo { color: var(--vermelho); font-size: .82rem; min-height: 1.1em; margin-top: 4px; }
+
+/* ---------- Cartões de escolha (plano e forma de pagamento) ---------- */
+.opcoes-plano, .opcoes-forma { display: grid; gap: 10px; margin-top: 14px; }
+.opcao { position: relative; display: flex; align-items: center; gap: 14px; cursor: pointer; background: var(--superficie-2); border: 2px solid var(--borda); border-radius: 12px; padding: 14px 16px; min-height: 56px; }
+.opcao:hover { border-color: var(--azul-claro); }
+.opcao:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
+.opcao:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--azul-suave); }
+.opcao input { accent-color: var(--azul); width: 20px; height: 20px; flex: none; }
+.opcao-texto { flex: 1; min-width: 0; }
+.opcao-texto b { display: block; color: #fff; }
+.opcao-texto small { color: var(--texto-suave); }
+.opcao-preco { font-weight: 700; color: #fff; white-space: nowrap; }
+.opcao-icone { font-size: 1.5rem; flex: none; }
+
+/* ---------- Área do gateway ---------- */
+.area-pagamento { margin-top: 16px; border: 1px dashed var(--borda); border-radius: 12px; padding: 16px; color: var(--texto-suave); font-size: .92rem; }
+.area-pagamento strong { color: #fff; }
+.area-pagamento p:last-child { margin-bottom: 0; }
+
+/* ---------- Resumo ---------- */
+.resumo { position: sticky; top: 84px; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 22px; }
+.resumo h2 { text-align: left; font-size: 1.2rem; margin-bottom: 14px; }
+.resumo-linha { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--borda); color: var(--texto-suave); font-size: .92rem; }
+.resumo-linha b { color: #fff; text-align: right; }
+.resumo-total { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 18px; border-top: 1px solid var(--borda); }
+.resumo-total strong { font-size: 1.6rem; color: #fff; }
+.botao-largo { width: 100%; font-size: 1.05rem; padding: 15px; cursor: pointer; font-family: inherit; }
+.botao-largo:disabled { opacity: .6; cursor: wait; transform: none; }
+.resumo-nota { margin: 12px 0 0; font-size: .82rem; text-align: center; }
+.mensagem { margin-top: 12px; font-size: .9rem; min-height: 1.2em; }
+.mensagem.erro { color: var(--vermelho); }
+.mensagem.ok { color: var(--verde); }
+
+/* ---------- Celular e tablet ---------- */
+@media (max-width: 860px) {
+  .pagamento-grade { grid-template-columns: 1fr; }
+  .resumo { position: static; }   /* no celular o resumo vem depois dos campos */
+}
+@media (max-width: 560px) {
+  .bloco { padding: 18px 16px; }
+  .campo-linha { grid-template-columns: 1fr; gap: 0; }
+}
