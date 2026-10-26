@@ -50,13 +50,6 @@
     <span class="topo-perfil">Gestor</span>
     <div class="topo-espaco"></div>
 
-    <!-- Liga/desliga os motoristas automáticos da simulação -->
-    <label class="interruptor" title="Motoristas de teste aceitam e fazem corridas sozinhos">
-      <input type="checkbox" id="simulacao-automatica" />
-      <span class="interruptor-trilho"></span>
-      <span class="texto-pequeno oculto-celular">Simulação automática</span>
-    </label>
-
     <!-- Atalho sempre visível (também no celular) para converter planilhas -->
     <button class="botao botao-primario botao-pequeno" id="atalho-topo-planilhas" data-atalho-planilhas title="Converter planilha CSV em Excel">📊 Planilhas</button>
 
@@ -81,9 +74,6 @@
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
       <button class="menu-item" data-aba="clientes"><span class="menu-icone">🏢</span>Clientes</button>
-      <div class="menu-rodape">
-        <button class="menu-item" id="botao-resetar"><span class="menu-icone">↺</span>Resetar dados de teste</button>
-      </div>
     </nav>
 
     <main class="conteudo">
@@ -127,6 +117,7 @@
             <div class="cartao-cabecalho">
               <h2>Corridas ativas</h2>
               <span class="texto-suave texto-pequeno" id="total-ativas"></span>
+              <button class="botao botao-primario botao-pequeno" id="nova-corrida-visao">+ Nova corrida</button>
             </div>
             <div class="lista-corridas lista-rolavel" id="lista-ativas"></div>
           </div>
@@ -140,11 +131,12 @@
             <h1>Corridas</h1>
             <p class="texto-suave">Clique numa corrida para ver detalhes, designar motorista, ajustar valores ou conversar.</p>
           </div>
+          <button class="botao botao-primario" id="nova-corrida">+ Nova corrida</button>
         </div>
 
         <!-- Filtros -->
         <div class="filtros">
-          <input class="campo" type="search" id="filtro-busca" placeholder="Buscar por código, cliente ou endereço" />
+          <input class="campo" type="search" id="filtro-busca" placeholder="Buscar por código, cliente, trajeto ou embarque" />
           <select class="campo" id="filtro-status"></select>
           <select class="campo" id="filtro-servico"></select>
         </div>
@@ -212,10 +204,10 @@
               </div>
             </div>
             <div class="cartao">
-              <h2>Por tipo de preço</h2>
+              <h2>Por trajeto</h2>
               <div class="tabela-container">
                 <table class="tabela">
-                  <thead><tr><th>Tipo</th><th class="direita">Corridas</th><th class="direita">Total</th></tr></thead>
+                  <thead><tr><th>Trajeto</th><th class="direita">Corridas</th><th class="direita">Total</th></tr></thead>
                   <tbody id="financeiro-modos"></tbody>
                 </table>
               </div>
@@ -389,8 +381,6 @@
   <script src="../js/utilitarios.js"></script>
   <script src="../js/dados-teste.js"></script>
   <script src="../js/precos.js"></script>
-  <script src="../js/banco-local.js"></script>
-  <script src="../js/simulacao.js"></script>
   <script src="../js/sessao.js"></script>
   <script src="../js/interface.js"></script>
   <script src="../js/config-mapa.js"></script>

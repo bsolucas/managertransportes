@@ -9,9 +9,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `04-cadastro-motoristas.sql` | Funções `criar_motorista` e `remover_motorista`: o gestor cadastra/remove motoristas com login |
 | `05-cadastro-assinantes.sql` | Tabela `cadastros`: novos assinantes (login Google/Microsoft, CPF/CNPJ, celular). Guia: `CONFIGURAR-LOGIN-GOOGLE-MICROSOFT.md` |
 | `06-clientes-login-nuvem.sql` | Login do cliente (`definir_login_cliente`), `remover_cliente` e atualização ao vivo de clientes/locais/tarifas |
+| `07-corridas-nuvem.sql` | Corridas e chat no Supabase: trajeto + embarque, ordem das situações, motorista "em corrida", chat liberado só após aceitar, mensagens do sistema (tudo por gatilhos no banco) |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05 e o 06, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06 e o 07, no SQL Editor do Supabase.
 
 ## Tabelas
 

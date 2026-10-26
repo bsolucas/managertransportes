@@ -16,7 +16,6 @@
 (function () {
   var u = App.utils;
   var ui = App.ui;
-  var banco = App.banco;
 
   /* ==========================================================================
      1. EMPRESA DO GESTOR (topo da página)
@@ -37,7 +36,7 @@
   }
 
   var sessaoAtual = App.sessao.atual() || {};
-  mostrarEmpresa(sessaoAtual.empresa || banco.obterEmpresa());
+  mostrarEmpresa(sessaoAtual.empresa || { nome: "Minha empresa" });
   App.auth.buscarEmpresa().then(mostrarEmpresa).catch(function () { /* mantém a empresa já mostrada */ });
 
   /* ==========================================================================
@@ -86,7 +85,7 @@
 
   /* Quantas corridas e quanto já foi concluído para cada cliente. */
   function resumoDoCliente(id) {
-    var corridas = banco.listarCorridas().filter(function (c) { return c.clienteId === id; });
+    var corridas = App.nuvem.corridas().filter(function (c) { return c.clienteId === id; });
     var total = corridas.filter(function (c) { return c.status === "concluida"; })
       .reduce(function (s, c) { return s + App.precos.totalCorrida(c); }, 0);
     return { corridas: corridas.length, total: total };
@@ -338,10 +337,7 @@
 
   ui.$('[data-aba="clientes"]').addEventListener("click", desenharClientes);
   App.nuvem.aoMudar(function (chave) {
-    if (chave === "clientes" && abaClientesAberta()) desenharClientes();
-  });
-  banco.aoMudar(function (chave) {
-    if (!abaClientesAberta()) return;
-    if (chave === "corridas" || chave === "tudo") desenharClientes();   // o total de cada cliente vem das corridas
+    /* O total de cada cliente vem das corridas; por isso também redesenha quando elas mudam. */
+    if ((chave === "clientes" || chave === "corridas") && abaClientesAberta()) desenharClientes();
   });
 })();

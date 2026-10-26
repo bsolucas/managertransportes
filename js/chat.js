@@ -6,9 +6,12 @@
    aparecem as mensagens automáticas do sistema).
 
    Uso:
-     var chat = App.chat.criar(elementoContainer);
+     var chat = App.chat.criar(elementoContainer, fonte);
      chat.abrir(corridaId);   // mostra a conversa daquela corrida
      chat.fechar();
+   "fonte" é de onde vêm as corridas e mensagens: App.nuvem (Supabase, usado pelo
+   gestor e pelo motorista) ou App.banco (banco local, usado pelo portal do cliente
+   até a migração terminar). Se não informar, usa App.banco.
 
    O HTML do chat é montado aqui dentro do container; o visual está em
    css/componentes.css (seção CHAT).
@@ -16,8 +19,9 @@
 
 App.chat = {
 
-  criar: function (container) {
+  criar: function (container, fonte) {
     var u = App.utils;
+    fonte = fonte || App.banco;
     var corridaId = null;
     var totalMostrado = -1;
 
@@ -45,7 +49,7 @@ App.chat = {
     }
 
     function desenhar() {
-      var corrida = corridaId ? App.banco.buscarCorrida(corridaId) : null;
+      var corrida = corridaId ? fonte.buscarCorrida(corridaId) : null;
       if (!corrida) {
         elSub.textContent = "";
         elMensagens.innerHTML = '<p class="chat-vazio">Selecione uma corrida para ver a conversa.</p>';
@@ -54,7 +58,7 @@ App.chat = {
         return;
       }
       elSub.textContent = "Corrida " + corrida.codigo;
-      var msgs = App.banco.listarMensagens(corridaId);
+      var msgs = fonte.listarMensagens(corridaId);
       var podeEscrever = liberado(corrida);
       form.hidden = false;
       campo.disabled = !podeEscrever;
@@ -78,7 +82,7 @@ App.chat = {
       }).join("") || '<p class="chat-vazio">Nenhuma mensagem ainda.</p>';
       totalMostrado = msgs.length;
       elMensagens.scrollTop = elMensagens.scrollHeight;
-      App.banco.marcarLidas(corridaId, chaveEu);
+      fonte.marcarLidas(corridaId, chaveEu);
     }
 
     function rotuloPapel(tipo) {
@@ -91,20 +95,28 @@ App.chat = {
       var texto = campo.value.trim();
       if (!texto || !corridaId) return;
       var usuario = App.sessao.atual();
-      App.banco.enviarMensagem(corridaId, usuario, texto);
       campo.value = "";
       campo.focus();
+      /* A nuvem devolve uma Promise (pode recusar, ex.: chat ainda não liberado); o banco local não. */
+      Promise.resolve(fonte.enviarMensagem(corridaId, usuario, texto)).catch(function (e) {
+        App.ui.aviso(e.message || "Não foi possível enviar a mensagem.", "erro");
+      });
     });
 
     /* Redesenha quando chegam mensagens novas (desta ou de outra aba). */
-    App.banco.aoMudar(function (chave) {
+    fonte.aoMudar(function (chave) {
       if (chave === "mensagens" || chave === "corridas" || chave === "tudo") desenhar();
     });
 
     desenhar();
 
     return {
-      abrir: function (id) { corridaId = id; totalMostrado = -1; desenhar(); },
+      abrir: function (id) {
+        corridaId = id;
+        totalMostrado = -1;
+        desenhar();
+        if (fonte.carregarMensagens) fonte.carregarMensagens(id);   // conversa antiga que ainda não está na memória
+      },
       fechar: function () { corridaId = null; desenhar(); },
       corridaAtual: function () { return corridaId; }
     };
