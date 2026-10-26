@@ -16,6 +16,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gestor — Manager Transportes</title>
 
+  <!-- PWA: deixa o app instalável no celular (Android/iPhone) -->
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#0047ff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Manager" />
+  <link rel="icon" type="image/png" href="../icones/icone-192.png" />
+  <link rel="apple-touch-icon" href="../icones/apple-touch-icon.png" />
+
   <!-- Biblioteca de mapas Leaflet (vem da internet) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 
@@ -422,5 +431,8 @@
   <script src="../js/paginas/gestor.js"></script>
   <script src="../js/paginas/gestor-planilhas.js"></script>
   <script src="../js/paginas/gestor-clientes.js"></script>
+
+  <!-- PWA: registra o service worker -->
+  <script src="../js/pwa.js"></script>
 </body>
 </html>

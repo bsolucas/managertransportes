@@ -1,0 +1,7 @@
+<!-- Ícone do app (fonte editável). Os PNGs da pasta são gerados a partir dele. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0047ff"/>
+  <text x="256" y="320" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold"
+        font-size="210" text-anchor="middle" fill="#ffffff">MT</text>
+  <rect x="136" y="352" width="240" height="14" rx="7" fill="#07080b"/>
+</svg>
