@@ -22,6 +22,8 @@
   banco.iniciar();
   var usuario = App.sessao.exigir("motorista");
   if (!usuario) return;
+  App.auth.exigirLogin();          // sem login válido no Supabase, volta para o início
+  App.banco.garantirMotorista(Object.assign({}, usuario.dados, { id: usuario.id, nome: usuario.nome }));
   ui.montarTopo();
   document.getElementById("usuario-avatar").textContent = u.iniciais(usuario.nome);
   App.simulacao.iniciarMotor(); // os OUTROS motoristas de teste continuam agindo

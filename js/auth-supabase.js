@@ -8,6 +8,7 @@
      App.auth.entrar(usuario, senha)  -> Promise com { id, nome, papel, empresa }
      App.auth.exigirLogin()           -> Promise; sem login válido, volta para o início
      App.auth.buscarEmpresa()         -> Promise com os dados atuais da empresa
+     App.auth.buscarMotorista()       -> Promise com o cadastro do motorista logado
      App.auth.sair()                  -> Promise (encerra o login no Supabase)
 
    O login do Supabase fica guardado no navegador. Além dele, cada aba guarda em
@@ -65,9 +66,22 @@ App.auth = (function () {
     });
   }
 
+  /* Cadastro (tabela "motoristas") do motorista logado. A segurança do banco
+     (RLS) só devolve a linha dele; sem cadastro, o login não serve para o app. */
+  function buscarMotorista() {
+    return conexao().auth.getUser().then(function (r) {
+      if (!r.data || !r.data.user) throw new Error("Sem login.");
+      return conexao().from("motoristas").select("id, nome, telefone, servicos, status, veiculo")
+        .eq("user_id", r.data.user.id).maybeSingle();
+    }).then(function (r) {
+      if (r.error || !r.data) throw new Error("Este usuário não tem cadastro de motorista.");
+      return r.data;
+    });
+  }
+
   function sair() {
     try { return conexao().auth.signOut(); } catch (e) { return Promise.resolve(); }
   }
 
-  return { entrar: entrar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, sair: sair, conexao: conexao };
+  return { entrar: entrar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, sair: sair, conexao: conexao };
 })();

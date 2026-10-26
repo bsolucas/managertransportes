@@ -258,6 +258,25 @@ App.banco = (function () {
     return listarMotoristas().find(function (m) { return m.id === id; }) || null;
   }
 
+  /* Motorista com login real (Supabase): o resto do app ainda usa o banco local,
+     então cria aqui uma cópia dele (mesmo id) se ainda não existir. O status
+     "em_corrida" do Supabase não vale aqui: a corrida local é que manda. */
+  function garantirMotorista(dados) {
+    if (buscarMotorista(dados.id)) return buscarMotorista(dados.id);
+    var lista = listarMotoristas();
+    var modelo = lista[0] || {};
+    var novo = {
+      id: dados.id, nome: dados.nome, telefone: dados.telefone || "", avaliacao: 5.0,
+      servicos: dados.servicos && dados.servicos.length ? dados.servicos : ["carro"],
+      status: dados.status === "disponivel" ? "disponivel" : "offline",
+      veiculo: Object.assign({ modelo: "Veículo", placa: "---", cor: "" }, dados.veiculo),
+      rotaLivre: modelo.rotaLivre || []   // percurso de simulação, só para o mapa de teste
+    };
+    lista.push(novo);
+    gravar("motoristas", lista);
+    return novo;
+  }
+
   function atualizarMotorista(id, campos) {
     var lista = listarMotoristas();
     var m = lista.find(function (x) { return x.id === id; });
@@ -391,6 +410,7 @@ App.banco = (function () {
     concluirCorrida: concluirCorrida, cancelarCorrida: cancelarCorrida,
     alterarValores: alterarValores,
     listarMotoristas: listarMotoristas, buscarMotorista: buscarMotorista,
+    garantirMotorista: garantirMotorista,
     atualizarMotorista: atualizarMotorista, corridaAtivaDoMotorista: corridaAtivaDoMotorista,
     marcarControleManual: marcarControleManual, estaSobControleManual: estaSobControleManual,
     listarMensagens: listarMensagens, enviarMensagem: enviarMensagem,

@@ -5,8 +5,9 @@
    2. Preenche as listas de motoristas e clientes de teste.
    3. Ao clicar em "Entrar", guarda o perfil escolhido NESTA aba e abre a
       página correspondente em /paginas.
-   4. "Entrar como gestor" abre uma janela de usuário e senha e faz o login
-      real no Supabase (js/auth-supabase.js).
+   4. "Entrar como gestor" e "Entrar como motorista" abrem uma janela de
+      usuário e senha e fazem o login real no Supabase (js/auth-supabase.js).
+      O cliente ainda é de teste (sem senha).
    ============================================================================= */
 
 (function () {
@@ -16,12 +17,8 @@
   document.getElementById("nome-app").textContent = App.config.NOME_APP;
   document.title = "Entrar • " + App.config.NOME_APP;
 
-  /* Preenche os <select> com os usuários de teste. */
+  /* Preenche a lista de clientes de teste. */
   function preencherListas() {
-    ui.preencherSelect(document.getElementById("escolha-motorista"),
-      App.banco.listarMotoristas().map(function (m) {
-        return { valor: m.id, texto: m.nome + " — " + m.veiculo.modelo };
-      }));
     ui.preencherSelect(document.getElementById("escolha-cliente"),
       App.banco.listarClientes().filter(function (c) { return c.ativo !== false; }).map(function (c) {
         return { valor: c.id, texto: c.nome + (c.empresa ? " (" + c.empresa + ")" : "") };
@@ -30,13 +27,22 @@
   preencherListas();
 
   /* --- Botões "Entrar" ----------------------------------------------------- */
-  /* Gestor: pede usuário e senha antes de abrir o painel. */
-  document.getElementById("entrar-gestor").addEventListener("click", abrirLoginGestor);
+  /* Gestor e motorista: pedem usuário e senha antes de abrir a página. */
+  document.getElementById("entrar-gestor").addEventListener("click", function () {
+    abrirLogin({ titulo: "Entrar como gestor", texto: "Acesso do gestor da empresa.", papeis: ["gestor", "master"],
+                 erroPapel: "Este usuário não é gestor.", destino: "paginas/gestor.html", tipo: "gestor" });
+  });
+  document.getElementById("entrar-motorista").addEventListener("click", function () {
+    abrirLogin({ titulo: "Entrar como motorista", texto: "Use o usuário e a senha que a empresa passou para você.",
+                 papeis: ["motorista"], erroPapel: "Este usuário não é motorista.",
+                 destino: "paginas/motorista.html", tipo: "motorista" });
+  });
 
-  function abrirLoginGestor() {
-    var corpo = ui.abrirModal("Entrar como gestor",
-      '<form id="form-login-gestor" novalidate>' +
-        '<p class="texto-suave texto-pequeno">Acesso do gestor da empresa.</p>' +
+  /* Janela de login. cfg = { titulo, texto, papeis, erroPapel, destino, tipo } */
+  function abrirLogin(cfg) {
+    var corpo = ui.abrirModal(cfg.titulo,
+      '<form id="form-login" novalidate>' +
+        '<p class="texto-suave texto-pequeno">' + cfg.texto + '</p>' +
         '<div class="grupo-campo"><label class="rotulo" for="login-usuario">Usuário</label>' +
           '<input class="campo" id="login-usuario" autocomplete="username" autocapitalize="none" spellcheck="false" /></div>' +
         '<div class="grupo-campo"><label class="rotulo" for="login-senha">Senha</label>' +
@@ -48,7 +54,7 @@
         "</div>" +
       "</form>", { classe: "modal-pequeno" });
 
-    corpo.querySelector("#form-login-gestor").addEventListener("submit", function (ev) {
+    corpo.querySelector("#form-login").addEventListener("submit", function (ev) {
       ev.preventDefault();
       var erro = corpo.querySelector("#erro-login");
       var botao = corpo.querySelector('button[type="submit"]');
@@ -57,8 +63,23 @@
       botao.textContent = "Entrando…";
       App.auth.entrar(corpo.querySelector("#login-usuario").value, corpo.querySelector("#login-senha").value)
         .then(function (acesso) {
-          App.sessao.entrar({ tipo: "gestor", id: acesso.id, nome: acesso.nome, papel: acesso.papel, empresa: acesso.empresa });
-          window.location.href = "paginas/gestor.html";
+          if (cfg.papeis.indexOf(acesso.papel) === -1) {
+            // Login certo, mas é de outro tipo de usuário: encerra e avisa.
+            return App.auth.sair().then(function () { throw new Error(cfg.erroPapel); });
+          }
+          var sessao = { tipo: cfg.tipo, id: acesso.id, nome: acesso.nome, papel: acesso.papel, empresa: acesso.empresa };
+          if (cfg.tipo !== "motorista") return sessao;
+          // Motorista: o id da sessão passa a ser o do cadastro dele (tabela "motoristas").
+          return App.auth.buscarMotorista().then(function (m) {
+            sessao.id = m.id;
+            sessao.nome = m.nome;
+            sessao.dados = m; // usado para criar a cópia local (veja banco.garantirMotorista)
+            return sessao;
+          });
+        })
+        .then(function (sessao) {
+          App.sessao.entrar(sessao);
+          window.location.href = cfg.destino;
         })
         .catch(function (e) {
           erro.textContent = e.message || "Não foi possível entrar.";
@@ -71,12 +92,6 @@
 
     corpo.querySelector("#login-usuario").focus();
   }
-
-  document.getElementById("entrar-motorista").addEventListener("click", function () {
-    var m = App.banco.buscarMotorista(document.getElementById("escolha-motorista").value);
-    App.sessao.entrar({ tipo: "motorista", id: m.id, nome: m.nome });
-    window.location.href = "paginas/motorista.html";
-  });
 
   document.getElementById("entrar-cliente").addEventListener("click", function () {
     var c = App.banco.buscarCliente(document.getElementById("escolha-cliente").value);
