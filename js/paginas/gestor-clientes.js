@@ -9,7 +9,8 @@
      5. Ações ............... editar, ativar/desativar e excluir
 
    "Clientes" são as empresas terceirizadas que contratam o transporte e pedem
-   as corridas. Os dados ficam no banco local (js/banco-local.js).
+   as corridas. Os clientes ficam no Supabase (js/nuvem.js); as corridas ainda no
+   banco local (js/banco-local.js) até a próxima etapa da migração.
    ============================================================================= */
 
 (function () {
@@ -92,7 +93,7 @@
   }
 
   function desenharClientes() {
-    var todos = banco.listarClientes();
+    var todos = App.nuvem.clientes();
     var busca = document.getElementById("busca-clientes").value.trim().toLowerCase();
     var buscaNumeros = soNumeros(busca);
     var situacao = document.getElementById("filtro-situacao-clientes").value;
@@ -122,7 +123,8 @@
         '<td data-rotulo="Empresa"><div class="cliente-empresa">' + ui.avatar(nomeExibido(c)) +
           "<div><strong>" + u.escaparHtml(nomeExibido(c)) + "</strong>" +
           (c.empresa ? "<small>Contato: " + u.escaparHtml(c.nome) + "</small>" : "") +
-          (c.email ? "<small>" + u.escaparHtml(c.email) + "</small>" : "") + "</div></div></td>" +
+          (c.email ? "<small>" + u.escaparHtml(c.email) + "</small>" : "") +
+          (c.temLogin ? "<small>🔑 Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
         '<td data-rotulo="CNPJ" class="nao-quebra">' + u.escaparHtml(c.cnpj || "—") + "</td>" +
         '<td data-rotulo="Telefone" class="nao-quebra">' + u.escaparHtml(c.telefone || "—") + "</td>" +
         '<td data-rotulo="Corridas" class="direita numero">' + r.corridas + "</td>" +
@@ -152,7 +154,8 @@
      4. CADASTRO (janela modal): novo cliente ou edição
      ========================================================================== */
   function abrirFormulario(id) {
-    var c = (id && banco.buscarCliente(id)) || { ativo: true };
+    var c = (id && App.nuvem.buscarCliente(id)) || { ativo: true };
+    var idAtual = id;   // vira o id do cliente assim que ele é gravado (evita duplicar se o login falhar)
     var v = function (campo) { return u.escaparHtml(c[campo] || ""); };
 
     var corpo = ui.abrirModal(id ? "Editar cliente" : "Novo cliente",
@@ -183,6 +186,21 @@
         '<div class="grupo-campo"><label class="rotulo" for="cli-ativo">Situação</label>' +
           '<select class="campo" id="cli-ativo"><option value="1"' + (c.ativo !== false ? " selected" : "") + '>Ativo</option>' +
           '<option value="0"' + (c.ativo === false ? " selected" : "") + ">Inativo</option></select></div>" +
+        '<hr class="separador" />' +
+        '<p class="texto-suave texto-pequeno">' + (c.temLogin
+          ? "Este cliente já tem acesso ao portal. Para trocar a senha, digite uma nova."
+          : "Acesso do cliente ao portal de pedidos (opcional — deixe em branco para cadastrar sem acesso).") + "</p>" +
+        '<div class="linha-campos">' +
+          '<div class="grupo-campo"><label class="rotulo" for="cli-usuario">Usuário de login</label>' +
+            '<input class="campo" id="cli-usuario" value="' + u.escaparHtml(c.usuarioLogin || "") + '"' + (c.temLogin ? " disabled" : "") +
+              ' placeholder="Ex.: mendes.consultoria" autocapitalize="none" spellcheck="false" autocomplete="off" />' +
+            '<div class="erro-campo" data-erro="usuario"></div></div>' +
+          '<div class="grupo-campo"><label class="rotulo" for="cli-senha">' + (c.temLogin ? "Nova senha" : "Senha (mín. 6)") + "</label>" +
+            '<div class="campo-senha"><input class="campo" id="cli-senha" type="password" autocomplete="new-password" />' +
+              '<button type="button" class="botao-olho" id="cli-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button></div>' +
+            '<div class="erro-campo" data-erro="senha"></div></div>' +
+        "</div>" +
+        '<div class="erro-login" id="cli-erro-geral" role="alert"></div>' +
         '<div class="acoes-modal">' +
           '<button type="button" class="botao botao-secundario" data-fechar-modal>Cancelar</button>' +
           '<button type="submit" class="botao botao-primario">' + (id ? "Salvar alterações" : "Cadastrar cliente") + "</button>" +
@@ -191,6 +209,16 @@
 
     var cnpj = corpo.querySelector("#cli-cnpj");
     var telefone = corpo.querySelector("#cli-telefone");
+    var campoSenha = corpo.querySelector("#cli-senha");
+    var olho = corpo.querySelector("#cli-ver-senha");
+    olho.addEventListener("click", function () {
+      var mostrar = campoSenha.type === "password";
+      campoSenha.type = mostrar ? "text" : "password";
+      olho.textContent = mostrar ? "🙈" : "👁";
+      olho.title = mostrar ? "Esconder senha" : "Mostrar senha";
+      campoSenha.focus();
+    });
+
     cnpj.addEventListener("input", function () { cnpj.value = formatarCnpj(cnpj.value); });
     telefone.addEventListener("input", function () { telefone.value = formatarTelefone(telefone.value); });
 
@@ -204,7 +232,7 @@
     corpo.querySelector("#form-cliente").addEventListener("submit", function (ev) {
       ev.preventDefault();
       var dados = {
-        id: id || undefined,
+        id: idAtual || undefined,
         empresa: corpo.querySelector("#cli-empresa").value.trim(),
         nome: corpo.querySelector("#cli-nome").value.trim(),
         cnpj: cnpj.value.trim(),
@@ -222,19 +250,42 @@
       ok = erro("cnpj", !dados.cnpj || cnpjValido(dados.cnpj) ? "" : "CNPJ inválido.") && ok;
       ok = erro("telefone", !dados.telefone || soNumeros(dados.telefone).length >= 10 ? "" : "Telefone incompleto (com DDD).") && ok;
       ok = erro("email", !dados.email || /^\S+@\S+\.\S+$/.test(dados.email) ? "" : "E-mail inválido.") && ok;
+
+      /* Login: para um cliente SEM login, usuário e senha vêm juntos (ou nenhum dos dois). */
+      var usuario = corpo.querySelector("#cli-usuario").value.trim().toLowerCase();
+      var senha = campoSenha.value;
+      var quer = c.temLogin ? senha.length > 0 : (usuario.length > 0 || senha.length > 0);
+      if (quer) {
+        if (!c.temLogin) ok = erro("usuario", /^[a-z0-9._-]{3,30}$/.test(usuario) ? "" : "Use de 3 a 30 letras minúsculas, números, ponto, hífen ou sublinhado.") && ok;
+        ok = erro("senha", senha.length >= 6 ? "" : "A senha precisa ter pelo menos 6 caracteres.") && ok;
+      } else {
+        erro("usuario", ""); erro("senha", "");
+      }
       if (!ok) return;
 
       /* Evita cadastrar a mesma empresa duas vezes (mesmo CNPJ) */
       if (dados.cnpj) {
-        var repetido = banco.listarClientes().some(function (o) {
-          return o.id !== id && soNumeros(o.cnpj) === soNumeros(dados.cnpj);
+        var repetido = App.nuvem.clientes().some(function (o) {
+          return o.id !== idAtual && soNumeros(o.cnpj) === soNumeros(dados.cnpj);
         });
         if (!erro("cnpj", repetido ? "Já existe um cliente com este CNPJ." : "")) return;
       }
 
-      banco.salvarCliente(dados);
-      ui.fecharModal();
-      ui.aviso(id ? "Cliente atualizado." : "Cliente cadastrado.", "sucesso");
+      var erroGeral = corpo.querySelector("#cli-erro-geral");
+      var botao = corpo.querySelector('button[type="submit"]');
+      erroGeral.textContent = "";
+      botao.disabled = true;
+
+      App.nuvem.salvarCliente(dados).then(function (salvo) {
+        idAtual = salvo.id;   // se o login falhar, tentar de novo atualiza em vez de duplicar
+        if (quer) return App.nuvem.definirLoginCliente(salvo.id, usuario, senha);
+      }).then(function () {
+        ui.fecharModal();
+        ui.aviso(id ? "Cliente atualizado." : "Cliente cadastrado.", "sucesso");
+      }).catch(function (e) {
+        erroGeral.textContent = (idAtual && !id ? "O cliente foi salvo, mas o login não: " : "") + (e.message || "Não foi possível salvar.");
+        botao.disabled = false;
+      });
     });
 
     corpo.querySelector("#cli-empresa").focus();
@@ -255,13 +306,14 @@
     if (editar) abrirFormulario(editar);
 
     if (alternar) {
-      var c = banco.buscarCliente(alternar);
-      banco.salvarCliente({ id: c.id, ativo: c.ativo === false });
-      ui.aviso(nomeExibido(c) + (c.ativo === false ? " ativado." : " desativado."), "info");
+      var c = App.nuvem.buscarCliente(alternar);
+      App.nuvem.salvarCliente({ id: c.id, ativo: c.ativo === false }).then(function () {
+        ui.aviso(nomeExibido(c) + (c.ativo === false ? " ativado." : " desativado."), "info");
+      }).catch(function (e) { ui.aviso(e.message, "erro"); });
     }
 
     if (excluir) {
-      var cli = banco.buscarCliente(excluir);
+      var cli = App.nuvem.buscarCliente(excluir);
       var qtd = resumoDoCliente(excluir).corridas;
       if (qtd) {
         ui.aviso(nomeExibido(cli) + " tem " + u.plural(qtd, "corrida", "corridas") + " no histórico. Para não perder o histórico, desative o cliente em vez de excluir.", "erro");
@@ -269,8 +321,9 @@
       }
       ui.confirmar("Excluir " + nomeExibido(cli) + " do cadastro?").then(function (sim) {
         if (!sim) return;
-        banco.excluirCliente(excluir);
-        ui.aviso("Cliente excluído.", "info");
+        App.nuvem.excluirCliente(excluir).then(function () {
+          ui.aviso("Cliente excluído.", "info");
+        }).catch(function (e) { ui.aviso(e.message, "erro"); });
       });
     }
   });
@@ -284,8 +337,11 @@
   }
 
   ui.$('[data-aba="clientes"]').addEventListener("click", desenharClientes);
+  App.nuvem.aoMudar(function (chave) {
+    if (chave === "clientes" && abaClientesAberta()) desenharClientes();
+  });
   banco.aoMudar(function (chave) {
     if (!abaClientesAberta()) return;
-    if (chave === "clientes" || chave === "corridas" || chave === "tudo") desenharClientes();
+    if (chave === "corridas" || chave === "tudo") desenharClientes();   // o total de cada cliente vem das corridas
   });
 })();

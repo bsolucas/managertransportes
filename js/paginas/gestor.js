@@ -25,7 +25,7 @@
   banco.iniciar();
   var usuario = App.sessao.exigir("gestor");
   if (!usuario) return;
-  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); iniciarRastreioReal(); }); // sem login válido, volta para o início
+  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); iniciarRastreioReal(); App.nuvem.iniciar(); }); // sem login válido, volta para o início
   ui.montarTopo();
   document.getElementById("usuario-avatar").textContent = u.iniciais(usuario.nome);
 
@@ -90,7 +90,7 @@
     return lista;
   }
 
-  function nomeCliente(id) { var c = banco.buscarCliente(id); return c ? c.nome : "—"; }
+  function nomeCliente(id) { var c = App.nuvem.buscarCliente(id); return c ? c.nome : "—"; }
   function nomeMotorista(id) { var m = id && banco.buscarMotorista(id); return m ? m.nome : "—"; }
   function eHoje(ms) { return ms && new Date(ms).toDateString() === new Date().toDateString(); }
   function ativa(c) { return c.status === "aguardando" || c.status === "aceita" || c.status === "em_andamento"; }
@@ -250,7 +250,7 @@
     var area = document.getElementById("detalhe-info");
     var c = detalheAberto && banco.buscarCorrida(detalheAberto);
     if (!area || !c) { detalheAberto = null; return; }
-    var cliente = banco.buscarCliente(c.clienteId) || {};
+    var cliente = App.nuvem.buscarCliente(c.clienteId) || {};
     var motorista = c.motoristaId ? banco.buscarMotorista(c.motoristaId) : null;
     var finalizada = c.status === "concluida" || c.status === "cancelada";
 
@@ -533,7 +533,7 @@
   var tarifasEditando = null; // cópia que o gestor edita até clicar em "Salvar"
 
   function desenharTarifas() {
-    tarifasEditando = JSON.parse(JSON.stringify(banco.obterTarifas()));
+    tarifasEditando = JSON.parse(JSON.stringify(App.nuvem.tarifas()));
     var t = tarifasEditando;
 
     document.getElementById("tarifas-servicos").innerHTML = Object.keys(t.servicos).map(function (s) {
@@ -554,7 +554,7 @@
   }
 
   function desenharFixos() {
-    var locais = banco.listarLocais();
+    var locais = App.nuvem.locais();
     var opLocais = function (sel) {
       return locais.map(function (l) {
         return '<option value="' + l.id + '"' + (l.id === sel ? " selected" : "") + ">" + u.escaparHtml(l.nome) + "</option>";
@@ -596,7 +596,8 @@
   });
 
   document.getElementById("adicionar-fixo").addEventListener("click", function () {
-    var locais = banco.listarLocais();
+    var locais = App.nuvem.locais();
+    if (locais.length < 2) { ui.aviso("Cadastre ao menos dois locais para criar um valor fixo.", "erro"); return; }
     tarifasEditando.tabelaFixa.push({ id: u.novoId("tf"), origemId: locais[0].id, destinoId: locais[1].id, servico: "carro", valor: 0 });
     desenharFixos();
   });
@@ -604,8 +605,9 @@
   document.getElementById("salvar-tarifas").addEventListener("click", function () {
     var invalido = tarifasEditando.tabelaFixa.some(function (f) { return f.origemId === f.destinoId || !(f.valor > 0); });
     if (invalido) { ui.aviso("Na tabela fixa, origem e destino devem ser diferentes e o valor maior que zero.", "erro"); return; }
-    banco.salvarTarifas(tarifasEditando);
-    ui.aviso("Tarifas salvas. Valem para as próximas corridas.", "sucesso");
+    App.nuvem.salvarTarifas(tarifasEditando).then(function () {
+      ui.aviso("Tarifas salvas. Valem para as próximas corridas.", "sucesso");
+    }).catch(function (e) { ui.aviso(e.message, "erro"); });
   });
 
   /* ==========================================================================
