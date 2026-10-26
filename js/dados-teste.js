@@ -46,48 +46,12 @@ App.dadosTeste = {
   ],
 
   /* ---------------------------------------------------------------------------
-     MOTORISTAS DE TESTE
-     - status inicial: "disponivel" ou "offline"
-     - rotaLivre: pontos por onde o motorista "circula" quando está livre
-       (a simulação faz ele andar em volta desses pontos sem parar).
+     MOTORISTAS — zerados a pedido do usuário. Os motoristas agora são
+     cadastrados pelo gestor no Supabase (aba Motoristas). Formato antigo de
+     teste, caso precise: { id, nome, telefone, avaliacao, servicos, status,
+     veiculo: { modelo, placa, cor }, rotaLivre: [{ lat, lng }, ...] }
      --------------------------------------------------------------------------- */
-  motoristas: [
-    { id: "m1", nome: "Carlos Souza", telefone: "(11) 98888-0001", avaliacao: 4.9,
-      servicos: ["carro", "utilitario"], status: "disponivel",
-      veiculo: { modelo: "Toyota Corolla", placa: "BRA-2E19", cor: "Prata" },
-      rotaLivre: [{ lat: -30.1139, lng: -51.3294 }, { lat: -30.1083, lng: -51.3132 },
-                  { lat: -30.1165, lng: -51.3180 }, { lat: -30.1209, lng: -51.3378 }] },
-
-    { id: "m2", nome: "Ana Lima", telefone: "(11) 98888-0002", avaliacao: 4.8,
-      servicos: ["carro"], status: "disponivel",
-      veiculo: { modelo: "Honda City", placa: "QWE-4A21", cor: "Preto" },
-      rotaLivre: [{ lat: -30.1083, lng: -51.3132 }, { lat: -30.1097, lng: -51.3165 },
-                  { lat: -30.1165, lng: -51.3180 }, { lat: -30.1129, lng: -51.3312 }] },
-
-    { id: "m3", nome: "João Pereira", telefone: "(11) 98888-0003", avaliacao: 4.7,
-      servicos: ["guincho"], status: "disponivel",
-      veiculo: { modelo: "VW Delivery Plataforma", placa: "GUI-9C88", cor: "Branco" },
-      rotaLivre: [{ lat: -30.1358, lng: -51.3546 }, { lat: -30.1209, lng: -51.3378 },
-                  { lat: -30.1170, lng: -51.3375 }, { lat: -30.1139, lng: -51.3294 }] },
-
-    { id: "m4", nome: "Mariana Costa", telefone: "(11) 98888-0004", avaliacao: 5.0,
-      servicos: ["carro", "utilitario"], status: "disponivel",
-      veiculo: { modelo: "Fiat Fiorino", placa: "FIO-1B23", cor: "Branco" },
-      rotaLivre: [{ lat: -30.0916, lng: -51.3282 }, { lat: -30.1083, lng: -51.3132 },
-                  { lat: -30.1139, lng: -51.3294 }, { lat: -30.1097, lng: -51.3165 }] },
-
-    { id: "m5", nome: "Roberto Alves", telefone: "(11) 98888-0005", avaliacao: 4.6,
-      servicos: ["guincho"], status: "disponivel",
-      veiculo: { modelo: "Ford Cargo Plataforma", placa: "PLT-7D45", cor: "Azul" },
-      rotaLivre: [{ lat: -30.1717, lng: -51.3889 }, { lat: -30.1358, lng: -51.3546 },
-                  { lat: -30.1209, lng: -51.3378 }, { lat: -30.1500, lng: -51.3700 }] },
-
-    { id: "m6", nome: "Fernanda Rocha", telefone: "(11) 98888-0006", avaliacao: 4.9,
-      servicos: ["carro"], status: "offline",
-      veiculo: { modelo: "Hyundai HB20", placa: "HBX-3F67", cor: "Vermelho" },
-      rotaLivre: [{ lat: -30.1209, lng: -51.3378 }, { lat: -30.1170, lng: -51.3375 },
-                  { lat: -30.1139, lng: -51.3294 }, { lat: -30.1129, lng: -51.3312 }] }
-  ],
+  motoristas: [],   // vazio: o gestor cadastra os motoristas (aba Motoristas)
 
   /* ---------------------------------------------------------------------------
      CLIENTES DE TESTE (quem pede as corridas pelo portal)
@@ -137,20 +101,5 @@ App.dadosTeste = {
      painel já abrir com histórico do dia (faturamento, ranking etc.).
      "minAtras" = há quantos minutos a corrida foi pedida.
      --------------------------------------------------------------------------- */
-  corridasIniciais: [
-    { cliente: "c1", motorista: "m1", origem: "l1", destino: "l2", servico: "carro",
-      modo: "fixo", status: "concluida", minAtras: 300, ocasioes: [] },
-    { cliente: "c2", motorista: "m3", origem: "l9", destino: "l10", servico: "guincho",
-      modo: "fixo", status: "concluida", minAtras: 240, ocasioes: ["urgente"],
-      extras: [{ descricao: "Pedágio", valor: 8.50 }] },
-    { cliente: "c3", motorista: "m2", origem: "l3", destino: "l6", servico: "carro",
-      modo: "variavel", status: "concluida", minAtras: 180, ocasioes: ["pico"] },
-    { cliente: "c1", motorista: "m4", origem: "l5", destino: "l7", servico: "utilitario",
-      modo: "variavel", status: "concluida", minAtras: 120, ocasioes: [] },
-    { cliente: "c2", motorista: "m5", origem: "l2", destino: "l11", servico: "guincho",
-      modo: "variavel", status: "concluida", minAtras: 90, ocasioes: ["chuva"],
-      extras: [{ descricao: "Hora de espera", valor: 40.00 }] },
-    { cliente: "c3", motorista: null, origem: "l4", destino: "l1", servico: "carro",
-      modo: "variavel", status: "cancelada", minAtras: 60, ocasioes: [] }
-  ]
+  corridasIniciais: []   // vazio: as corridas passam a ser criadas de verdade
 };

@@ -56,9 +56,11 @@
   var RECENTE_MS = 2 * 60 * 1000; // posição mais velha que isso é ignorada (celular sem sinal)
 
   function carregarMotoristasReais() {
-    App.auth.conexao().from("motoristas").select("id, nome, servicos, status, veiculo").then(function (r) {
-      (r.data || []).forEach(function (m) { cadastroReais[m.id] = m; });
-    });
+    App.motoristasDb.listar().then(function (lista) {
+      cadastroReais = {};   // recomeça: quem foi removido deixa de aparecer
+      lista.forEach(function (m) { cadastroReais[m.id] = m; });
+      desenharMotoristas();
+    }).catch(function () { /* mantém o que já está na tela */ });
   }
   function iniciarRastreioReal() {
     carregarMotoristasReais();
@@ -102,7 +104,7 @@
     var faturamento = concluidasHoje.reduce(function (s, c) { return s + App.precos.totalCorrida(c); }, 0);
     var aguardando = corridas.filter(function (c) { return c.status === "aguardando"; }).length;
     var andamento = corridas.filter(function (c) { return c.status === "aceita" || c.status === "em_andamento"; }).length;
-    var motoristas = banco.listarMotoristas();
+    var motoristas = Object.keys(cadastroReais).map(function (id) { return cadastroReais[id]; });
     var disponiveis = motoristas.filter(function (m) { return m.status === "disponivel"; }).length;
     var online = motoristas.filter(function (m) { return m.status !== "offline"; }).length;
 
@@ -405,46 +407,64 @@
   /* ==========================================================================
      5. MOTORISTAS
      ========================================================================== */
+  /* Os motoristas vêm do Supabase (cadastroReais), cadastrados pelo gestor. */
   function desenharMotoristas() {
     var corridas = banco.listarCorridas();
-    document.getElementById("lista-motoristas").innerHTML = banco.listarMotoristas().map(function (m) {
+    var lista = Object.keys(cadastroReais).map(function (id) { return cadastroReais[id]; });
+    var el = document.getElementById("lista-motoristas");
+    if (!lista.length) {
+      el.innerHTML = '<p class="texto-suave">Nenhum motorista cadastrado. Toque em <strong>+ Novo motorista</strong> para cadastrar o primeiro.</p>';
+      return;
+    }
+    el.innerHTML = lista.map(function (m) {
       var hoje = corridas.filter(function (c) { return c.motoristaId === m.id && c.status === "concluida" && eHoje(c.concluidaEm); });
       var ganhos = hoje.reduce(function (s, c) { return s + App.precos.totalCorrida(c); }, 0);
-      var atual = banco.corridaAtivaDoMotorista(m.id);
-      var manual = banco.estaSobControleManual(m.id);
+      var veiculo = [m.veiculo.modelo, m.veiculo.placa].filter(Boolean).join(" • ");
       return '<div class="cartao cartao-motorista">' +
         '<div class="cartao-motorista-topo">' + ui.avatar(m.nome, "avatar-grande") +
           "<div><h3>" + u.escaparHtml(m.nome) + "</h3>" +
-          '<div class="texto-suave texto-pequeno">' + u.escaparHtml(m.veiculo.modelo + " • " + m.veiculo.placa) + "</div></div></div>" +
+          '<div class="texto-suave texto-pequeno">' + (veiculo ? u.escaparHtml(veiculo) : "Veículo não informado") + "</div></div></div>" +
         "<div>" + ui.seloMotorista(m.status) +
-          (manual ? ' <span class="texto-suave texto-pequeno">• controlado por uma pessoa</span>' : "") + "</div>" +
+          (m.telefone ? ' <span class="texto-suave texto-pequeno">• ' + u.escaparHtml(m.telefone) + "</span>" : "") + "</div>" +
         '<div class="texto-pequeno texto-suave">Serviços: ' + m.servicos.map(function (s) { return App.SERVICOS[s].icone + " " + App.SERVICOS[s].rotulo; }).join(", ") + "</div>" +
-        (atual ? '<div class="texto-pequeno">Na corrida <strong>' + atual.codigo + "</strong> — " + (App.STATUS_CORRIDA[atual.status] || {}).rotulo + "</div>" : "") +
         '<div class="cartao-motorista-numeros">' +
           '<div class="numero-bloco"><strong>' + hoje.length + "</strong><span>corridas hoje</span></div>" +
           '<div class="numero-bloco"><strong>' + u.moeda(ganhos) + "</strong><span>ganhos hoje</span></div>" +
-          '<div class="numero-bloco"><strong>⭐ ' + m.avaliacao + "</strong><span>avaliação</span></div>" +
         "</div>" +
         '<div class="cartao-motorista-acoes">' +
           '<button class="botao botao-secundario botao-pequeno" data-localizar="' + m.id + '">Localizar no mapa</button>' +
-          (m.status === "offline"
-            ? '<button class="botao botao-secundario botao-pequeno" data-status-motorista="' + m.id + '" data-novo="disponivel">Colocar online</button>'
-            : (m.status === "disponivel" ? '<button class="botao botao-secundario botao-pequeno" data-status-motorista="' + m.id + '" data-novo="offline">Colocar offline</button>' : "")) +
+          '<button class="botao botao-perigo botao-pequeno" data-remover-motorista="' + m.id + '">Remover</button>' +
         "</div>" +
       "</div>";
     }).join("");
   }
 
+  document.getElementById("novo-motorista").addEventListener("click", function () {
+    App.gestorMotoristas.abrirCadastro(carregarMotoristasReais);
+  });
+
   document.getElementById("lista-motoristas").addEventListener("click", function (ev) {
     var loc = ev.target.closest("[data-localizar]");
     if (loc) {
-      var m = banco.buscarMotorista(loc.getAttribute("data-localizar"));
+      var p = posicoesReais[loc.getAttribute("data-localizar")];
+      if (!p) { ui.aviso("Este motorista está sem GPS no momento (offline ou sem sinal).", "info"); return; }
       document.querySelector('[data-aba="visao"]').click();
-      mapa.focar(App.simulacao.posicaoMotorista(m), 15);
+      mapa.focar({ lat: p.lat, lng: p.lng }, 15);
       return;
     }
-    var st = ev.target.closest("[data-status-motorista]");
-    if (st) banco.atualizarMotorista(st.getAttribute("data-status-motorista"), { status: st.getAttribute("data-novo") });
+    var rem = ev.target.closest("[data-remover-motorista]");
+    if (rem) {
+      var m = cadastroReais[rem.getAttribute("data-remover-motorista")];
+      if (!m) return;
+      ui.confirmar("Remover o motorista " + m.nome + "? O login dele será apagado e ele não conseguirá mais entrar no app.").then(function (sim) {
+        if (!sim) return;
+        App.motoristasDb.remover(m.id).then(function () {
+          ui.aviso("Motorista removido.", "sucesso");
+          delete posicoesReais[m.id];
+          carregarMotoristasReais();
+        }).catch(function (e) { ui.aviso(e.message || "Não foi possível remover.", "erro"); });
+      });
+    }
   });
 
   /* ==========================================================================

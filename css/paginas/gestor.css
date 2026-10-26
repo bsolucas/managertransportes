@@ -49,3 +49,8 @@
 .extras-linha { display: grid; grid-template-columns: 1fr 120px 32px; gap: 8px; margin-bottom: 8px; }
 .acoes-corrida { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 .chat-no-detalhe { height: 420px; }
+
+/* --- Janela "Novo motorista": serviços em linha e botão de remover --- */
+.opcoes-servico { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.opcao-servico { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.9rem; }
+.separador { border: 0; border-top: 1px solid var(--borda); margin: 14px 0; }

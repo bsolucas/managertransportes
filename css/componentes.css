@@ -68,6 +68,15 @@ textarea.campo { resize: vertical; min-height: 70px; }
 
 .rotulo { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--texto-suave); }
 .grupo-campo { margin-bottom: 14px; }
+/* Campo de senha com o botão "olho" (mostrar/esconder) dentro, à direita */
+.campo-senha { position: relative; }
+.campo-senha .campo { padding-right: 46px; }
+.botao-olho {
+  position: absolute; top: 0; right: 0; height: 100%; width: 44px;
+  background: none; border: 0; cursor: pointer; font-size: 1.1rem; color: var(--texto-suave);
+}
+.botao-olho:hover, .botao-olho:focus-visible { color: var(--texto); }
+
 .linha-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* Caixinhas de marcar (ocasiões de preço) em formato de "pílula" */

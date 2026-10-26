@@ -23,7 +23,7 @@ App.banco = (function () {
   /* Aumente este número sempre que mudar os DADOS DE TESTE (locais, motoristas...).
      Navegadores com dados de uma versão antiga recomeçam com os dados novos.
      v1 = São Paulo | v2 = Guaíba-RS */
-  var VERSAO_DADOS = 2;
+  var VERSAO_DADOS = 3;   // 3 = motoristas e corridas de teste zerados
 
   /* ------------------------------------------------------------------------
      Leitura e gravação básicas (com JSON)
@@ -270,7 +270,8 @@ App.banco = (function () {
       servicos: dados.servicos && dados.servicos.length ? dados.servicos : ["carro"],
       status: dados.status === "disponivel" ? "disponivel" : "offline",
       veiculo: Object.assign({ modelo: "Veículo", placa: "---", cor: "" }, dados.veiculo),
-      rotaLivre: modelo.rotaLivre || []   // percurso de simulação, só para o mapa de teste
+      // percurso de simulação (só para o mapa de teste); sem modelo, fica parado no centro do mapa
+      rotaLivre: modelo.rotaLivre || [{ lat: App.config.MAPA_CENTRO[0], lng: App.config.MAPA_CENTRO[1] }]
     };
     lista.push(novo);
     gravar("motoristas", lista);
