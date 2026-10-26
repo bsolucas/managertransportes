@@ -46,13 +46,29 @@
         '<div class="grupo-campo"><label class="rotulo" for="login-usuario">Usuário</label>' +
           '<input class="campo" id="login-usuario" autocomplete="username" autocapitalize="none" spellcheck="false" /></div>' +
         '<div class="grupo-campo"><label class="rotulo" for="login-senha">Senha</label>' +
-          '<input class="campo" id="login-senha" type="password" autocomplete="current-password" /></div>' +
+          '<div class="campo-senha">' +
+            '<input class="campo" id="login-senha" type="password" autocomplete="current-password" />' +
+            '<button type="button" class="botao-olho" id="ver-senha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha">👁</button>' +
+          '</div></div>' +
         '<div class="erro-login" id="erro-login" role="alert"></div>' +
         '<div class="acoes-modal">' +
           '<button type="button" class="botao botao-secundario" data-fechar-modal>Cancelar</button>' +
           '<button type="submit" class="botao botao-primario">Entrar</button>' +
         "</div>" +
       "</form>", { classe: "modal-pequeno" });
+
+    /* Olho: alterna entre senha escondida e visível. */
+    var campoSenha = corpo.querySelector("#login-senha");
+    var botaoOlho = corpo.querySelector("#ver-senha");
+    botaoOlho.addEventListener("click", function () {
+      var mostrar = campoSenha.type === "password";
+      campoSenha.type = mostrar ? "text" : "password";
+      botaoOlho.textContent = mostrar ? "🙈" : "👁";
+      botaoOlho.setAttribute("aria-pressed", mostrar ? "true" : "false");
+      botaoOlho.setAttribute("aria-label", mostrar ? "Esconder senha" : "Mostrar senha");
+      botaoOlho.title = mostrar ? "Esconder senha" : "Mostrar senha";
+      campoSenha.focus();
+    });
 
     corpo.querySelector("#form-login").addEventListener("submit", function (ev) {
       ev.preventDefault();
