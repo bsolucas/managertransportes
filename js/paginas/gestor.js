@@ -25,7 +25,7 @@
   banco.iniciar();
   var usuario = App.sessao.exigir("gestor");
   if (!usuario) return;
-  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); }); // sem login válido, volta para o início
+  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); iniciarRastreioReal(); }); // sem login válido, volta para o início
   ui.montarTopo();
   document.getElementById("usuario-avatar").textContent = u.iniciais(usuario.nome);
 
@@ -49,12 +49,43 @@
   });
 
   /* Lista de motoristas com a posição de AGORA (usada no mapa e nas listas). */
+  /* Motoristas REAIS (login no Supabase) com GPS ligado: aparecem no mapa na
+     posição que o celular deles enviou. Os de teste continuam simulados. */
+  var posicoesReais = {};    // motorista_id -> { lat, lng, atualizada_em }
+  var cadastroReais = {};    // motorista_id -> { id, nome, servicos, status, veiculo }
+  var RECENTE_MS = 2 * 60 * 1000; // posição mais velha que isso é ignorada (celular sem sinal)
+
+  function carregarMotoristasReais() {
+    App.auth.conexao().from("motoristas").select("id, nome, servicos, status, veiculo").then(function (r) {
+      (r.data || []).forEach(function (m) { cadastroReais[m.id] = m; });
+    });
+  }
+  function iniciarRastreioReal() {
+    carregarMotoristasReais();
+    setInterval(carregarMotoristasReais, 15000); // pega mudanças de situação (disponível/em corrida)
+    App.rastreio.carregarTodas().then(function (lista) {
+      lista.forEach(function (p) { posicoesReais[p.motorista_id] = p; });
+    });
+    App.rastreio.assinar(function (p) {
+      if (p.removida) { delete posicoesReais[p.motorista_id]; return; }
+      posicoesReais[p.motorista_id] = p;
+      if (!cadastroReais[p.motorista_id]) carregarMotoristasReais(); // motorista novo
+    });
+  }
+
   function motoristasComPosicao() {
     var agora = Date.now();
     var focoMotorista = corridaDestacada ? (banco.buscarCorrida(corridaDestacada) || {}).motoristaId : null;
-    return banco.listarMotoristas().map(function (m) {
+    var lista = banco.listarMotoristas().filter(function (m) { return !posicoesReais[m.id]; }).map(function (m) {
       return { motorista: m, posicao: App.simulacao.posicaoMotorista(m, agora), destaque: m.id === focoMotorista };
     });
+    Object.keys(posicoesReais).forEach(function (id) {
+      var p = posicoesReais[id];
+      var m = cadastroReais[id];
+      if (!m || agora - new Date(p.atualizada_em).getTime() > RECENTE_MS) return;
+      lista.push({ motorista: m, posicao: { lat: p.lat, lng: p.lng }, destaque: id === focoMotorista });
+    });
+    return lista;
   }
 
   function nomeCliente(id) { var c = banco.buscarCliente(id); return c ? c.nome : "—"; }

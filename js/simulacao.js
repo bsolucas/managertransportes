@@ -89,6 +89,9 @@ App.simulacao = (function () {
     agora = agora || Date.now();
     if (!motorista) return null;
 
+    /* 0) GPS real deste aparelho (motorista com login), quando estiver ligado. */
+    if (App.posicaoReal && App.posicaoReal[motorista.id]) return App.posicaoReal[motorista.id];
+
     /* 1) Em corrida: anda pelo trecho atual. */
     var corrida = App.banco.corridaAtivaDoMotorista(motorista.id);
     if (corrida) {

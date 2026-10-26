@@ -3,7 +3,7 @@
    -----------------------------------------------------------------------------
    Organização:
      1. Preparação (e "batida de coração" que avisa que há uma pessoa aqui)
-     2. Disponível / Offline
+     2. Disponível / Offline (e GPS)
      3. Corrida atual (iniciar, concluir, cancelar)
      4. Corridas disponíveis (aceitar)
      5. Mapa e chat
@@ -61,6 +61,34 @@
     chkDisp.checked = m.status !== "offline";
     chkDisp.disabled = m.status === "em_corrida"; // não dá para ficar offline no meio da corrida
     document.getElementById("disponibilidade-texto").textContent = App.STATUS_MOTORISTA[m.status].rotulo;
+    sincronizarGps();
+  }
+
+  /* GPS: enquanto o motorista NÃO está offline, manda a posição real do aparelho
+     ao Supabase (o gestor vê no mapa). Ao ficar offline, para e apaga a posição. */
+  var elGps = document.getElementById("gps-estado");
+  var pararGps = null;       // função que encerra o envio (null = GPS desligado)
+  var statusEnviado = null;  // último status gravado no banco
+
+  function sincronizarGps() {
+    var status = eu().status;
+    var deveEnviar = status !== "offline";
+    if (deveEnviar && !pararGps) {
+      elGps.textContent = "📡 Procurando GPS…";
+      pararGps = App.rastreio.iniciarEnvio(usuario.id, usuario.empresa.id, null, {
+        aoPosicao: function () { elGps.textContent = "📡 GPS ativo"; },
+        aoErro: function (texto) { elGps.textContent = "⚠️ GPS sem sinal"; elGps.title = texto; ui.aviso(texto, "erro"); }
+      });
+    } else if (!deveEnviar && pararGps) {
+      pararGps();
+      pararGps = null;
+      App.rastreio.removerPosicao(usuario.id);
+      elGps.textContent = "";
+    }
+    if (status !== statusEnviado) {
+      statusEnviado = status;
+      App.rastreio.definirStatus(usuario.id, status);
+    }
   }
 
   chkDisp.addEventListener("change", function () {
