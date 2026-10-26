@@ -2,7 +2,7 @@
    pagamento.js — COMPORTAMENTO DA PÁGINA DE PAGAMENTO (pagamento.html)
    -----------------------------------------------------------------------------
    Organização:
-     1. Dados e ajudantes (moeda, máscaras, CPF/CNPJ)
+     1. Dados e ajudantes (formas de pagamento; máscaras vêm de validacao.js)
      2. Plano e forma de pagamento (cartões de escolha e resumo)
      3. Validação do formulário
      4. Envio: como o pedido é entregue ao pagamento
@@ -19,7 +19,8 @@
        e escreva o nome em config.pagamento.provedor. A "areaPagamento" é a
        caixa da tela onde o gateway pode desenhar o QR Code do Pix, o formulário
        seguro do cartão etc.
-     • Sem nada configurado: o pedido é enviado pelo WhatsApp.
+     • Sem nada configurado: a página avisa que o pagamento online abre em breve
+       (se houver config.whatsapp, o pedido vai por lá como plano B).
    Por segurança, esta página NUNCA pede número de cartão: isso fica sempre na
    tela segura do gateway.
    ============================================================================= */
@@ -39,48 +40,12 @@
   };
   var formasAtivas = (pg.formas || ["pix", "cartao", "boleto"]).filter(function (f) { return FORMAS[f]; });
 
+  var V = window.Validacao;   // máscaras e validações (js/validacao.js)
+  var moeda = V.moeda, soNumeros = V.soNumeros, escapar = V.escapar;
+  var formatarTelefone = V.formatarTelefone, formatarDocumento = V.formatarDocumento;
+  var documentoValido = V.documentoValido;
+
   function $(id) { return document.getElementById(id); }
-  function moeda(v) { return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
-  function soNumeros(t) { return String(t || "").replace(/\D/g, ""); }
-  function escapar(t) { return String(t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
-
-  function formatarTelefone(t) {
-    var d = soNumeros(t).slice(0, 11);
-    if (d.length <= 2) return d;
-    if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
-    if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
-    return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
-  }
-  function formatarDocumento(t) {
-    var d = soNumeros(t).slice(0, 14);
-    if (d.length <= 11) {
-      return d.replace(/^(\d{3})(\d)/, "$1.$2").replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1-$2");
-    }
-    return d.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d)/, "$1-$2");
-  }
-
-  /* Dígitos verificadores de CPF (11) e CNPJ (14). */
-  function digito(base, pesos) {
-    var soma = 0;
-    for (var i = 0; i < pesos.length; i++) soma += Number(base[i]) * pesos[i];
-    var resto = soma % 11;
-    return resto < 2 ? 0 : 11 - resto;
-  }
-  function documentoValido(texto) {
-    var d = soNumeros(texto);
-    if (/^(\d)\1+$/.test(d)) return false; // 000.000.000-00 etc.
-    if (d.length === 11) {
-      var c1 = digito(d, [10, 9, 8, 7, 6, 5, 4, 3, 2]);
-      var c2 = digito(d.slice(0, 9) + c1, [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]);
-      return d === d.slice(0, 9) + c1 + c2;
-    }
-    if (d.length === 14) {
-      var n1 = digito(d, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-      var n2 = digito(d.slice(0, 12) + n1, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
-      return d === d.slice(0, 12) + n1 + n2;
-    }
-    return false;
-  }
 
   /* ==========================================================================
      2. PLANO E FORMA DE PAGAMENTO
@@ -131,8 +96,11 @@
       area.innerHTML = "<p>Ao continuar, você será levado ao ambiente seguro de pagamento para concluir com <strong>" +
         FORMAS[formaAtual].rotulo + "</strong>.</p>";
     } else {
-      area.innerHTML = "<p><strong>Pagamento online em breve.</strong> Por enquanto, ao continuar enviamos o seu pedido pelo WhatsApp " +
-        "e combinamos o pagamento por <strong>" + FORMAS[formaAtual].rotulo + "</strong>.</p>";
+      area.innerHTML = cfg.whatsapp
+        ? "<p><strong>Pagamento online em breve.</strong> Por enquanto, ao continuar enviamos o seu pedido pelo WhatsApp " +
+          "e combinamos o pagamento por <strong>" + FORMAS[formaAtual].rotulo + "</strong>.</p>"
+        : "<p><strong>Pagamento online em breve.</strong> Estamos finalizando a ativação da cobrança. " +
+          "Você já pode conferir o plano e a forma de pagamento.</p>";
     }
   }
 
@@ -143,7 +111,7 @@
     var dias = Number(cfg.diasTeste) || 0;
     $("linha-teste").hidden = !dias;
     $("resumo-teste").textContent = dias + " dias";
-    $("botao-pagar").textContent = gatewayLigado() ? "Ir para o pagamento" : "Continuar pelo WhatsApp";
+    $("botao-pagar").textContent = gatewayLigado() ? "Ir para o pagamento" : (cfg.whatsapp ? "Continuar pelo WhatsApp" : "Continuar");
   }
 
   /* ==========================================================================
@@ -209,7 +177,7 @@
       "CPF/CNPJ: " + formatarDocumento(pedido.cliente.documento)
     ].filter(Boolean);
     if (!cfg.whatsapp) {
-      return Promise.reject(new Error("O WhatsApp da empresa ainda não foi configurado. Tente novamente mais tarde."));
+      return Promise.reject(new Error("A assinatura online ainda não está disponível. Tente novamente em breve."));
     }
     window.location.href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent(linhas.join("\n"));
     return Promise.resolve();

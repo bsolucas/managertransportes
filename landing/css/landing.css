@@ -120,8 +120,6 @@ ul, ol { margin: 0; padding: 0; }
 .plano li { padding: 8px 0 8px 26px; position: relative; color: var(--texto-suave); border-top: 1px solid var(--borda); }
 .plano li::before { content: "✔"; position: absolute; left: 0; color: var(--azul-claro); }
 .plano li b { color: #fff; }
-.plano-assinar { display: block; text-align: center; margin-top: 14px; color: var(--azul-claro); font-weight: 600; text-decoration: none; font-size: .95rem; }
-.plano-assinar:hover { color: #fff; text-decoration: underline; }
 .nota-plano { color: var(--azul-claro); font-weight: 600; margin-bottom: 14px; }
 .nota { text-align: center; margin-top: 26px; font-size: .92rem; }
 

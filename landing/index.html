@@ -3,7 +3,7 @@
      index.html — LANDING PAGE DO SISTEMA DE TRANSPORTES
      Página de apresentação e venda. Fica separada do app que já está no ar.
      Estilos em css/landing.css e comportamento em js/landing.js.
-     Para trocar nome da marca, WhatsApp e link do sistema: edite js/config.js
+     Para trocar nome da marca, planos, preços e link do sistema: edite js/config.js
      ============================================================================= -->
 <html lang="pt-BR">
 <head>
@@ -26,7 +26,7 @@
         <a href="#planos">Planos</a>
         <a href="#duvidas">Dúvidas</a>
       </nav>
-      <a class="botao botao-pequeno" data-whatsapp href="#">Falar no WhatsApp</a>
+      <a class="botao botao-pequeno" href="cadastro.html">Assinar agora</a>
       <button class="menu-botao" id="menu-botao" aria-label="Abrir menu" aria-expanded="false">☰</button>
     </div>
   </header>
@@ -41,7 +41,7 @@
           <h1>Controle suas corridas e feche o mês <em>sem planilha bagunçada</em></h1>
           <p>Acompanhe motoristas e corridas em um painel simples, que funciona no celular. E converta o arquivo que a sua empresa gera em uma planilha XLSX limpa, já com o total em reais.</p>
           <div class="hero-botoes">
-            <a class="botao" data-whatsapp href="#">Quero testar 14 dias grátis</a>
+            <a class="botao" href="cadastro.html">Quero testar 14 dias grátis</a>
             <a class="botao botao-borda" data-sistema href="#">Ver o sistema</a>
           </div>
           <ul class="hero-lista">
@@ -113,7 +113,7 @@
             <li><b>Baixe</b> a planilha XLSX pronta, com a linha de total e o resumo.</li>
           </ol>
           <p class="nota-plano">Disponível a partir do plano Profissional.</p>
-          <a class="botao" data-whatsapp href="#">Quero ver funcionando</a>
+          <a class="botao" href="cadastro.html">Quero assinar agora</a>
         </div>
         <div class="resultado" aria-hidden="true">
           <div class="resultado-linha"><span>Corridas</span><b>297</b></div>
@@ -141,8 +141,7 @@
               <li>Área do motorista</li>
               <li>Mapa das corridas</li>
             </ul>
-            <a class="botao botao-borda" data-whatsapp data-plano="Básico" href="#">Começar teste grátis</a>
-            <a class="plano-assinar" href="pagamento.html?plano=basico">Já quero assinar →</a>
+            <a class="botao botao-borda" href="cadastro.html?plano=basico">Começar teste grátis</a>
           </article>
 
           <article class="plano plano-destaque">
@@ -155,8 +154,7 @@
               <li><b>Conversão de planilha CSV → XLSX</b></li>
               <li>Soma por motorista e por status</li>
             </ul>
-            <a class="botao" data-whatsapp data-plano="Profissional" href="#">Começar teste grátis</a>
-            <a class="plano-assinar" href="pagamento.html?plano=profissional">Já quero assinar →</a>
+            <a class="botao" href="cadastro.html?plano=profissional">Começar teste grátis</a>
           </article>
 
           <article class="plano">
@@ -168,8 +166,7 @@
               <li>Veículos ilimitados</li>
               <li>Ajustes sob medida</li>
             </ul>
-            <a class="botao botao-borda" data-whatsapp data-plano="Empresarial" href="#">Começar teste grátis</a>
-            <a class="plano-assinar" href="pagamento.html?plano=empresarial">Já quero assinar →</a>
+            <a class="botao botao-borda" href="cadastro.html?plano=empresarial">Começar teste grátis</a>
           </article>
         </div>
         <p class="nota">Implantação opcional, paga uma única vez. Fale com a gente para combinar.</p>
@@ -192,7 +189,7 @@
       <div class="conteudo">
         <h2>Pronto para fechar o mês em minutos?</h2>
         <p>Peça seu teste grátis de 14 dias.</p>
-        <a class="botao botao-branco" data-whatsapp href="#">Falar no WhatsApp</a>
+        <a class="botao botao-branco" href="cadastro.html">Assinar agora</a>
       </div>
     </section>
   </main>

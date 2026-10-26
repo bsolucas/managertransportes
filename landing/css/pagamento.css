@@ -4,7 +4,7 @@
    resumo, celular. Campos com 16px para o celular não dar zoom ao digitar.
    ============================================================================= */
 
-.topo .botao-pequeno { display: inline-block; }  /* o botão "Voltar" fica visível também no celular */
+.topo .botao-pequeno { display: inline-block; white-space: nowrap; }  /* o botão "Voltar" fica visível também no celular */
 .pagamento { padding-top: 36px; padding-bottom: 64px; }
 .pagamento h1 { text-align: left; font-size: clamp(1.6rem, 4vw, 2.2rem); }
 .lead-pagamento { margin-bottom: 28px; }

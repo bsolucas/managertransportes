@@ -6,9 +6,11 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 |---|---|
 | `01-estrutura.sql` | Cria as tabelas, a numeração automática das corridas e a segurança (RLS) por empresa |
 | `03-planilhas-fechamento-app-notificacoes.sql` | Fechamento quinzenal/mensal, importação de planilhas, preços por cliente, app Android (dispositivos/versões), notificações, posições em tempo real, logins de motorista e cliente |
+| `04-cadastro-motoristas.sql` | Funções `criar_motorista` e `remover_motorista`: o gestor cadastra/remove motoristas com login |
+| `05-cadastro-assinantes.sql` | Tabela `cadastros`: novos assinantes (login Google/Microsoft, CPF/CNPJ, celular). Guia: `CONFIGURAR-LOGIN-GOOGLE-MICROSOFT.md` |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02 e o 03, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04 e o 05, no SQL Editor do Supabase.
 
 ## Tabelas
 
