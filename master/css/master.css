@@ -1,0 +1,134 @@
+/* =============================================================================
+   master.css — ESTILO DO PAINEL DO DONO (azul forte + preto, como o resto do sistema)
+   Organização: cores, base, entrada, topo, indicadores, abas, tabelas, selos, janela, celular.
+   ============================================================================= */
+
+:root {
+  --azul: #0047ff; --azul-escuro: #0033c2; --azul-claro: #4d7fff; --azul-suave: rgba(0, 71, 255, .14);
+  --preto: #07080b; --superficie: #101218; --superficie-2: #171a22; --borda: #272c38;
+  --texto: #f1f3f8; --texto-suave: #9aa3b6; --verde: #22c55e; --amarelo: #f5a524; --vermelho: #ef4444;
+  --fonte: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--preto); color: var(--texto); font-family: var(--fonte); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0 0 10px; line-height: 1.25; }
+p { margin: 0 0 10px; }
+[hidden] { display: none !important; }
+.suave { color: var(--texto-suave); }
+.direita { text-align: right; }
+.conteudo { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+.cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 24px; }
+
+/* ---------- Botões e campos ---------- */
+.botao { display: inline-block; background: var(--azul); color: #fff; border: 2px solid var(--azul); border-radius: 10px; padding: 12px 22px; font: inherit; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; }
+.botao:hover:not(:disabled) { background: var(--azul-escuro); border-color: var(--azul-escuro); }
+.botao:disabled { opacity: .6; cursor: wait; }
+.botao-borda { background: transparent; border-color: var(--borda); color: var(--texto); }
+.botao-borda:hover:not(:disabled) { background: var(--superficie-2); border-color: var(--azul-claro); }
+.botao-pequeno { padding: 8px 14px; font-size: .9rem; white-space: nowrap; }
+.botao-largo { width: 100%; font-size: 1.05rem; padding: 14px; }
+.botao-icone { background: none; border: 0; color: var(--texto-suave); font-size: 1.1rem; cursor: pointer; padding: 6px 10px; }
+.botao-icone:hover { color: #fff; }
+
+.campo-grupo { margin-bottom: 14px; }
+.campo-grupo label { display: block; margin-bottom: 6px; font-size: .9rem; color: var(--texto-suave); }
+input, select { width: 100%; background: var(--superficie-2); color: var(--texto); border: 1px solid var(--borda); border-radius: 10px; padding: 12px 14px; font: inherit; font-size: 16px; }
+input:focus, select:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.campo-senha { position: relative; }
+.campo-senha input { padding-right: 46px; }
+.botao-olho { position: absolute; top: 0; right: 0; height: 100%; width: 44px; background: none; border: 0; cursor: pointer; font-size: 1.1rem; color: var(--texto-suave); }
+.mensagem { min-height: 1.2em; margin-bottom: 10px; font-size: .9rem; color: var(--vermelho); }
+
+/* ---------- Entrada ---------- */
+.entrada { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.entrada-cartao { width: 100%; max-width: 400px; }
+.marca { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+.marca-logo { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--azul); color: #fff; font-weight: 800; flex: none; }
+.entrada-cartao .marca { margin-bottom: 8px; }
+
+/* ---------- Topo ---------- */
+.topo { position: sticky; top: 0; z-index: 10; background: rgba(7, 8, 11, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borda); }
+.topo-interno { display: flex; align-items: center; gap: 14px; min-height: 64px; }
+.topo-interno .marca { margin-right: auto; }
+.topo small { font-weight: 400; }
+.painel { padding-top: 24px; padding-bottom: 60px; }
+
+/* ---------- Indicadores ---------- */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 26px; }
+.indicador { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 18px; }
+.indicador-rotulo { color: var(--texto-suave); font-size: .85rem; }
+.indicador-valor { font-size: 1.8rem; font-weight: 800; margin: 4px 0; white-space: nowrap; }
+.indicador-detalhe { color: var(--texto-suave); font-size: .8rem; }
+.indicador-destaque { border-color: var(--azul); background: linear-gradient(180deg, rgba(0, 71, 255, .16), var(--superficie)); }
+
+/* ---------- Abas e filtros ---------- */
+.abas { display: flex; gap: 6px; border-bottom: 1px solid var(--borda); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+.abas::-webkit-scrollbar { display: none; }
+.aba { background: none; border: 0; border-bottom: 3px solid transparent; color: var(--texto-suave); font: inherit; font-weight: 600; padding: 12px 16px; cursor: pointer; white-space: nowrap; }
+.aba.ativo { color: #fff; border-bottom-color: var(--azul); }
+.contador { display: inline-block; min-width: 22px; padding: 1px 7px; margin-left: 4px; background: var(--superficie-2); border-radius: 999px; font-size: .78rem; text-align: center; }
+.filtros { display: grid; grid-template-columns: 1fr 220px; gap: 12px; margin-bottom: 16px; }
+
+/* ---------- Tabelas ---------- */
+.tabela-container { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; overflow-x: auto; }
+.tabela { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tabela th { text-align: left; color: var(--texto-suave); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; padding: 12px 14px; border-bottom: 1px solid var(--borda); white-space: nowrap; }
+.tabela th.direita { text-align: right; }
+.tabela td { padding: 13px 14px; border-bottom: 1px solid var(--borda); vertical-align: middle; }
+.tabela tr:last-child td { border-bottom: 0; }
+.tabela tbody tr.clicavel { cursor: pointer; }
+.tabela tbody tr.clicavel:hover { background: var(--superficie-2); }
+.tabela-vazia { text-align: center; color: var(--texto-suave); padding: 30px 14px !important; }
+.nao-quebra { white-space: nowrap; }
+.empresa-celula strong { display: block; }
+.empresa-celula small { color: var(--texto-suave); }
+.nota { margin-top: 14px; font-size: .82rem; text-align: right; }
+
+/* ---------- Selos de situação ---------- */
+.selo { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+.selo-ativa { background: rgba(34, 197, 94, .15); color: var(--verde); }
+.selo-teste, .selo-aguardando_pagamento { background: rgba(245, 165, 36, .15); color: var(--amarelo); }
+.selo-suspensa, .selo-cancelada { background: rgba(239, 68, 68, .15); color: var(--vermelho); }
+.selo-ativado { background: rgba(34, 197, 94, .15); color: var(--verde); }
+
+/* ---------- Janela de detalhe ---------- */
+.modal-fundo { position: fixed; inset: 0; background: rgba(0, 0, 0, .7); display: grid; place-items: center; padding: 20px; z-index: 50; }
+.modal { width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; background: var(--superficie); border: 1px solid var(--borda); border-radius: 16px; }
+.modal-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 22px; border-bottom: 1px solid var(--borda); }
+.modal-cabecalho h2 { margin: 0; font-size: 1.2rem; }
+.modal-corpo { padding: 18px 22px 24px; }
+.lista-dados { display: grid; grid-template-columns: 150px 1fr; gap: 8px 14px; margin: 0 0 16px; }
+.lista-dados dt { color: var(--texto-suave); }
+.lista-dados dd { margin: 0; word-break: break-word; }
+
+/* ---------- Celular pequeno: topo compacto e indicadores em duas colunas ---------- */
+@media (max-width: 560px) {
+  .conteudo { padding: 0 14px; }
+  .topo-interno { gap: 8px; }
+  .marca { font-size: 1rem; white-space: nowrap; }
+  .topo small { display: none; }
+  .botao-pequeno { padding: 8px 11px; }
+  .indicadores { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .indicadores .indicador:first-child { grid-column: 1 / -1; }
+  .indicador { padding: 14px; }
+  .indicador-valor { font-size: 1.45rem; }
+  .aba { padding: 12px 11px; }
+}
+
+/* ---------- Celular: tabelas viram cartões ---------- */
+@media (max-width: 860px) {
+  .oculto-celular { display: none; }
+  .filtros { grid-template-columns: 1fr; }
+  .tabela-cartoes thead { display: none; }
+  .tabela-cartoes, .tabela-cartoes tbody, .tabela-cartoes tr, .tabela-cartoes td { display: block; width: 100%; }
+  .tabela-container { background: none; border: 0; overflow: visible; }
+  .tabela-cartoes tr { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 8px 14px; margin-bottom: 12px; }
+  .tabela-cartoes td { border: 0; display: flex; justify-content: space-between; gap: 14px; padding: 7px 0; text-align: right; }
+  .tabela-cartoes td::before { content: attr(data-rotulo); color: var(--texto-suave); text-align: left; flex: none; }
+  .tabela-cartoes td.direita { text-align: right; }
+  .tabela-cartoes td.tabela-vazia { display: block; text-align: center; }
+  .tabela-cartoes td.tabela-vazia::before { content: none; }
+  .lista-dados { grid-template-columns: 1fr; gap: 2px; }
+  .lista-dados dd { margin-bottom: 8px; }
+}

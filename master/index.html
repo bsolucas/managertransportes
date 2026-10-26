@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- =============================================================================
+     master/index.html — PAINEL DO DONO DO MANAGER TRANSPORTES
+     Mostra todas as empresas que assinam o sistema e os cadastros novos.
+     Nenhuma página do site ou do app tem link para cá. A proteção de verdade está
+     no banco (banco/08-painel-dono.sql): só quem estiver na tabela "donos" recebe
+     os dados. Como liberar o seu e-mail: banco/CONFIGURAR-PAINEL-DONO.md
+     Estilos em css/master.css e comportamento em js/master.js.
+     ============================================================================= -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel do dono</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#07080b">
+  <link rel="stylesheet" href="css/master.css">
+</head>
+<body>
+
+  <!-- ===== ENTRAR ===== -->
+  <main class="entrada" id="tela-entrar" hidden>
+    <form class="cartao entrada-cartao" id="form-entrar" novalidate>
+      <div class="marca"><span class="marca-logo">M</span><span>Painel do dono</span></div>
+      <p class="suave">Acesso restrito.</p>
+      <div class="campo-grupo">
+        <label for="en-email">E-mail</label>
+        <input id="en-email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" />
+      </div>
+      <div class="campo-grupo">
+        <label for="en-senha">Senha</label>
+        <div class="campo-senha">
+          <input id="en-senha" type="password" autocomplete="current-password" />
+          <button type="button" class="botao-olho" id="ver-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button>
+        </div>
+      </div>
+      <div class="mensagem" id="erro-entrar" role="alert"></div>
+      <button class="botao botao-largo" type="submit" id="botao-entrar">Entrar</button>
+    </form>
+  </main>
+
+  <!-- ===== PAINEL ===== -->
+  <div id="tela-painel" hidden>
+    <header class="topo">
+      <div class="conteudo topo-interno">
+        <div class="marca"><span class="marca-logo">M</span><span>Manager Transportes <small class="suave">· dono</small></span></div>
+        <span class="suave oculto-celular" id="usuario-email"></span>
+        <button class="botao botao-borda botao-pequeno" id="botao-atualizar" title="Atualizar agora" aria-label="Atualizar">↻<span class="oculto-celular"> Atualizar</span></button>
+        <button class="botao botao-borda botao-pequeno" id="botao-sair">Sair</button>
+      </div>
+    </header>
+
+    <main class="conteudo painel">
+      <div class="mensagem" id="erro-painel" role="alert"></div>
+
+      <section class="indicadores" id="indicadores" aria-label="Resumo"></section>
+
+      <nav class="abas" aria-label="Seções">
+        <button class="aba ativo" data-aba="empresas">Empresas <span class="contador" id="cont-empresas">0</span></button>
+        <button class="aba" data-aba="cadastros">Cadastros novos <span class="contador" id="cont-cadastros">0</span></button>
+      </nav>
+
+      <div class="filtros">
+        <input id="busca" type="search" placeholder="Buscar por nome, cidade, e-mail, CPF/CNPJ…" />
+        <select id="filtro-situacao"></select>
+      </div>
+
+      <section data-painel="empresas">
+        <div class="tabela-container">
+          <table class="tabela tabela-cartoes">
+            <thead>
+              <tr><th>Empresa</th><th>Plano</th><th>Situação</th><th class="direita">Clientes</th><th class="direita">Motoristas</th>
+                  <th class="direita">Corridas 30 d</th><th>Última corrida</th><th class="direita">Mensal</th></tr>
+            </thead>
+            <tbody id="tabela-empresas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section data-painel="cadastros" hidden>
+        <div class="tabela-container">
+          <table class="tabela tabela-cartoes">
+            <thead>
+              <tr><th>Quando</th><th>Responsável</th><th>Empresa</th><th>CPF / CNPJ</th><th>Contato</th><th>Plano</th><th>Situação</th></tr>
+            </thead>
+            <tbody id="tabela-cadastros"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="suave nota" id="rodape-atualizado"></p>
+    </main>
+  </div>
+
+  <!-- Janela de detalhe -->
+  <div class="modal-fundo" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <div class="modal-cabecalho"><h2 id="modal-titulo"></h2><button class="botao-icone" id="modal-fechar" aria-label="Fechar">✕</button></div>
+      <div class="modal-corpo" id="modal-corpo"></div>
+    </div>
+  </div>
+
+  <!-- Biblioteca do Supabase e dados públicos de conexão -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script>var App = {};</script>
+  <script src="../js/config-supabase.js"></script>
+  <script src="js/master.js"></script>
+</body>
+</html>
