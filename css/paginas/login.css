@@ -65,3 +65,16 @@
 .faixa-landing:hover { background: var(--azul); }
 .faixa-landing-seta { font-weight: 600; color: var(--azul-claro); white-space: nowrap; }
 .faixa-landing:hover .faixa-landing-seta { color: #fff; }
+
+/* Cadeado discreto do acesso do dono: quase invisível até passar o mouse ou tocar */
+.acesso-dono {
+  display: block;
+  width: 36px;
+  margin: 18px auto 0;
+  text-align: center;
+  font-size: 0.85rem;
+  text-decoration: none;
+  opacity: 0.18;
+  transition: opacity 0.15s;
+}
+.acesso-dono:hover, .acesso-dono:focus-visible { opacity: 0.8; }
