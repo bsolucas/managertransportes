@@ -57,7 +57,7 @@
     var m0 = eu();
     document.getElementById("veiculo-motorista").textContent = [m0.veiculo.modelo, m0.veiculo.placa].filter(Boolean).join(" • ");
     var elServicos = document.getElementById("servicos-motorista");
-    elServicos.textContent = m0.servicos.map(function (s) { return App.SERVICOS[s].icone; }).join(" ");
+    elServicos.innerHTML = m0.servicos.map(function (s) { return App.SERVICOS[s].icone; }).join(" ");
     elServicos.title = "Seus serviços: " + m0.servicos.map(function (s) { return App.SERVICOS[s].rotulo; }).join(", ");
 
     /* ========================================================================
@@ -81,10 +81,10 @@
     function sincronizarGps() {
       var deveEnviar = eu().status !== "offline";
       if (deveEnviar && !pararGps) {
-        elGps.textContent = "📡 Procurando GPS…";
+        elGps.innerHTML = App.icone("satellite-dish") + " Procurando GPS…";
         pararGps = App.rastreio.iniciarEnvio(usuario.id, usuario.empresa.id, null, {
-          aoPosicao: function () { elGps.textContent = "📡 GPS ativo"; },
-          aoErro: function (texto) { elGps.textContent = "⚠️ GPS sem sinal"; elGps.title = texto; ui.aviso(texto, "erro"); }
+          aoPosicao: function () { elGps.innerHTML = App.icone("satellite-dish") + " GPS ativo"; },
+          aoErro: function (texto) { elGps.innerHTML = App.icone("triangle-alert") + " GPS sem sinal"; elGps.title = texto; ui.aviso(texto, "erro"); }
         });
       } else if (!deveEnviar && pararGps) {
         pararGps();

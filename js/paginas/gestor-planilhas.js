@@ -96,14 +96,14 @@
     var titulos = r.dados.colunas.map(function (c) { return c.titulo; });
 
     /* Avisos: o que foi corrigido + valores que não deu para entender */
-    var itens = r.avisos.map(function (a) { return "<li>✔ " + u.escaparHtml(a) + "</li>"; });
+    var itens = r.avisos.map(function (a) { return "<li>" + App.icone("check") + " " + u.escaparHtml(a) + "</li>"; });
     if (r.dados.registros.some(function (reg) { return reg.some(function (v) { return typeof v === "string" && /[ÃÂ][\u0080-¿]/.test(v); }); })) {
       itens.push('<li class="problema">Ainda há textos com acento estranho; confira a prévia.</li>');
     }
-    r.problemas.slice(0, 5).forEach(function (p) { itens.push('<li class="problema">⚠ ' + u.escaparHtml(p) + "</li>"); });
-    if (r.problemas.length > 5) itens.push('<li class="problema">⚠ … e mais ' + (r.problemas.length - 5) + " valores que não entendi.</li>");
+    r.problemas.slice(0, 5).forEach(function (p) { itens.push('<li class="problema">' + App.icone("triangle-alert") + ' ' + u.escaparHtml(p) + "</li>"); });
+    if (r.problemas.length > 5) itens.push('<li class="problema">' + App.icone("triangle-alert") + ' … e mais ' + (r.problemas.length - 5) + " valores que não entendi.</li>");
     var outrosStatus = r.totais.porStatus.length > 1;
-    if (outrosStatus) itens.push('<li class="problema">⚠ O arquivo tem corridas com mais de um status; o total soma TODAS. Veja "Por status" abaixo.</li>');
+    if (outrosStatus) itens.push('<li class="problema">' + App.icone("triangle-alert") + ' O arquivo tem corridas com mais de um status; o total soma TODAS. Veja "Por status" abaixo.</li>');
     document.getElementById("avisos-planilha").innerHTML = itens.join("");
 
     /* Indicadores principais */

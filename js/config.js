@@ -59,10 +59,10 @@ App.STATUS_MOTORISTA = {
   offline:    { rotulo: "Offline",    classe: "motorista-offline" }
 };
 
-/* Tipos de serviço que a empresa oferece. */
+/* Tipos de serviço que a empresa oferece. O ícone de cada um é colocado por js/icones.js. */
 App.SERVICOS = {
-  carro:      { rotulo: "Carro / táxi (passageiros)",   icone: "🚗" },
-  van:        { rotulo: "Van / fretamento",             icone: "🚐" },
-  onibus:     { rotulo: "Ônibus",                       icone: "🚌" },
-  utilitario: { rotulo: "Utilitário / carga leve",      icone: "📦" }
+  carro:      { rotulo: "Carro / táxi (passageiros)",   icone: "" },
+  van:        { rotulo: "Van / fretamento",             icone: "" },
+  onibus:     { rotulo: "Ônibus",                       icone: "" },
+  utilitario: { rotulo: "Utilitário / carga leve",      icone: "" }
 };

@@ -332,7 +332,7 @@
       return '<div class="extras-linha">' +
         '<input class="campo" data-extra-desc="' + i + '" placeholder="Descrição (ex.: pedágio)" value="' + u.escaparHtml(e.descricao) + '"' + (c.status === "cancelada" ? " disabled" : "") + " />" +
         '<input class="campo" type="number" step="0.01" min="0" data-extra-valor="' + i + '" value="' + e.valor + '" />' +
-        '<button class="botao-icone" data-acao="remover-extra" data-indice="' + i + '" title="Remover">✕</button>' +
+        '<button class="botao-icone" data-acao="remover-extra" data-indice="' + i + '" title="Remover">' + App.icone("x") + '</button>' +
       "</div>";
     }).join("");
     var totalExtras = extrasEditando.reduce(function (s, e) { return s + (Number(e.valor) || 0); }, 0);
@@ -577,7 +577,7 @@
       return "<tr>" +
         '<td><input class="campo" data-trajeto="' + i + '" data-campo="nome" value="' + u.escaparHtml(t.nome) + '" placeholder="Ex.: Guaíba x POA Zona Sul" autocomplete="off" /></td>' +
         '<td><input class="campo" type="number" step="0.01" min="0" inputmode="decimal" data-trajeto="' + i + '" data-campo="valor" value="' + (t.valor || "") + '" placeholder="0,00" /></td>' +
-        '<td><button class="botao-icone" data-remover-trajeto="' + i + '" title="Remover" aria-label="Remover trajeto">✕</button></td>' +
+        '<td><button class="botao-icone" data-remover-trajeto="' + i + '" title="Remover" aria-label="Remover trajeto">' + App.icone("x") + '</button></td>' +
       "</tr>";
     }).join("") : '<tr><td colspan="3" class="tabela-vazia">Nenhum trajeto cadastrado. Clique em "+ Novo trajeto".</td></tr>';
   }

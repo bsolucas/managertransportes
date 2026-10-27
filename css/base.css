@@ -70,6 +70,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* Elementos com o atributo "hidden" ficam realmente escondidos. */
 [hidden] { display: none !important; }
 
+/* Ícones (js/icones.js, Lucide): traço fino, herdam a cor do texto */
+.ico { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.18em; }
+
 /* Barra de rolagem escura (Chrome/Edge). */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--preto); }

@@ -48,15 +48,15 @@ App.mapa = {
     var camadaCorrida = L.layerGroup().addTo(mapa);
     var camadaPontos = L.layerGroup().addTo(mapa);
 
-    /* Ícone de motorista: um círculo com as iniciais e o emoji do serviço.
+    /* Ícone de motorista: um círculo com as iniciais e o ícone do serviço.
        A classe CSS muda conforme o status (disponível, em corrida, offline). */
     function iconeMotorista(m, destaque) {
       var classeStatus = (App.STATUS_MOTORISTA[m.status] || {}).classe || "";
-      var emoji = (App.SERVICOS[m.servicos[0]] || {}).icone || "🚗";
+      var icone = (App.SERVICOS[m.servicos[0]] || {}).icone || App.icone("car-front");
       return L.divIcon({
         className: "marcador-motorista " + classeStatus + (destaque ? " marcador-destaque" : ""),
         html: '<span class="marcador-iniciais">' + u.iniciais(m.nome) + "</span>" +
-              '<span class="marcador-emoji">' + emoji + "</span>",
+              '<span class="marcador-icone">' + icone + "</span>",
         iconSize: [38, 38],
         iconAnchor: [19, 19]
       });

@@ -46,7 +46,7 @@
 .perfil-icone {
   width: 52px; height: 52px; border-radius: 14px;
   display: grid; place-items: center; font-size: 1.6rem;
-  background: var(--azul-suave);
+  background: var(--azul-suave); color: var(--azul-claro);
 }
 
 .login-rodape {
@@ -63,7 +63,7 @@
   margin: 0 auto 20px; max-width: 900px; padding: 14px 18px; border-radius: var(--raio);
   background: var(--azul-suave); border: 1px solid var(--azul); color: var(--texto); text-decoration: none; }
 .faixa-landing:hover { background: var(--azul); }
-.faixa-landing-seta { font-weight: 600; color: var(--azul-claro); white-space: nowrap; }
+.faixa-landing-seta { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--azul-claro); white-space: nowrap; }
 .faixa-landing:hover .faixa-landing-seta { color: #fff; }
 
 /* Cadeado discreto do acesso do dono: quase invisível até passar o mouse ou tocar */
@@ -75,6 +75,7 @@
   font-size: 0.85rem;
   text-decoration: none;
   opacity: 0.18;
+  color: var(--texto-suave);
   transition: opacity 0.15s;
 }
 .acesso-dono:hover, .acesso-dono:focus-visible { opacity: 0.8; }

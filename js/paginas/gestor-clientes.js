@@ -28,7 +28,7 @@
   function ajustarModo(empresa) {
     individual = empresa.modo_uso === "individual";
     var botao = ui.$('[data-aba="clientes"]');
-    botao.innerHTML = '<span class="menu-icone">🏢</span>' + (individual ? "Meus clientes" : "Clientes");
+    botao.innerHTML = '<span class="menu-icone">' + App.icone("building-2") + '</span>' + (individual ? "Meus clientes" : "Clientes");
     var secao = ui.$('[data-painel="clientes"]');
     secao.classList.toggle("modo-individual", individual);
     secao.querySelector("h1").textContent = individual ? "Meus clientes" : "Clientes";
@@ -141,16 +141,16 @@
           "<div><strong>" + u.escaparHtml(nomeExibido(c)) + "</strong>" +
           (c.empresa ? "<small>Contato: " + u.escaparHtml(c.nome) + "</small>" : "") +
           (c.email ? "<small>" + u.escaparHtml(c.email) + "</small>" : "") +
-          (c.temLogin && !individual ? "<small>🔑 Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
+          (c.temLogin && !individual ? "<small>" + App.icone("key-round") + " Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
         '<td data-rotulo="CNPJ" class="nao-quebra col-cnpj">' + u.escaparHtml(c.cnpj || "—") + "</td>" +
         '<td data-rotulo="Telefone" class="nao-quebra">' + u.escaparHtml(c.telefone || "—") + "</td>" +
         '<td data-rotulo="Corridas" class="direita numero">' + r.corridas + "</td>" +
         '<td data-rotulo="Total" class="direita numero">' + u.moeda(r.total) + "</td>" +
         '<td data-rotulo="Situação"><span class="selo ' + (inativo ? "status-concluida" : "status-andamento") + '">' + (inativo ? "Inativo" : "Ativo") + "</span></td>" +
         '<td><div class="acoes-linha">' +
-          '<button class="botao-icone" data-editar="' + c.id + '" title="Editar" aria-label="Editar">✏️</button>' +
-          '<button class="botao-icone" data-alternar="' + c.id + '" title="' + (inativo ? "Ativar" : "Desativar") + '" aria-label="' + (inativo ? "Ativar" : "Desativar") + '">' + (inativo ? "▶️" : "⏸️") + "</button>" +
-          '<button class="botao-icone" data-excluir="' + c.id + '" title="Excluir" aria-label="Excluir">🗑️</button>' +
+          '<button class="botao-icone" data-editar="' + c.id + '" title="Editar" aria-label="Editar">' + App.icone("pencil") + '</button>' +
+          '<button class="botao-icone" data-alternar="' + c.id + '" title="' + (inativo ? "Ativar" : "Desativar") + '" aria-label="' + (inativo ? "Ativar" : "Desativar") + '">' + App.icone(inativo ? "circle-play" : "circle-pause") + "</button>" +
+          '<button class="botao-icone" data-excluir="' + c.id + '" title="Excluir" aria-label="Excluir">' + App.icone("trash-2") + '</button>' +
         "</div></td>" +
       "</tr>";
     }).join("") : '<tr><td colspan="7" class="tabela-vazia">' +
@@ -216,7 +216,7 @@
             '<div class="erro-campo" data-erro="usuario"></div></div>' +
           '<div class="grupo-campo"><label class="rotulo" for="cli-senha">' + (c.temLogin ? "Nova senha" : "Senha (mín. 6)") + "</label>" +
             '<div class="campo-senha"><input class="campo" id="cli-senha" type="password" autocomplete="new-password" />' +
-              '<button type="button" class="botao-olho" id="cli-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button></div>' +
+              '<button type="button" class="botao-olho" id="cli-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">' + App.icone("eye") + '</button></div>' +
             '<div class="erro-campo" data-erro="senha"></div></div>' +
         "</div></div>" +
         '<div class="erro-login" id="cli-erro-geral" role="alert"></div>' +
@@ -233,7 +233,7 @@
     olho.addEventListener("click", function () {
       var mostrar = campoSenha.type === "password";
       campoSenha.type = mostrar ? "text" : "password";
-      olho.textContent = mostrar ? "🙈" : "👁";
+      olho.innerHTML = App.icone(mostrar ? "eye-off" : "eye");
       olho.title = mostrar ? "Esconder senha" : "Mostrar senha";
       campoSenha.focus();
     });

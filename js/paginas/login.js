@@ -42,7 +42,7 @@
         '<div class="grupo-campo"><label class="rotulo" for="login-senha">Senha</label>' +
           '<div class="campo-senha">' +
             '<input class="campo" id="login-senha" type="password" autocomplete="current-password" />' +
-            '<button type="button" class="botao-olho" id="ver-senha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha">👁</button>' +
+            '<button type="button" class="botao-olho" id="ver-senha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha">' + App.icone("eye") + '</button>' +
           '</div></div>' +
         '<div class="erro-login" id="erro-login" role="alert"></div>' +
         '<div class="acoes-modal">' +
@@ -57,7 +57,7 @@
     botaoOlho.addEventListener("click", function () {
       var mostrar = campoSenha.type === "password";
       campoSenha.type = mostrar ? "text" : "password";
-      botaoOlho.textContent = mostrar ? "🙈" : "👁";
+      botaoOlho.innerHTML = App.icone(mostrar ? "eye-off" : "eye");
       botaoOlho.setAttribute("aria-pressed", mostrar ? "true" : "false");
       botaoOlho.setAttribute("aria-label", mostrar ? "Esconder senha" : "Mostrar senha");
       botaoOlho.title = mostrar ? "Esconder senha" : "Mostrar senha";

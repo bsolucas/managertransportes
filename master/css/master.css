@@ -30,6 +30,8 @@ p { margin: 0 0 10px; }
 .botao-largo { width: 100%; font-size: 1.05rem; padding: 14px; }
 .botao-icone { background: none; border: 0; color: var(--texto-suave); font-size: 1.1rem; cursor: pointer; padding: 6px 10px; }
 .botao-icone:hover { color: #fff; }
+.botao-icone { display: inline-grid; place-items: center; }
+.ico { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.18em; }
 
 .campo-grupo { margin-bottom: 14px; }
 .campo-grupo label { display: block; margin-bottom: 6px; font-size: .9rem; color: var(--texto-suave); }
@@ -37,7 +39,8 @@ input, select { width: 100%; background: var(--superficie-2); color: var(--texto
 input:focus, select:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
 .campo-senha { position: relative; }
 .campo-senha input { padding-right: 46px; }
-.botao-olho { position: absolute; top: 0; right: 0; height: 100%; width: 44px; background: none; border: 0; cursor: pointer; font-size: 1.1rem; color: var(--texto-suave); }
+.botao-olho { position: absolute; top: 0; right: 0; height: 100%; width: 44px; background: none; border: 0; cursor: pointer; font-size: 1.1rem; color: var(--texto-suave); display: grid; place-items: center; }
+.botao-olho .ico { width: 19px; height: 19px; }
 .mensagem { min-height: 1.2em; margin-bottom: 10px; font-size: .9rem; color: var(--vermelho); }
 
 /* ---------- Entrada ---------- */

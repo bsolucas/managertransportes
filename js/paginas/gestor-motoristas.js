@@ -43,7 +43,7 @@ App.gestorMotoristas = (function () {
           '<div class="grupo-campo"><label class="rotulo" for="mot-senha">Senha * (mín. 6)</label>' +
             '<div class="campo-senha">' +
               '<input class="campo" id="mot-senha" type="password" autocomplete="new-password" />' +
-              '<button type="button" class="botao-olho" id="mot-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button>' +
+              '<button type="button" class="botao-olho" id="mot-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">' + App.icone("eye") + '</button>' +
             "</div></div>" +
         "</div>" +
         '<div class="erro-login" id="erro-motorista" role="alert"></div>' +
@@ -61,7 +61,7 @@ App.gestorMotoristas = (function () {
     olho.addEventListener("click", function () {
       var mostrar = campoSenha.type === "password";
       campoSenha.type = mostrar ? "text" : "password";
-      olho.textContent = mostrar ? "🙈" : "👁";
+      olho.innerHTML = App.icone(mostrar ? "eye-off" : "eye");
       olho.title = mostrar ? "Esconder senha" : "Mostrar senha";
       campoSenha.focus();
     });

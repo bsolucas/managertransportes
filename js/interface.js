@@ -48,7 +48,7 @@ App.ui = {
       '<div class="modal ' + ((opcoes && opcoes.classe) || "") + '" role="dialog" aria-modal="true">' +
         '<div class="modal-cabecalho">' +
           "<h2>" + App.utils.escaparHtml(titulo) + "</h2>" +
-          '<button class="botao-icone" data-fechar-modal aria-label="Fechar">✕</button>' +
+          '<button class="botao-icone" data-fechar-modal aria-label="Fechar">' + App.icone("x") + '</button>' +
         "</div>" +
         '<div class="modal-corpo">' + html + "</div>" +
       "</div>";

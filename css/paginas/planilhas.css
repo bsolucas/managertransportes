@@ -11,7 +11,8 @@
   transition: border-color 0.15s, background 0.15s;
 }
 .area-anexo:hover, .area-anexo.arrastando { border-color: var(--azul); background: var(--azul-suave); }
-.area-anexo-icone { font-size: 2rem; }
+.area-anexo-icone { font-size: 2rem; color: var(--azul-claro); display: grid; place-items: center; }
+.area-anexo-icone .ico { width: 34px; height: 34px; }
 
 /* Botões "Baixar" e "Anexar outro" */
 .acoes-planilha { display: flex; gap: 10px; flex-wrap: wrap; margin: var(--espaco) 0; }

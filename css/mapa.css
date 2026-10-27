@@ -48,10 +48,13 @@
 .marcador-motorista.motorista-offline    { opacity: 0.55; }
 .marcador-destaque { transform: scale(1.25); z-index: 1000 !important; box-shadow: 0 0 0 4px rgba(0, 71, 255, 0.45); }
 
-.marcador-emoji {
-  position: absolute; right: -8px; bottom: -6px;
-  font-size: 13px; line-height: 1;
+.marcador-icone {
+  position: absolute; right: -9px; bottom: -7px;
+  display: grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--azul); color: #fff; border: 2px solid var(--preto);
 }
+.marcador-icone .ico { width: 11px; height: 11px; }
 
 /* --- Alfinetes de origem/destino ------------------------------------------- */
 .marcador-ponto span {

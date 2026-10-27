@@ -118,8 +118,8 @@ App.mapaGoogle = {
       return m.nome + " — " + m.veiculo.modelo + " • " + m.veiculo.placa + " — " + ((App.STATUS_MOTORISTA[m.status] || {}).rotulo || "");
     }
     function htmlMotorista(m) {
-      var emoji = (App.SERVICOS[m.servicos[0]] || {}).icone || "🚗";
-      return '<span class="marcador-iniciais">' + u.iniciais(m.nome) + '</span><span class="marcador-emoji">' + emoji + "</span>";
+      var icone = (App.SERVICOS[m.servicos[0]] || {}).icone || App.icone("car-front");
+      return '<span class="marcador-iniciais">' + u.iniciais(m.nome) + '</span><span class="marcador-icone">' + icone + "</span>";
     }
     function classeMotorista(m, destaque) {
       return "marcador-motorista " + ((App.STATUS_MOTORISTA[m.status] || {}).classe || "") + (destaque ? " marcador-destaque" : "");

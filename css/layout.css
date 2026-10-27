@@ -87,7 +87,8 @@
 }
 .menu-item:hover { background: var(--superficie-2); color: var(--texto); }
 .menu-item.ativo { background: var(--azul-suave); color: var(--texto); box-shadow: inset 3px 0 0 var(--azul); }
-.menu-icone { width: 20px; text-align: center; }
+.menu-icone { width: 20px; display: inline-grid; place-items: center; }
+.menu-icone .ico { width: 19px; height: 19px; }
 
 /* Contador (ex.: corridas aguardando) ao lado do item do menu */
 .menu-contador {

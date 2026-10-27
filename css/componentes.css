@@ -51,6 +51,7 @@
   border: 0; background: transparent; color: var(--texto-suave); cursor: pointer;
 }
 .botao-icone:hover { background: var(--superficie-3); color: var(--texto); }
+.botao-icone .ico { width: 18px; height: 18px; }
 
 /* ===================== 2. CAMPOS DE FORMULÁRIO =========================== */
 .campo {
@@ -74,7 +75,9 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .botao-olho {
   position: absolute; top: 0; right: 0; height: 100%; width: 44px;
   background: none; border: 0; cursor: pointer; font-size: 1.1rem; color: var(--texto-suave);
+  display: grid; place-items: center;
 }
+.botao-olho .ico { width: 19px; height: 19px; }
 .botao-olho:hover, .botao-olho:focus-visible { color: var(--texto); }
 
 .linha-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
