@@ -148,8 +148,28 @@
         .sort(function (a, b) { return b.criadaEm - a.criadaEm; });
     }
 
+    /* Botão "Remover canceladas": só aparece quando há alguma. */
+    function atualizarBotaoCanceladas() {
+      var ids = minhasCorridas().filter(function (c) { return c.status === "cancelada"; }).map(function (c) { return c.id; });
+      var b = document.getElementById("remover-canceladas");
+      b.hidden = !ids.length;
+      b.innerHTML = App.icone("trash-2") + " Remover canceladas (" + ids.length + ")";
+      return ids;
+    }
+    document.getElementById("remover-canceladas").addEventListener("click", function () {
+      var ids = atualizarBotaoCanceladas();
+      if (!ids.length) return;
+      ui.confirmar("Remover " + u.plural(ids.length, "corrida cancelada", "corridas canceladas") + "? O chat delas também será apagado. Isso não pode ser desfeito.").then(function (sim) {
+        if (!sim) return;
+        nuvem.removerCanceladas(ids).then(function (n) { ui.aviso(u.plural(n, "corrida removida", "corridas removidas") + ".", "sucesso"); })
+          .catch(function (e) { ui.aviso(e.message, "erro"); });
+      });
+    });
+
     function desenharMinhas() {
+      atualizarBotaoCanceladas();
       var lista = minhasCorridas();
+      if (corridaSelecionada && !lista.some(function (c) { return c.id === corridaSelecionada; })) corridaSelecionada = null;   // a selecionada foi removida
       if (!corridaSelecionada && lista.length) corridaSelecionada = lista[0].id;
       var chave = App.sessao.chaveUsuario();
       document.getElementById("lista-minhas").innerHTML = lista.length ? lista.map(function (c) {

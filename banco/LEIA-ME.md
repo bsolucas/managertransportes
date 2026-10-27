@@ -49,3 +49,4 @@ Há dois: `garciatransportes` e `master`. A senha provisória é igual ao nome d
 **Troque as senhas antes de usar dados reais.**
 
 Decisões tomadas pelo Claude que você pode mudar: veja `DECISOES.md`.
+- 23-cliente-remove-canceladas.sql — cliente remove as próprias corridas canceladas

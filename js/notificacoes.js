@@ -34,18 +34,39 @@ App.notificacoes = (function () {
                  corrida_iniciada: "navigation", corrida_concluida: "check-check", corrida_cancelada: "triangle-alert",
                  sem_motorista: "triangle-alert", mensagem: "message-circle" };
 
-  /* Bip curto, gerado pelo navegador (sem arquivo de som). */
+  /* Bip curto, gerado pelo navegador (sem arquivo de som). O navegador só libera o áudio depois de
+     o usuário tocar na tela uma vez: por isso o contexto é criado/ativado no primeiro toque ou tecla. */
+  var ctxAudio = null;
+  function contextoAudio() {
+    if (!ctxAudio) {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      ctxAudio = new Ctx();
+    }
+    if (ctxAudio.state === "suspended") ctxAudio.resume();
+    return ctxAudio;
+  }
+  function liberarAudio() {
+    try { contextoAudio(); } catch (e) { /* sem áudio */ }
+  }
+  ["click", "touchstart", "keydown"].forEach(function (ev) { document.addEventListener(ev, liberarAudio, { passive: true }); });
+
   function bip() {
     try {
-      var Ctx = window.AudioContext || window.webkitAudioContext;
-      var ctx = new Ctx();
-      var osc = ctx.createOscillator();
-      var ganho = ctx.createGain();
-      osc.frequency.value = 880;
-      ganho.gain.value = 0.08;
-      osc.connect(ganho); ganho.connect(ctx.destination);
-      osc.start();
-      setTimeout(function () { osc.stop(); ctx.close(); }, 250);
+      var ctx = contextoAudio();
+      if (!ctx) return;
+      [880, 1175].forEach(function (freq, i) {          // dois tons seguidos, mais fáceis de ouvir
+        var osc = ctx.createOscillator();
+        var ganho = ctx.createGain();
+        var ini = ctx.currentTime + i * 0.18;
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        ganho.gain.setValueAtTime(0.0001, ini);
+        ganho.gain.exponentialRampToValueAtTime(0.3, ini + 0.02);
+        ganho.gain.exponentialRampToValueAtTime(0.0001, ini + 0.16);
+        osc.connect(ganho); ganho.connect(ctx.destination);
+        osc.start(ini); osc.stop(ini + 0.17);
+      });
     } catch (e) { /* sem áudio: tudo bem */ }
   }
 
