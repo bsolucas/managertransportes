@@ -342,3 +342,11 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .notificacao-texto small { color: var(--texto-suave); font-size: 0.74rem; }
 .notificacao-vazia { padding: 22px; text-align: center; color: var(--texto-suave); margin: 0; }
 @media (max-width: 760px) { .painel-notificacoes { position: fixed; right: 12px; left: 12px; top: calc(var(--altura-topo) + 6px); width: auto; } }
+
+/* Pendentes no sininho: corrida que ainda espera motorista (some só quando for atribuída) */
+.sino-contador.pendente { background: var(--cor-aguardando); color: #1a1100; }
+.sino.sino-pendente { color: var(--cor-aguardando); }
+.notificacao-secao { padding: 8px 12px 4px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto-suave); background: var(--superficie-2); }
+.notificacao-secao-pendente { color: var(--cor-aguardando); }
+.notificacao-item.pendente { background: rgba(245, 165, 36, 0.10); color: var(--texto); }
+.notificacao-item.pendente .notificacao-icone { color: var(--cor-aguardando); background: rgba(245, 165, 36, 0.16); }
