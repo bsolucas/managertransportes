@@ -17,8 +17,11 @@ App.mapa = {
   criar: function (idElemento) {
     var u = App.utils;
 
-    /* Com chave do Google em config-mapa.js, usa o Google Maps (mapa-google.js). */
-    if (App.mapaConfig && App.mapaConfig.googleChave && App.mapaGoogle) {
+    /* Com chave do Google em config-mapa.js, usa o Google Maps (mapa-google.js) — mas só para
+       quem estiver marcado em "googleEm" (os outros seguem no mapa livre, sem custo). */
+    var perfil = (App.sessao && App.sessao.atual() || {}).tipo;
+    var quemUsaGoogle = (App.mapaConfig && App.mapaConfig.googleEm) || {};
+    if (App.mapaConfig && App.mapaConfig.googleChave && App.mapaGoogle && quemUsaGoogle[perfil]) {
       return App.mapaGoogle.criar(idElemento);
     }
 
