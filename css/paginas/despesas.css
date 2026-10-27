@@ -14,3 +14,12 @@
 .barra-categoria-topo span { color: var(--texto-suave); }
 .barra-fundo { height: 8px; border-radius: 99px; background: var(--superficie-2); overflow: hidden; }
 .barra-preenchida { height: 100%; border-radius: 99px; background: var(--azul); }
+
+/* ---------- Pagamentos de motoristas ---------- */
+.bloco-comissao { margin-bottom: var(--espaco); }
+.comissao-padrao { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 12px 0 8px; }
+.campo-percentual { position: relative; display: inline-flex; align-items: center; }
+.campo-percentual .campo { width: 120px; padding-right: 30px; }
+.campo-percentual span { position: absolute; right: 12px; color: var(--texto-suave); pointer-events: none; }
+.campo-percentual-modal { margin-top: 8px; }
+.pilula-bloco { display: flex; margin-bottom: 8px; }

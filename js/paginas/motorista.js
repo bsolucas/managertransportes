@@ -223,29 +223,46 @@
     /* ========================================================================
        6. GANHOS
        ======================================================================== */
+    var campoPeriodo = document.getElementById("ganhos-periodo");
+    campoPeriodo.innerHTML = App.pagamentos.PERIODOS.map(function (p) { return '<option value="' + p.id + '">' + u.escaparHtml(p.rotulo()) + "</option>"; }).join("");
+    campoPeriodo.value = "mes_atual";
+    campoPeriodo.addEventListener("change", desenharGanhos);
+
+    /* Motorista CLT não vê ganhos: a aba some. (O salário nem chega ao celular dele.) */
+    var ganhosLiberados = true;
+    App.pagamentos.meuTipo().then(function (tipo) {
+      ganhosLiberados = tipo !== "clt";
+      ui.$('[data-aba="ganhos"]').hidden = !ganhosLiberados;
+      if (!ganhosLiberados && abaAtual === "ganhos") ui.$('[data-aba="corridas"]').click();
+    });
+
     function desenharGanhos() {
-      var minhas = nuvem.corridas().filter(function (c) { return c.motoristaId === usuario.id && c.status === "concluida"; })
-        .sort(function (a, b) { return b.concluidaEm - a.concluidaEm; });
-      var inicioHoje = new Date(new Date().toDateString()).getTime();
-      var hoje = minhas.filter(function (c) { return c.concluidaEm >= inicioHoje; });
-      var semana = minhas.filter(function (c) { return c.concluidaEm >= Date.now() - 7 * 86400000; });
-      var soma = function (l) { return l.reduce(function (s, c) { return s + App.precos.totalCorrida(c); }, 0); };
+      if (!ganhosLiberados) return;
+      var per = App.pagamentos.PERIODOS.filter(function (p) { return p.id === campoPeriodo.value; })[0];
+      var de = per.de(), ate = per.ate();
+      var minhas = nuvem.corridas().filter(function (c) {
+        return c.motoristaId === usuario.id && c.status === "concluida" && c.concluidaEm >= de && c.concluidaEm < ate;
+      }).sort(function (a, b) { return b.concluidaEm - a.concluidaEm; });
+      var comissao = function (c) { return c.comissaoValor || 0; };
+      var total = minhas.reduce(function (s, c) { return s + comissao(c); }, 0);
 
       document.getElementById("indicadores-ganhos").innerHTML = [
-        ["Hoje", u.moeda(soma(hoje)), u.plural(hoje.length, "corrida", "corridas")],
-        ["Últimos 7 dias", u.moeda(soma(semana)), u.plural(semana.length, "corrida", "corridas")],
-        ["Total", u.moeda(soma(minhas)), u.plural(minhas.length, "corrida", "corridas")]
+        ["Comissão do período", u.moeda(total), per.rotulo()],
+        ["Corridas concluídas", String(minhas.length), "no período"],
+        ["Média por corrida", u.moeda(minhas.length ? total / minhas.length : 0), "comissão média"]
       ].map(function (i) {
         return '<div class="cartao indicador"><div class="indicador-rotulo">' + i[0] + '</div><div class="indicador-valor">' + i[1] +
-               '</div><div class="indicador-detalhe">' + i[2] + "</div></div>";
+               '</div><div class="indicador-detalhe">' + u.escaparHtml(i[2]) + "</div></div>";
       }).join("");
 
       document.getElementById("tabela-ganhos").innerHTML = minhas.length ? minhas.map(function (c) {
+        var pct = c.comissaoPercentual === null ? "—" : String(c.comissaoPercentual).replace(".", ",") + "%";
         return '<tr><td data-rotulo="Corrida"><strong>' + c.codigo + "</strong></td><td data-rotulo=\"Concluída\">" + u.dataHora(c.concluidaEm) + "</td>" +
           '<td data-rotulo="Trajeto" class="trajeto-celula">' + u.escaparHtml(c.trajeto) + "</td>" +
-          '<td data-rotulo="Valor" class="direita numero">' + u.moeda(c.valor) + '</td><td data-rotulo="Extras" class="direita numero">' + u.moeda(App.precos.totalExtras(c)) +
-          '</td><td data-rotulo="Total" class="direita numero"><strong>' + u.moeda(App.precos.totalCorrida(c)) + "</strong></td></tr>";
-      }).join("") : '<tr><td colspan="6" class="tabela-vazia">Nenhuma corrida concluída ainda.</td></tr>';
+          '<td data-rotulo="Valor da corrida" class="direita numero">' + u.moeda(App.precos.totalCorrida(c)) + "</td>" +
+          '<td data-rotulo="Comissão" class="direita numero">' + pct + "</td>" +
+          '<td data-rotulo="Você ganhou" class="direita numero"><strong>' + u.moeda(comissao(c)) + "</strong></td></tr>";
+      }).join("") : '<tr><td colspan="6" class="tabela-vazia">Nenhuma corrida concluída neste período.</td></tr>';
     }
 
     /* ========================================================================

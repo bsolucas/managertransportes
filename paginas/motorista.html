@@ -100,14 +100,18 @@
       <div class="cabecalho-secao">
         <div>
           <h1>Meus ganhos</h1>
-          <p class="texto-suave">Soma das corridas concluídas (valor + extras).</p>
+          <p class="texto-suave">Sua comissão de cada corrida aparece depois que ela é concluída.</p>
         </div>
+      </div>
+      <div class="filtros-ganhos">
+        <label for="ganhos-periodo" class="texto-suave">Período</label>
+        <select class="campo campo-estreito" id="ganhos-periodo"></select>
       </div>
       <div class="indicadores" id="indicadores-ganhos"></div>
       <div class="tabela-container">
         <table class="tabela tabela-cartoes">
           <thead>
-            <tr><th>Corrida</th><th>Concluída</th><th>Trajeto</th><th class="direita">Valor</th><th class="direita">Extras</th><th class="direita">Total</th></tr>
+            <tr><th>Corrida</th><th>Concluída</th><th>Trajeto</th><th class="direita">Valor da corrida</th><th class="direita">Comissão</th><th class="direita">Você ganhou</th></tr>
           </thead>
           <tbody id="tabela-ganhos"></tbody>
         </table>
@@ -129,6 +133,7 @@
   <script src="../js/auth-supabase.js"></script>
   <script src="../js/rastreio.js"></script>
   <script src="../js/notificacoes.js"></script>
+  <script src="../js/pagamentos-supabase.js"></script>
   <script src="../js/nuvem.js"></script>
   <script src="../js/config-mapa.js"></script>
   <script src="../js/mapa-google.js"></script>

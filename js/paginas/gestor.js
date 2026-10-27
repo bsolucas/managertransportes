@@ -440,6 +440,7 @@
   function desenharMotoristas() {
     var corridas = nuvem.corridas();
     var lista = nuvem.motoristas();
+    var comPagamentos = !!App.gestorPagamentos && App.modulos.da((App.sessao.atual() || {}).empresa).pagamentos;
     var el = document.getElementById("lista-motoristas");
     if (!lista.length) {
       el.innerHTML = '<p class="texto-suave">Nenhum motorista cadastrado. Toque em <strong>+ Novo motorista</strong> para cadastrar o primeiro.</p>';
@@ -456,6 +457,7 @@
           '<div class="texto-suave texto-pequeno">' + (veiculo ? u.escaparHtml(veiculo) : "Veículo não informado") + "</div></div></div>" +
         "<div>" + ui.seloMotorista(m.status) +
           (m.telefone ? ' <span class="texto-suave texto-pequeno">• ' + u.escaparHtml(m.telefone) + "</span>" : "") + "</div>" +
+        (comPagamentos ? '<div class="texto-pequeno texto-suave">Pagamento: ' + u.escaparHtml(App.gestorPagamentos.resumoForma(m.id)) + "</div>" : "") +
         '<div class="texto-pequeno texto-suave">Serviços: ' + m.servicos.map(function (s) { return App.SERVICOS[s].icone + " " + App.SERVICOS[s].rotulo; }).join(", ") + "</div>" +
         (atual ? '<div class="texto-pequeno">Na corrida <strong>' + atual.codigo + "</strong> — " + (App.STATUS_CORRIDA[atual.status] || {}).rotulo + "</div>" : "") +
         '<div class="cartao-motorista-numeros">' +
@@ -464,17 +466,22 @@
         "</div>" +
         '<div class="cartao-motorista-acoes">' +
           '<button class="botao botao-secundario botao-pequeno" data-localizar="' + m.id + '">Localizar no mapa</button>' +
+          (comPagamentos ? '<button class="botao botao-secundario botao-pequeno" data-alterar-comissao="' + m.id + '">Alterar comissão</button>' : "") +
           '<button class="botao botao-perigo botao-pequeno" data-remover-motorista="' + m.id + '">Remover</button>' +
         "</div>" +
       "</div>";
     }).join("");
   }
 
+  App.__redesenharMotoristas = desenharMotoristas;   // usado quando a comissão muda (gestor-pagamentos.js)
+
   document.getElementById("novo-motorista").addEventListener("click", function () {
     App.gestorMotoristas.abrirCadastro(nuvem.recarregarMotoristas);
   });
 
   document.getElementById("lista-motoristas").addEventListener("click", function (ev) {
+    var alterar = ev.target.closest("[data-alterar-comissao]");
+    if (alterar) { App.gestorPagamentos.abrir(alterar.getAttribute("data-alterar-comissao")); return; }
     var loc = ev.target.closest("[data-localizar]");
     if (loc) {
       var pos = posicaoDoMotorista(loc.getAttribute("data-localizar"));

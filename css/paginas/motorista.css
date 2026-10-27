@@ -25,3 +25,6 @@
   color: var(--texto-suave);
   text-align: center;
 }
+
+/* Aba Ganhos: seletor de período */
+.filtros-ganhos { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: var(--espaco); }
