@@ -135,3 +135,32 @@ input:focus, select:focus { outline: none; border-color: var(--azul); box-shadow
   .lista-dados { grid-template-columns: 1fr; gap: 2px; }
   .lista-dados dd { margin-bottom: 8px; }
 }
+
+
+/* ---------- Aba "Uso e limites" ---------- */
+.uso-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin: 14px 0 6px; }
+.uso-cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 16px 18px; }
+.uso-topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: var(--texto-suave); font-size: .9rem; }
+.uso-selo { font-size: .72rem; font-weight: 700; padding: 2px 9px; border-radius: 10px; background: rgba(34, 197, 94, .15); color: var(--verde); white-space: nowrap; }
+.uso-medio .uso-selo { background: rgba(245, 165, 36, .15); color: var(--amarelo); }
+.uso-alto .uso-selo { background: rgba(239, 68, 68, .15); color: var(--vermelho); }
+.uso-valor { font-size: 1.6rem; font-weight: 700; margin: 6px 0 8px; }
+.uso-valor small { font-size: .85rem; font-weight: 400; color: var(--texto-suave); }
+.uso-barra { height: 8px; background: var(--superficie-2); border-radius: 6px; overflow: hidden; }
+.uso-barra i { display: block; height: 100%; background: var(--verde); border-radius: 6px; }
+.uso-medio .uso-barra i { background: var(--amarelo); }
+.uso-alto .uso-barra i { background: var(--vermelho); }
+.uso-barra.pequena { height: 6px; }
+.uso-barra.pequena i { background: var(--azul-claro); }
+.uso-rodape { margin-top: 6px; font-size: .82rem; color: var(--texto-suave); }
+.uso-dica { margin-top: 8px; font-size: .82rem; color: var(--texto-suave); border-top: 1px solid var(--borda); padding-top: 8px; }
+.uso-titulo { margin: 24px 0 10px; font-size: 1.05rem; }
+.uso-celula { position: relative; min-width: 76px; }
+.uso-celula i { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--azul); opacity: .8; border-radius: 2px; }
+.uso-celula span { position: relative; }
+.tabela tfoot td { font-weight: 700; border-top: 2px solid var(--borda); }
+.uso-tabelas { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 14px 18px; }
+.uso-linha { display: grid; grid-template-columns: 150px 1fr 80px; gap: 12px; align-items: center; padding: 5px 0; font-size: .9rem; }
+.uso-linha span:last-child { text-align: right; }
+.uso-links { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 640px) { .uso-linha { grid-template-columns: 100px 1fr 64px; } }

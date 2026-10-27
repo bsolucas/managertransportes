@@ -58,9 +58,10 @@
       <nav class="abas" aria-label="Seções">
         <button class="aba ativo" data-aba="empresas">Empresas <span class="contador" id="cont-empresas">0</span></button>
         <button class="aba" data-aba="cadastros">Cadastros novos <span class="contador" id="cont-cadastros">0</span></button>
+        <button class="aba" data-aba="uso">Uso e limites</button>
       </nav>
 
-      <div class="filtros">
+      <div class="filtros" id="filtros">
         <input id="busca" type="search" placeholder="Buscar por nome, cidade, e-mail, CPF/CNPJ…" />
         <select id="filtro-situacao"></select>
       </div>
@@ -86,6 +87,17 @@
             <tbody id="tabela-cadastros"></tbody>
           </table>
         </div>
+      </section>
+
+      <section data-painel="uso" hidden>
+        <p class="suave" id="uso-intro"></p>
+        <div class="uso-grade" id="uso-limites"></div>
+        <h3 class="uso-titulo">Dia a dia</h3>
+        <div class="tabela-container"><table class="tabela" id="uso-dias"></table></div>
+        <h3 class="uso-titulo">O que mais pesa no banco</h3>
+        <div id="uso-tabelas" class="uso-tabelas"></div>
+        <h3 class="uso-titulo">Números oficiais (o painel de cada serviço é a fonte de verdade)</h3>
+        <div class="uso-links" id="uso-links"></div>
       </section>
 
       <p class="suave nota" id="rodape-atualizado"></p>

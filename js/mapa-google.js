@@ -119,6 +119,7 @@ App.mapaGoogle = {
   _montar: function (idElemento) {
     var u = App.utils;
     var centro = App.config.MAPA_CENTRO;
+    if (App.auth && App.auth.registrarUso) App.auth.registrarUso("google_maps");   // monitor de uso do dono (cada mapa aberto)
     var mapa = new google.maps.Map(document.getElementById(idElemento), {
       center: { lat: centro[0], lng: centro[1] },
       zoom: App.config.MAPA_ZOOM,

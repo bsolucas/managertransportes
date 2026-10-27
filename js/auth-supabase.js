@@ -40,10 +40,16 @@ App.auth = (function () {
       });
   }
 
+  /* Conta o uso no monitor do dono (banco/25). Nunca atrapalha quem chamou. */
+  function registrarUso(tipo) {
+    try { Promise.resolve(conexao().rpc("registrar_uso", { p_tipo: tipo })).catch(function () {}); } catch (e) { /* ignora */ }
+  }
+
   function entrar(usuario, senha) {
     var email = String(usuario || "").trim().toLowerCase() + cfg.dominioLogin;
     return conexao().auth.signInWithPassword({ email: email, password: String(senha || "") }).then(function (r) {
       if (r.error) throw new Error("Usuário ou senha incorretos.");
+      registrarUso("login");
       return carregarPerfil(r.data.user.id).then(function (perfil) {
         return { id: r.data.user.id, nome: perfil.nome, papel: perfil.papel, empresa: perfil.empresa };
       });
@@ -113,5 +119,5 @@ App.auth = (function () {
     return Promise.race([desvincular, new Promise(function (ok) { setTimeout(ok, 2000); })]).then(fim, fim);
   }
 
-  return { entrar: entrar, restaurar: restaurar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao };
+  return { entrar: entrar, restaurar: restaurar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao, registrarUso: registrarUso };
 })();

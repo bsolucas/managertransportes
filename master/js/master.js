@@ -129,8 +129,9 @@
      ========================================================================== */
   function carregar() {
     $("erro-painel").textContent = "";
-    return Promise.all([sb.rpc("dono_resumo"), sb.rpc("dono_empresas"), sb.rpc("dono_cadastros")]).then(function (rs) {
-      var falha = rs.filter(function (r) { return r.error; })[0];
+    return Promise.all([sb.rpc("dono_resumo"), sb.rpc("dono_empresas"), sb.rpc("dono_cadastros"), sb.rpc("dono_uso", { p_dias: 30 })]).then(function (rs) {
+      estado.uso = rs[3].error ? null : rs[3].data;   // a aba de uso é um extra: se faltar o banco/25, o resto continua
+      var falha = rs.slice(0, 3).filter(function (r) { return r.error; })[0];
       if (falha) {
         if (/Acesso negado/i.test(falha.error.message || "")) return sair("Esta conta não tem acesso a este painel.");
         throw new Error("Não foi possível carregar os dados agora.");
@@ -231,10 +232,108 @@
     $("filtro-situacao").innerHTML = opcoes.map(function (o) { return '<option value="' + o[0] + '">' + o[1] + "</option>"; }).join("");
   }
 
+
+  /* ==========================================================================
+     4b. USO E LIMITES (banco/25-monitor-de-uso.sql)
+     Mostra o quanto de cada plano gratuito já foi usado, para decidir se é hora de pagar um plano maior.
+     ========================================================================== */
+  var LIMITES = {
+    banco: 524288000,        // Supabase gratuito: 500 MB de banco
+    usuarios: 50000,         // Supabase gratuito: 50 mil usuários ativos por mês
+    mapas: 10000,            // Google Maps: 10 mil carregamentos grátis por mês
+    emails: 100,             // Gmail pelo Apps Script: cerca de 100 e-mails por dia
+    pushes: 20000            // Apps Script: cerca de 20 mil chamadas externas por dia
+  };
+  function num(v) { return Number(v || 0).toLocaleString("pt-BR"); }
+  function tamanho(b) {
+    b = Number(b || 0);
+    return b >= 1073741824 ? (b / 1073741824).toFixed(2).replace(".", ",") + " GB"
+         : b >= 1048576 ? (b / 1048576).toFixed(1).replace(".", ",") + " MB" : Math.round(b / 1024) + " KB";
+  }
+  function diaCurto(iso) { var p = String(iso).split("-"); return p[2] + "/" + p[1]; }
+  function somar(dias, campo) { return dias.reduce(function (t, d) { return t + Number(d[campo] || 0); }, 0); }
+
+  function cartaoLimite(titulo, usado, limite, textoUsado, dica, extra) {
+    var pct = limite ? usado / limite * 100 : 0;
+    var nivel = pct >= 90 ? "alto" : pct >= 70 ? "medio" : "ok";
+    var situacao = pct >= 90 ? "Perto do limite" : pct >= 70 ? "Atenção" : "Tranquilo";
+    return '<div class="uso-cartao uso-' + nivel + '">' +
+      '<div class="uso-topo"><span>' + titulo + '</span><span class="uso-selo">' + situacao + "</span></div>" +
+      '<div class="uso-valor">' + textoUsado + "</div>" +
+      '<div class="uso-barra"><i style="width:' + Math.min(100, Math.max(pct > 0 ? 1.5 : 0, pct)).toFixed(1) + '%"></i></div>' +
+      '<div class="uso-rodape">' + pct.toFixed(pct < 10 ? 1 : 0).replace(".", ",") + "% do limite gratuito" + (extra ? " · " + extra : "") + "</div>" +
+      '<div class="uso-dica">' + dica + "</div></div>";
+  }
+
+  function desenharUso() {
+    var u = estado.uso;
+    if (!u) {
+      $("uso-intro").textContent = "O monitor de uso ainda não está ativo: aplique o arquivo banco/25-monitor-de-uso.sql no Supabase.";
+      $("uso-limites").innerHTML = ""; $("uso-dias").innerHTML = ""; $("uso-tabelas").innerHTML = ""; $("uso-links").innerHTML = "";
+      return;
+    }
+    var dias = u.dias || [];                           // do mais antigo ao de hoje
+    var hoje = dias[dias.length - 1] || {};
+    var mapas30 = somar(dias, "google_maps");
+    var custoMapas = Math.max(0, mapas30 - LIMITES.mapas) / 1000 * 7;
+    $("uso-intro").textContent = "Contadores de Google Maps, e-mails, push e logins" + (u.desde ? " começam em " + data(u.desde + "T12:00:00") : "") +
+      ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico.";
+
+    $("uso-limites").innerHTML =
+      cartaoLimite("Banco de dados (Supabase)", u.banco.bytes, u.banco.limite || LIMITES.banco,
+        tamanho(u.banco.bytes) + " <small>de " + tamanho(u.banco.limite || LIMITES.banco) + "</small>",
+        "Acima de 70%, vale pensar no plano Pro do Supabase (US$ 25/mês, 8 GB). O plano gratuito também pausa por inatividade.",
+        "seus dados: " + tamanho(u.banco.bytes_app)) +
+      cartaoLimite("Usuários ativos (30 dias)", u.usuarios.ativos_30d, u.usuarios.limite || LIMITES.usuarios,
+        num(u.usuarios.ativos_30d) + " <small>de " + num(u.usuarios.limite || LIMITES.usuarios) + "</small>",
+        "Conta quem entrou nos últimos 30 dias. Total de logins criados: " + num(u.usuarios.total) + ".") +
+      cartaoLimite("Google Maps (30 dias)", mapas30, LIMITES.mapas,
+        num(mapas30) + " <small>de " + num(LIMITES.mapas) + "</small>",
+        "Cada mapa aberto no painel do gestor conta 1. Depois do limite: cerca de US$ 7 por 1.000." +
+        (custoMapas > 0 ? " Estimativa do excesso: US$ " + custoMapas.toFixed(2).replace(".", ",") + "." : "") +
+        " Estimativa nossa; o Google tem o número oficial.",
+        "hoje: " + num(hoje.google_maps)) +
+      cartaoLimite("E-mails hoje (Gmail do script)", hoje.email || 0, LIMITES.emails,
+        num(hoje.email) + " <small>de ~" + num(LIMITES.emails) + " por dia</small>",
+        "Limite da conta Google dona do script, somando todas as empresas. Perto de 70%, migre para domínio próprio + Resend.") +
+      cartaoLimite("Push hoje (Apps Script)", hoje.push || 0, LIMITES.pushes,
+        num(hoje.push) + " <small>de ~" + num(LIMITES.pushes) + " por dia</small>",
+        "Cada aparelho avisado conta 1 chamada. Perto de 70%, troque o envio por uma Edge Function do Supabase.",
+        num(hoje.push_chamadas) + " pedidos ao script hoje");
+
+    /* Tabela dia a dia, do mais recente ao mais antigo, com barrinhas proporcionais ao maior valor da coluna. */
+    var colunas = [["google_maps", "Google Maps"], ["login", "Logins"], ["email", "E-mails"], ["push", "Push"],
+                   ["corridas", "Corridas"], ["notificacoes", "Notificações"], ["mensagens", "Mensagens"], ["cadastros", "Cadastros"]];
+    var maximos = {};
+    colunas.forEach(function (c) { maximos[c[0]] = Math.max.apply(null, dias.map(function (d) { return Number(d[c[0]] || 0); }).concat([1])); });
+    var recentes = dias.slice().reverse().slice(0, 14);
+    $("uso-dias").innerHTML = "<thead><tr><th>Dia</th>" + colunas.map(function (c) { return '<th class="direita">' + c[1] + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      recentes.map(function (d) {
+        return "<tr><td>" + diaCurto(d.dia) + "</td>" + colunas.map(function (c) {
+          var v = Number(d[c[0]] || 0);
+          return '<td class="direita uso-celula"><i style="width:' + (v / maximos[c[0]] * 100).toFixed(0) + '%"></i><span>' + (v ? num(v) : "·") + "</span></td>";
+        }).join("") + "</tr>";
+      }).join("") + "</tbody>" +
+      '<tfoot><tr><td>Total ' + dias.length + " dias</td>" + colunas.map(function (c) { return '<td class="direita">' + num(somar(dias, c[0])) + "</td>"; }).join("") + "</tr></tfoot>";
+
+    var maiorTabela = Math.max.apply(null, (u.banco.tabelas || []).map(function (t) { return t.bytes; }).concat([1]));
+    $("uso-tabelas").innerHTML = (u.banco.tabelas || []).map(function (t) {
+      return '<div class="uso-linha"><span>' + escapar(t.nome) + '</span><div class="uso-barra pequena"><i style="width:' + (t.bytes / maiorTabela * 100).toFixed(0) + '%"></i></div><span class="suave">' + tamanho(t.bytes) + "</span></div>";
+    }).join("") + '<p class="suave nota">O restante do tamanho total é do próprio Supabase (login, agendador, extensões).</p>';
+
+    $("uso-links").innerHTML = [
+      ["Supabase: uso do projeto", "https://supabase.com/dashboard/project/qjccecmfnwiypyivwwqb/reports"],
+      ["Google Cloud: uso do Maps", "https://console.cloud.google.com/google/maps-apis/metrics"],
+      ["Apps Script: execuções e erros", "https://script.google.com"],
+      ["Firebase: projeto do push", "https://console.firebase.google.com/project/projetoalerta-d3334/overview"]
+    ].map(function (l) { return '<a class="botao botao-borda botao-pequeno" target="_blank" rel="noopener" href="' + l[1] + '">' + l[0] + "</a>"; }).join("");
+  }
+
   function desenhar() {
     desenharIndicadores();
     desenharEmpresas();
     desenharCadastros();
+    desenharUso();
   }
 
   document.querySelectorAll(".aba").forEach(function (botao) {
@@ -242,6 +341,7 @@
       estado.aba = botao.getAttribute("data-aba");
       document.querySelectorAll(".aba").forEach(function (b) { b.classList.toggle("ativo", b === botao); });
       document.querySelectorAll("[data-painel]").forEach(function (p) { p.hidden = p.getAttribute("data-painel") !== estado.aba; });
+      $("filtros").hidden = estado.aba === "uso";
       preencherFiltro();
       desenhar();
     });
