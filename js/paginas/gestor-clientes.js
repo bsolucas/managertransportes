@@ -83,6 +83,7 @@
   /* Confere os dois dígitos verificadores do CNPJ. */
   function cnpjValido(texto) {
     var d = soNumeros(texto);
+    if (App.config.ACEITAR_DOCUMENTO_INVALIDO) return d.length === 14;   // modo teste
     if (d.length !== 14 || /^(\d)\1+$/.test(d)) return false;
     function digito(base) {
       var pesos = base.length === 12 ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2] : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];

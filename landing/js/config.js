@@ -22,6 +22,10 @@ window.CONFIG = {
     chavePublica: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqY2NlY21mbndpeXB5aXZ3d3FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5NTYwMzIsImV4cCI6MjEwODUzMjAzMn0.foixqbpxOccv-X9i2P8z5POU3J4BHgxwrReAAz9wpFA"
   },
 
+  /* MODO TESTE: com "true", o cadastro aceita CPF/CNPJ com dígitos inválidos (11 ou 14 números).
+     DESLIGUE ("false") antes de divulgar o site, e rode o comando de banco/19-modo-teste-documento.sql. */
+  aceitarDocumentoInvalido: true,
+
   /* Dias de teste grátis (mostrado na página de pagamento). 0 = sem teste. */
   diasTeste: 14,
 

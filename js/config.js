@@ -11,6 +11,10 @@
 window.App = window.App || {};
 
 App.config = {
+  /* MODO TESTE: com "true", o CNPJ do cliente (aba Clientes) é aceito mesmo com dígitos inválidos
+     (só o tamanho de 14 números é conferido). Desligue ("false") antes de divulgar o sistema. */
+  ACEITAR_DOCUMENTO_INVALIDO: true,
+
   /* Nome exibido no topo das páginas e no título da aba. */
   NOME_APP: "Manager Transportes",
 

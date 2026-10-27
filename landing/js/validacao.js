@@ -46,6 +46,8 @@ window.Validacao = (function () {
 
   function documentoValido(texto) {
     var d = soNumeros(texto);
+    /* Modo teste (landing/js/config.js): só confere o tamanho, não os dígitos verificadores. */
+    if ((window.CONFIG || {}).aceitarDocumentoInvalido) return d.length === 11 || d.length === 14;
     if (/^(\d)\1+$/.test(d)) return false; // 000.000.000-00 etc.
     if (d.length === 11) {
       var c1 = digito(d, [10, 9, 8, 7, 6, 5, 4, 3, 2]);
