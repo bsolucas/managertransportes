@@ -87,6 +87,11 @@
         </div>
       </div>
       <div class="campo-grupo">
+        <label for="cd-tipo">Tipo de empresa *</label>
+        <select id="cd-tipo"></select>
+        <div class="erro-campo" data-erro="tipo"></div>
+      </div>
+      <div class="campo-grupo">
         <label for="cd-plano">Plano *</label>
         <select id="cd-plano"></select>
       </div>
@@ -97,7 +102,7 @@
 
     <!-- PASSO 3: cadastro recebido -->
     <section class="bloco" id="estado-pronto" hidden>
-      <h2 class="titulo-bloco"><span class="passo">✔</span> Cadastro recebido</h2>
+      <h2 class="titulo-bloco"><span class="passo"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></span> Cadastro recebido</h2>
       <dl class="resumo-cadastro" id="resumo-cadastro"></dl>
       <p>Falta só o pagamento. O acesso ao painel é liberado assim que ele for confirmado.</p>
       <div class="acoes">

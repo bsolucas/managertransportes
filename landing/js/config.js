@@ -25,6 +25,18 @@ window.CONFIG = {
   /* Dias de teste grátis (mostrado na página de pagamento). 0 = sem teste. */
   diasTeste: 14,
 
+  /* TIPOS DE EMPRESA — escolhidos no cadastro (landing/cadastro.html) e mostrados ao dono
+     no painel /master. O "id" também é gravado no banco (banco/11-tipo-de-empresa.sql). */
+  tiposEmpresa: [
+    { id: "taxi",          nome: "Táxi e carros executivos" },
+    { id: "van",           nome: "Vans e fretamento" },
+    { id: "onibus",        nome: "Ônibus" },
+    { id: "frota_pequena", nome: "Frota pequena (até 5 empresas clientes)" },
+    { id: "frota_grande",  nome: "Frota grande (muitos clientes)" },
+    { id: "interno",       nome: "Transporte interno (só funcionários, sem clientes externos)" },
+    { id: "outro",         nome: "Outro tipo de transporte" }
+  ],
+
   /* PLANOS — o preço aparece na landing e na página de pagamento a partir daqui.
      Valor em reais, com ponto decimal (129.90 = R$ 129,90).
      "limites": empresas clientes e funcionários por empresa (null = ilimitado). Por enquanto

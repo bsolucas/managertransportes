@@ -195,10 +195,14 @@
     }).join("") : '<tr><td colspan="8" class="tabela-vazia">' + (estado.empresas.length ? "Nenhuma empresa encontrada." : "Nenhuma empresa cadastrada ainda.") + "</td></tr>";
   }
 
+  var TIPOS = { taxi: "Táxi e executivos", van: "Vans e fretamento", onibus: "Ônibus", frota_pequena: "Frota pequena",
+                frota_grande: "Frota grande", interno: "Transporte interno", outro: "Outro" };
+  function tipoTexto(id) { return TIPOS[id] || "—"; }
+
   function desenharCadastros() {
     var situacao = $("filtro-situacao").value;
     var lista = estado.cadastros.filter(function (c) {
-      return (!situacao || c.status === situacao) && achou([c.nome_responsavel, c.empresa_nome, c.email, c.documento, c.celular, c.plano_nome]);
+      return (!situacao || c.status === situacao) && achou([c.nome_responsavel, c.empresa_nome, c.email, c.documento, c.celular, c.plano_nome, tipoTexto(c.tipo_empresa)]);
     });
     $("cont-cadastros").textContent = estado.cadastros.length;
     $("tabela-cadastros").innerHTML = lista.length ? lista.map(function (c) {
@@ -206,7 +210,7 @@
       return "<tr>" +
         '<td data-rotulo="Quando" class="nao-quebra">' + dataHora(c.criado_em) + "</td>" +
         '<td data-rotulo="Responsável">' + escapar(c.nome_responsavel) + "</td>" +
-        '<td data-rotulo="Empresa">' + escapar(c.empresa_nome) + "</td>" +
+        '<td data-rotulo="Empresa"><div class="empresa-celula">' + escapar(c.empresa_nome) + "<small>" + escapar(tipoTexto(c.tipo_empresa)) + "</small></div></td>" +
         '<td data-rotulo="' + (c.tipo_documento === "cnpj" ? "CNPJ" : "CPF") + '" class="nao-quebra">' + escapar(formatarDocumento(c.documento)) + "</td>" +
         '<td data-rotulo="Contato"><div class="empresa-celula">' + escapar(formatarCelular(c.celular)) + "<small>" + escapar(c.email) + "</small></div>" +
           (zap.length >= 10 ? ' <a class="botao botao-borda botao-pequeno" target="_blank" rel="noopener" href="https://wa.me/55' + zap + '">WhatsApp</a>' : "") + "</td>" +
@@ -256,6 +260,7 @@
     $("modal-titulo").textContent = e.nome;
     $("modal-corpo").innerHTML = '<dl class="lista-dados">' +
       "<dt>Situação</dt><dd>" + selo(e.assinatura_status) + "</dd>" +
+      "<dt>Tipo de empresa</dt><dd>" + escapar(tipoTexto(e.tipo_empresa)) + "</dd>" +
       "<dt>Plano</dt><dd>" + escapar(e.plano_nome || "Sem plano definido") + (e.plano ? " · " + moeda(e.valor_mensal) + "/mês" : "") + "</dd>" +
       "<dt>Cidade</dt><dd>" + escapar([e.cidade, e.uf].filter(Boolean).join(" / ") || "—") + "</dd>" +
       "<dt>Cliente desde</dt><dd>" + data(e.criada_em) + "</dd>" +

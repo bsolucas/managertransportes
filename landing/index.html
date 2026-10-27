@@ -28,7 +28,7 @@
         <a href="#duvidas">Dúvidas</a>
       </nav>
       <a class="botao botao-pequeno" href="cadastro.html">Assinar agora</a>
-      <button class="menu-botao" id="menu-botao" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <button class="menu-botao" id="menu-botao" aria-label="Abrir menu" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></svg></button>
     </div>
   </header>
 
@@ -46,9 +46,9 @@
             <a class="botao botao-borda" data-sistema href="#">Ver o sistema</a>
           </div>
           <ul class="hero-lista">
-            <li>✔ Funciona no celular</li>
-            <li>✔ Sem instalar nada</li>
-            <li>✔ Teste grátis, sem cartão</li>
+            <li><svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg> Funciona no celular</li>
+            <li><svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg> Sem instalar nada</li>
+            <li><svg class="ico ico-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg> Teste grátis, sem cartão</li>
           </ul>
         </div>
 
@@ -77,42 +77,48 @@
         <p class="lead">Transporte de pessoas é o nosso foco. Você escolhe o plano pela quantidade de empresas que atende, e <b>empresa pequena também entra</b>.</p>
 
         <div class="segmentos">
-          <article class="segmento seg-taxi">
-            <div class="segmento-icone">🚕</div>
+          <a class="segmento seg-taxi" href="cadastro.html?tipo=taxi">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4" /> <path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8" /> <path d="M7 14h.01" /> <path d="M17 14h.01" /> <rect width="18" height="8" x="3" y="10" rx="2" /> <path d="M5 18v2" /> <path d="M19 18v2" /></svg></div>
             <h3>Táxi e carros executivos</h3>
             <p>Do motorista autônomo à cooperativa: corridas, motoristas e chat num só painel.</p>
             <span class="etiqueta">Ideal: Básico</span>
-          </article>
-          <article class="segmento seg-van">
-            <div class="segmento-icone">🚐</div>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
+          <a class="segmento seg-van" href="cadastro.html?tipo=van">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 6v5a1 1 0 0 0 1 1h6.102a1 1 0 0 1 .712.298l.898.91a1 1 0 0 1 .288.702V17a1 1 0 0 1-1 1h-3" /> <path d="M5 18H3a1 1 0 0 1-1-1V8a2 2 0 0 1 2-2h12c1.1 0 2.1.8 2.4 1.8l1.176 4.2" /> <path d="M9 18h5" /> <circle cx="16" cy="18" r="2" /> <circle cx="7" cy="18" r="2" /></svg></div>
             <h3>Vans e fretamento</h3>
             <p>Transporte escolar, turismo e fretamento para empresas, com valor fixo por trajeto.</p>
             <span class="etiqueta">Ideal: Básico ou Profissional</span>
-          </article>
-          <article class="segmento seg-onibus">
-            <div class="segmento-icone">🚌</div>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
+          <a class="segmento seg-onibus" href="cadastro.html?tipo=onibus">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6 2 7" /> <path d="M10 6h4" /> <path d="m22 7-2-1" /> <rect width="16" height="16" x="4" y="3" rx="2" /> <path d="M4 11h16" /> <path d="M8 15h.01" /> <path d="M16 15h.01" /> <path d="M6 19v2" /> <path d="M18 21v-2" /></svg></div>
             <h3>Ônibus</h3>
             <p>Viagens e linhas contratadas por empresas, com controle de cada corrida e do fechamento.</p>
             <span class="etiqueta">Ideal: Profissional ou Empresarial</span>
-          </article>
-          <article class="segmento seg-pequena">
-            <div class="segmento-icone">🌱</div>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
+          <a class="segmento seg-pequena" href="cadastro.html?tipo=frota_pequena">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" /> <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" /> <path d="M5 21h14" /></svg></div>
             <h3>Frota pequena</h3>
             <p>Poucos veículos e poucos clientes? Comece com o plano mais simples e cresça sem trocar de sistema.</p>
             <span class="etiqueta">Até 5 empresas clientes</span>
-          </article>
-          <article class="segmento seg-grande">
-            <div class="segmento-icone">🏙️</div>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
+          <a class="segmento seg-grande" href="cadastro.html?tipo=frota_grande">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12h4" /> <path d="M10 8h4" /> <path d="M14 21v-3a2 2 0 0 0-4 0v3" /> <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /> <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></svg></div>
             <h3>Frota grande</h3>
             <p>Muitos motoristas e muitos clientes, cada um com seu login, seus valores e seu fechamento.</p>
             <span class="etiqueta">Clientes ilimitados</span>
-          </article>
-          <article class="segmento seg-interno">
-            <div class="segmento-icone">🏭</div>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
+          <a class="segmento seg-interno" href="cadastro.html?tipo=interno">
+            <div class="segmento-icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16h.01" /> <path d="M16 16h.01" /> <path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" /> <path d="M8 16h.01" /></svg></div>
             <h3>Transporte interno</h3>
             <p>Sua empresa leva os próprios funcionários e não atende clientes de fora? Cadastre cada setor ou unidade como cliente e controle tudo.</p>
             <span class="etiqueta">Sem clientes externos</span>
-          </article>
+            <span class="segmento-link">Começar teste grátis →</span>
+          </a>
         </div>
 
         <div class="escada" aria-label="Plano pelo número de empresas clientes">
@@ -148,12 +154,12 @@
       <div class="conteudo">
         <h2>Tudo o que o gestor precisa, num lugar só</h2>
         <div class="grade">
-          <article class="cartao"><div class="icone">📊</div><h3>Painel do gestor</h3><p>Veja corridas, motoristas e status em tempo real, com indicadores claros logo na abertura.</p></article>
-          <article class="cartao"><div class="icone">🚗</div><h3>Área do motorista</h3><p>O motorista aceita e acompanha as corridas direto do celular, sem complicação.</p></article>
-          <article class="cartao"><div class="icone">🗺️</div><h3>Mapa</h3><p>Acompanhe a localização das corridas num mapa fácil de entender.</p></article>
-          <article class="cartao"><div class="icone">📱</div><h3>Feito para o celular</h3><p>O gestor resolve tudo da palma da mão, com botões grandes e acesso rápido.</p></article>
-          <article class="cartao"><div class="icone">🔒</div><h3>Seus dados protegidos</h3><p>A conversão de planilha acontece no seu navegador: o arquivo não é enviado a ninguém.</p></article>
-          <article class="cartao"><div class="icone">💰</div><h3>Valores e tarifas</h3><p>Defina as tarifas e veja o preço de cada corrida antes de ela começar.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></svg></div><h3>Painel do gestor</h3><p>Veja corridas, motoristas e status em tempo real, com indicadores claros logo na abertura.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" /> <circle cx="7" cy="17" r="2" /> <path d="M9 17h6" /> <circle cx="17" cy="17" r="2" /></svg></div><h3>Área do motorista</h3><p>O motorista aceita e acompanha as corridas direto do celular, sem complicação.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 01-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0112 0" /> <path d="M4.474 15h-.197a1 1 0 00-.969.753l-1.097 4.35a1.5 1.5 0 001.444 1.898L20.344 22a1.5 1.5 0 001.446-1.897l-1.098-4.35a1 1 0 00-.969-.753h-.197" /> <circle cx="12" cy="8" r="2" /></svg></div><h3>Mapa</h3><p>Acompanhe a localização das corridas num mapa fácil de entender.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></svg></div><h3>Feito para o celular</h3><p>O gestor resolve tudo da palma da mão, com botões grandes e acesso rápido.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1" /> <rect x="3" y="10" width="18" height="12" rx="2" /> <path d="M7 10V7a5 5 0 0 1 10 0v3" /></svg></div><h3>Seus dados protegidos</h3><p>A conversão de planilha acontece no seu navegador: o arquivo não é enviado a ninguém.</p></article>
+          <article class="cartao"><div class="icone"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /> <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg></div><h3>Valores e tarifas</h3><p>Defina as tarifas e veja o preço de cada corrida antes de ela começar.</p></article>
         </div>
       </div>
     </section>
@@ -177,7 +183,7 @@
           <div class="resultado-linha"><span>Valor total</span><b>R$ 38.280,50</b></div>
           <div class="resultado-linha"><span>Valor estimado</span><b>R$ 33.676,89</b></div>
           <div class="resultado-linha"><span>Km rodados</span><b>10.536,81 km</b></div>
-          <div class="resultado-botao">⬇ Baixar planilha (.xlsx)</div>
+          <div class="resultado-botao"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3" /> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /> <path d="m7 10 5 5 5-5" /></svg> Baixar planilha (.xlsx)</div>
         </div>
       </div>
     </section>

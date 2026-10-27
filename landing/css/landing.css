@@ -86,14 +86,20 @@ ul, ol { margin: 0; padding: 0; }
 .cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 24px; }
 .secao-escura .cartao { background: var(--superficie-2); }
 .grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
-.icone { font-size: 1.8rem; margin-bottom: 10px; }
+/* Ícones (Lucide, licença ISC): traço fino, herdam a cor do texto */
+.ico { width: 1.25em; height: 1.25em; flex: none; vertical-align: -0.2em; }
+.ico-ok { color: var(--verde); width: 1.1em; height: 1.1em; margin-right: 2px; }
+.icone { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 12px; border-radius: 12px; background: var(--azul-suave); color: var(--azul-claro); }
+.icone .ico { width: 24px; height: 24px; }
 
 .comparativo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 32px; }
 .comparativo ul { list-style: none; }
 .comparativo li { padding: 7px 0; color: var(--texto-suave); }
-.cartao-ruim li::before { content: "✖ "; color: var(--vermelho); }
+/* Marcas de "certo" e "errado": ícones desenhados por máscara (iguais em qualquer aparelho) */
+.cartao-ruim li::before, .cartao-bom li::before, .plano li::before { content: ""; display: inline-block; width: 1em; height: 1em; margin-right: 8px; vertical-align: -0.15em; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+.cartao-ruim li::before { color: var(--vermelho); --m: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18'/%3E%3Cpath d='m6 6 12 12'/%3E%3C/svg%3E"); }
 .cartao-bom { border-color: var(--azul); box-shadow: 0 0 0 1px var(--azul-suave); }
-.cartao-bom li::before { content: "✔ "; color: var(--verde); }
+.cartao-bom li::before { color: var(--verde); --m: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E"); }
 
 /* Planilhas */
 .planilhas { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
@@ -105,7 +111,7 @@ ul, ol { margin: 0; padding: 0; }
 .resultado { background: var(--preto); border: 1px solid var(--borda); border-radius: 16px; padding: 22px; }
 .resultado-linha { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--borda); color: var(--texto-suave); }
 .resultado-linha b { color: #fff; }
-.resultado-botao { margin-top: 18px; background: var(--azul); color: #fff; text-align: center; padding: 13px; border-radius: 10px; font-weight: 600; }
+.resultado-botao { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 18px; background: var(--azul); color: #fff; text-align: center; padding: 13px; border-radius: 10px; font-weight: 600; }
 
 /* ---------- Planos ---------- */
 .planos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; align-items: stretch; }
@@ -118,7 +124,7 @@ ul, ol { margin: 0; padding: 0; }
 .preco small { font-size: 1rem; font-weight: 400; color: var(--texto-suave); }
 .plano ul { list-style: none; margin-bottom: 26px; flex: 1; }
 .plano li { padding: 8px 0 8px 26px; position: relative; color: var(--texto-suave); border-top: 1px solid var(--borda); }
-.plano li::before { content: "✔"; position: absolute; left: 0; color: var(--azul-claro); }
+.plano li::before { position: absolute; left: 0; top: 11px; margin: 0; color: var(--azul-claro); --m: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E"); }
 .plano li b { color: #fff; }
 .nota-plano { color: var(--azul-claro); font-weight: 600; margin-bottom: 14px; }
 .nota { text-align: center; margin-top: 26px; font-size: .92rem; }
@@ -131,8 +137,12 @@ ul, ol { margin: 0; padding: 0; }
 .segmentos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
 .segmento { --cor: var(--azul); position: relative; display: flex; flex-direction: column; gap: 4px; background: var(--superficie); border: 1px solid var(--borda); border-top: 3px solid var(--cor); border-radius: var(--raio); padding: 24px; transition: transform .15s, border-color .15s; }
 .segmento:hover { transform: translateY(-3px); border-color: var(--cor); }
+.segmento { text-decoration: none; color: inherit; }
 .segmento p { flex: 1; }
-.segmento-icone { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 8px; border-radius: 14px; font-size: 1.9rem; background: color-mix(in srgb, var(--cor) 18%, transparent); }
+.segmento-link { margin-top: 12px; font-size: .9rem; font-weight: 600; color: var(--cor); }
+.segmento:hover .segmento-link { text-decoration: underline; }
+.segmento-icone { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 8px; border-radius: 14px; color: var(--cor); background: color-mix(in srgb, var(--cor) 16%, transparent); }
+.segmento-icone .ico { width: 28px; height: 28px; }
 .etiqueta { align-self: flex-start; font-size: .8rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; color: #fff; background: color-mix(in srgb, var(--cor) 28%, transparent); border: 1px solid color-mix(in srgb, var(--cor) 60%, transparent); }
 .seg-taxi    { --cor: #f5b301; }
 .seg-van     { --cor: #22c55e; }
@@ -177,7 +187,7 @@ details p { margin: 12px 0 0; }
   .menu { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--preto); border-bottom: 1px solid var(--borda); }
   .menu.aberto { display: flex; }
   .menu a { padding: 15px 20px; border-top: 1px solid var(--borda); }
-  .menu-botao { display: block; }
+  .menu-botao { display: grid; place-items: center; }
   .topo .botao-pequeno { display: none; }
   .topo-interno { gap: 12px; }
 }

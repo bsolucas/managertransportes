@@ -40,6 +40,12 @@
     var id = parametros.get("plano");
     return planos.some(function (p) { return p.id === id; }) ? id : (planos[0] || {}).id;
   }
+  var tipos = cfg.tiposEmpresa || [];
+  function tipoDaUrl() {
+    var id = parametros.get("tipo");
+    return tipos.some(function (t) { return t.id === id; }) ? id : "";
+  }
+  function tipoPorId(id) { return tipos.filter(function (t) { return t.id === id; })[0]; }
   function planoPorId(id) { return planos.filter(function (p) { return p.id === id; })[0]; }
 
   var usuario = null;        // usuário logado (Supabase)
@@ -57,7 +63,7 @@
   /* Volta para esta mesma página (com o plano escolhido) depois do login.
      Esse endereço precisa estar liberado no Supabase (veja o guia em banco/). */
   function enderecoDeVolta() {
-    return location.origin + location.pathname + "?plano=" + encodeURIComponent(planoDaUrl() || "");
+    return location.origin + location.pathname + "?plano=" + encodeURIComponent(planoDaUrl() || "") + "&tipo=" + encodeURIComponent(tipoDaUrl());
   }
 
   function entrarCom(provedor) {
@@ -113,9 +119,15 @@
     }).join("");
   }
 
+  function desenharTipos(idSelecionado) {
+    $("cd-tipo").innerHTML = '<option value="">Selecione...</option>' + tipos.map(function (t) {
+      return '<option value="' + V.escapar(t.id) + '"' + (t.id === idSelecionado ? " selected" : "") + ">" + V.escapar(t.nome) + "</option>";
+    }).join("");
+  }
+
   function erroCampo(campo, texto) {
     var el = document.querySelector('[data-erro="' + campo + '"]');
-    var entrada = { nome: "cd-nome", empresa: "cd-empresa", documento: "cd-documento", celular: "cd-celular" }[campo];
+    var entrada = { nome: "cd-nome", empresa: "cd-empresa", tipo: "cd-tipo", documento: "cd-documento", celular: "cd-celular" }[campo];
     el.textContent = texto || "";
     $(entrada).classList.toggle("invalido", !!texto);
     return !texto;
@@ -125,6 +137,7 @@
     var ok = true;
     ok = erroCampo("nome", $("cd-nome").value.trim().split(/\s+/).length < 2 ? "Informe nome e sobrenome." : "") && ok;
     ok = erroCampo("empresa", $("cd-empresa").value.trim().length < 2 ? "Informe o nome da empresa." : "") && ok;
+    ok = erroCampo("tipo", $("cd-tipo").value ? "" : "Escolha o tipo de empresa.") && ok;
     ok = erroCampo("documento", V.documentoValido($("cd-documento").value) ? "" : "CPF ou CNPJ inválido.") && ok;
     ok = erroCampo("celular", V.celularValido($("cd-celular").value) ? "" : "Informe o celular com DDD (11 números).") && ok;
     return ok;
@@ -140,7 +153,8 @@
     $("cd-documento").value = c ? V.formatarDocumento(c.documento) : "";
     $("cd-celular").value = c ? V.formatarTelefone(c.celular) : "";
     desenharPlanos(c ? c.plano : planoDaUrl());
-    ["nome", "empresa", "documento", "celular"].forEach(function (campo) { erroCampo(campo, ""); });
+    desenharTipos(c ? c.tipo_empresa : tipoDaUrl());
+    ["nome", "empresa", "tipo", "documento", "celular"].forEach(function (campo) { erroCampo(campo, ""); });
     mensagem("mensagem-form", "");
     mostrar("estado-form");
   }
@@ -165,7 +179,8 @@
       empresa_nome: $("cd-empresa").value.trim(),
       documento: V.soNumeros($("cd-documento").value),
       celular: V.soNumeros($("cd-celular").value),
-      plano: $("cd-plano").value
+      plano: $("cd-plano").value,
+      tipo_empresa: $("cd-tipo").value
     };
     var botao = $("botao-salvar");
     botao.disabled = true;
@@ -195,6 +210,7 @@
     var linhas = [
       ["Responsável", c.nome_responsavel],
       ["Empresa", c.empresa_nome],
+      ["Tipo", (tipoPorId(c.tipo_empresa) || {}).nome || "—"],
       [c.tipo_documento === "cnpj" ? "CNPJ" : "CPF", V.formatarDocumento(c.documento)],
       ["Celular", V.formatarTelefone(c.celular)],
       ["E-mail", c.email],

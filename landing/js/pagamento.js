@@ -34,9 +34,9 @@
      1. DADOS E AJUDANTES
      ========================================================================== */
   var FORMAS = {
-    pix:    { rotulo: "Pix",                icone: "⚡", detalhe: "Aprovação na hora, 24 h por dia" },
-    cartao: { rotulo: "Cartão de crédito",  icone: "💳", detalhe: "Cobrança recorrente todo mês" },
-    boleto: { rotulo: "Boleto",             icone: "🧾", detalhe: "Compensação em até 3 dias úteis" }
+    pix:    { rotulo: "Pix",                icone: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></svg>', detalhe: "Aprovação na hora, 24 h por dia" },
+    cartao: { rotulo: "Cartão de crédito",  icone: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2" /> <line x1="2" x2="22" y1="10" y2="10" /> <path d="M6 14h2" /></svg>', detalhe: "Cobrança recorrente todo mês" },
+    boleto: { rotulo: "Boleto",             icone: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 16H8" /> <path d="M14 8H8" /> <path d="M16 12H8" /> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg>', detalhe: "Compensação em até 3 dias úteis" }
   };
   var formasAtivas = (pg.formas || ["pix", "cartao", "boleto"]).filter(function (f) { return FORMAS[f]; });
 

@@ -37,7 +37,8 @@
 .opcao-texto b { display: block; color: #fff; }
 .opcao-texto small { color: var(--texto-suave); }
 .opcao-preco { font-weight: 700; color: #fff; white-space: nowrap; }
-.opcao-icone { font-size: 1.5rem; flex: none; }
+.opcao-icone { flex: none; display: grid; color: var(--azul-claro); }
+.opcao-icone .ico { width: 26px; height: 26px; }
 
 /* ---------- Área do gateway ---------- */
 .area-pagamento { margin-top: 16px; border: 1px dashed var(--borda); border-radius: 12px; padding: 16px; color: var(--texto-suave); font-size: .92rem; }
