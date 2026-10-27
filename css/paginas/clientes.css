@@ -43,3 +43,12 @@
 .aviso-email-linha { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 6px; }
 .aviso-email-linha .campo { flex: 1 1 240px; }
 @media (max-width: 760px) { .aviso-email-linha .botao { flex: 1 1 140px; } }
+
+/* Dica "caiu no spam" (cartão Aviso por e-mail) */
+.dica-spam { margin-top: 10px; border: 1px solid var(--borda); border-radius: var(--raio-pequeno); background: var(--superficie-2); }
+.dica-spam summary { cursor: pointer; padding: 10px 12px; font-size: 0.9rem; color: var(--azul-claro); list-style: none; }
+.dica-spam summary::-webkit-details-marker { display: none; }
+.dica-spam summary::before { content: "+ "; font-weight: 700; }
+.dica-spam[open] summary::before { content: "− "; }
+.dica-spam ol { margin: 0; padding: 0 14px 12px 32px; font-size: 0.88rem; color: var(--texto-suave); display: grid; gap: 6px; }
+.dica-spam li strong { color: var(--texto); }
