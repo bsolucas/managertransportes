@@ -277,7 +277,7 @@
     var mapas30 = somar(dias, "google_maps");
     var custoMapas = Math.max(0, mapas30 - LIMITES.mapas) / 1000 * 7;
     $("uso-intro").textContent = "Contadores de Google Maps, e-mails, push e logins" + (u.desde ? " começam em " + data(u.desde + "T12:00:00") : "") +
-      ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico.";
+      ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico. Você recebe um e-mail quando um limite passa de 80% e outro aos 95% (conferido de hora em hora).";
 
     $("uso-limites").innerHTML =
       cartaoLimite("Banco de dados (Supabase)", u.banco.bytes, u.banco.limite || LIMITES.banco,

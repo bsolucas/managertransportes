@@ -52,3 +52,4 @@ Decisões tomadas pelo Claude que você pode mudar: veja `DECISOES.md`.
 - 23-cliente-remove-canceladas.sql — cliente remove as próprias corridas canceladas
 - 24-push-firebase.sql — push com app fechado (Firebase); passo a passo em CONFIGURAR-PUSH-FIREBASE.md
 - 25-monitor-de-uso.sql — monitor de uso e limites (aba 'Uso e limites' do painel do dono)
+- 26-alertas-de-uso.sql — e-mail ao dono quando o uso passa de 80%/95% (pg_cron 'alertas-de-uso', de hora em hora)
