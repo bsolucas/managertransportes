@@ -22,9 +22,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `17-destino-da-corrida.sql` | Endereço de destino (opcional) na corrida, para o motorista abrir a rota no Google Maps/Waze |
 | `18-solicitacao-automatica-e-notificacoes.sql` | Cliente pede "direto ao gestor" ou "automático" (o sistema escolhe o motorista livre há mais tempo); novas notificações (motorista designado, cancelamento, chat, sem motorista livre) |
 | `19-modo-teste-documento.sql` | MODO TESTE: cadastro aceita CPF/CNPJ com dígitos inválidos (desligar antes de divulgar; o comando está no arquivo) |
+| `20-limpeza-de-notificacoes.sql` | Todo dia às 03:00 (Brasília) apaga notificações com mais de 60 dias (pg_cron) |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15, o 16, o 17, o 18 e o 19, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15, o 16, o 17, o 18, o 19 e o 20, no SQL Editor do Supabase.
 
 ## Tabelas
 
