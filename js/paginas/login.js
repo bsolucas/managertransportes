@@ -1,30 +1,18 @@
 /* =============================================================================
    paginas/login.js — COMPORTAMENTO DA TELA INICIAL (index.html)
    -----------------------------------------------------------------------------
-   1. Prepara os dados de teste (na primeira vez).
-   2. Preenche as listas de motoristas e clientes de teste.
-   3. Ao clicar em "Entrar", guarda o perfil escolhido NESTA aba e abre a
-      página correspondente em /paginas.
-   4. "Entrar como gestor" e "Entrar como motorista" abrem uma janela de
+   1. Mostra o nome do app.
+   2. "Entrar como gestor", "motorista" ou "cliente" abrem uma janela de
       usuário e senha e fazem o login real no Supabase (js/auth-supabase.js).
-      O cliente ainda é de teste (sem senha).
+   3. Se o login der certo, guarda o perfil NESTA aba e abre a página
+      correspondente em /paginas.
    ============================================================================= */
 
 (function () {
   var ui = App.ui;
 
-  App.banco.iniciar();
   document.getElementById("nome-app").textContent = App.config.NOME_APP;
   document.title = "Entrar • " + App.config.NOME_APP;
-
-  /* Preenche a lista de clientes de teste. */
-  function preencherListas() {
-    ui.preencherSelect(document.getElementById("escolha-cliente"),
-      App.banco.listarClientes().filter(function (c) { return c.ativo !== false; }).map(function (c) {
-        return { valor: c.id, texto: c.nome + (c.empresa ? " (" + c.empresa + ")" : "") };
-      }));
-  }
-  preencherListas();
 
   /* --- Botões "Entrar" ----------------------------------------------------- */
   /* Gestor e motorista: pedem usuário e senha antes de abrir a página. */
@@ -36,6 +24,12 @@
     abrirLogin({ titulo: "Entrar como motorista", texto: "Use o usuário e a senha que a empresa passou para você.",
                  papeis: ["motorista"], erroPapel: "Este usuário não é motorista.",
                  destino: "paginas/motorista.html", tipo: "motorista" });
+  });
+
+  document.getElementById("entrar-cliente").addEventListener("click", function () {
+    abrirLogin({ titulo: "Entrar como cliente", texto: "Use o usuário e a senha que a empresa passou para você.",
+                 papeis: ["cliente"], erroPapel: "Este usuário não é cliente.",
+                 destino: "paginas/cliente.html", tipo: "cliente" });
   });
 
   /* Janela de login. cfg = { titulo, texto, papeis, erroPapel, destino, tipo } */
@@ -84,13 +78,15 @@
             return App.auth.sair().then(function () { throw new Error(cfg.erroPapel); });
           }
           var sessao = { tipo: cfg.tipo, id: acesso.id, nome: acesso.nome, papel: acesso.papel, empresa: acesso.empresa };
-          if (cfg.tipo !== "motorista") return sessao;
-          // Motorista: o id da sessão passa a ser o do cadastro dele (tabela "motoristas").
-          return App.auth.buscarMotorista().then(function (m) {
-            sessao.id = m.id;
-            sessao.nome = m.nome;
-            sessao.dados = m; // usado para criar a cópia local (veja banco.garantirMotorista)
+          if (cfg.tipo !== "motorista" && cfg.tipo !== "cliente") return sessao;
+          // Motorista e cliente: o id da sessão passa a ser o do cadastro (tabelas "motoristas" / "clientes").
+          var buscar = cfg.tipo === "motorista" ? App.auth.buscarMotorista : App.auth.buscarCliente;
+          return buscar().then(function (cad) {
+            sessao.id = cad.id;
+            sessao.nome = cad.nome;
             return sessao;
+          }).catch(function (e) {
+            return App.auth.sair().then(function () { throw e; });
           });
         })
         .then(function (sessao) {
@@ -108,21 +104,4 @@
 
     corpo.querySelector("#login-usuario").focus();
   }
-
-  document.getElementById("entrar-cliente").addEventListener("click", function () {
-    var c = App.banco.buscarCliente(document.getElementById("escolha-cliente").value);
-    App.sessao.entrar({ tipo: "cliente", id: c.id, nome: c.nome });
-    window.location.href = "paginas/cliente.html";
-  });
-
-  /* --- Resetar dados de teste --------------------------------------------- */
-  document.getElementById("resetar-dados").addEventListener("click", function () {
-    ui.confirmar("Apagar todas as corridas e mensagens e voltar aos dados de teste originais?")
-      .then(function (sim) {
-        if (!sim) return;
-        App.banco.resetar();
-        preencherListas();
-        ui.aviso("Dados de teste restaurados.", "sucesso");
-      });
-  });
 })();

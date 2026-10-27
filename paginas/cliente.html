@@ -3,8 +3,8 @@
      paginas/cliente.html — PORTAL DO CLIENTE
      -----------------------------------------------------------------------------
      Duas abas:
-       • Pedir corrida ..... escolhe origem/destino (lista ou clique no mapa),
-                             serviço e tipo de preço; vê o valor ANTES de pedir
+       • Pedir corrida ..... escolhe o trajeto (lista da empresa), informa o embarque
+                             e o serviço; vê o valor ANTES de pedir
        • Minhas corridas ... acompanha o motorista no mapa e conversa no chat
      O comportamento está em js/paginas/cliente.js.
      ============================================================================= -->
@@ -55,29 +55,19 @@
 
     <!-- ===================== ABA: PEDIR CORRIDA ===================== -->
     <section data-painel="pedir">
-      <div class="grade-lateral-mapa">
-
-        <!-- Formulário do pedido -->
+      <div class="coluna-pedido">
         <form class="cartao" id="formulario-pedido" autocomplete="off">
           <h2>Nova corrida</h2>
 
           <div class="grupo-campo">
-            <label class="rotulo" for="pedido-origem">Origem (de onde sair)</label>
-            <div class="campo-com-botao">
-              <select class="campo" id="pedido-origem"></select>
-              <button type="button" class="botao botao-secundario" data-marcar="origem" title="Clicar no mapa para escolher">📍</button>
-            </div>
+            <label class="rotulo" for="pedido-trajeto">Trajeto</label>
+            <select class="campo" id="pedido-trajeto"></select>
           </div>
 
           <div class="grupo-campo">
-            <label class="rotulo" for="pedido-destino">Destino (para onde ir)</label>
-            <div class="campo-com-botao">
-              <select class="campo" id="pedido-destino"></select>
-              <button type="button" class="botao botao-secundario" data-marcar="destino" title="Clicar no mapa para escolher">📍</button>
-            </div>
+            <label class="rotulo" for="pedido-embarque">Endereço de embarque (de onde sair)</label>
+            <input class="campo" id="pedido-embarque" maxlength="200" placeholder="Ex.: Rua das Flores, 100 - Centro" />
           </div>
-
-          <p class="dica-mapa" id="dica-mapa" hidden>Clique no mapa para marcar o ponto.</p>
 
           <div class="grupo-campo">
             <span class="rotulo">Serviço</span>
@@ -85,34 +75,15 @@
           </div>
 
           <div class="grupo-campo">
-            <span class="rotulo">Tipo de preço</span>
-            <div class="opcoes-pilula">
-              <label class="pilula"><input type="radio" name="modo" value="variavel" checked /> Variável (calculado)</label>
-              <label class="pilula"><input type="radio" name="modo" value="fixo" /> Valor fixo (tabela)</label>
-            </div>
-          </div>
-
-          <div class="grupo-campo">
-            <span class="rotulo">Ocasião</span>
-            <div class="opcoes-pilula" id="pedido-ocasioes"></div>
-            <p class="texto-suave texto-pequeno" id="ocasioes-automaticas"></p>
-          </div>
-
-          <div class="grupo-campo">
             <label class="rotulo" for="pedido-observacoes">Observações (opcional)</label>
             <textarea class="campo" id="pedido-observacoes" maxlength="300" placeholder="Ex.: veículo não liga, precisa de plataforma; levar 2 malas..."></textarea>
           </div>
 
-          <!-- Prévia do preço -->
+          <!-- Valor do trajeto escolhido -->
           <div class="previa-preco" id="previa-preco"></div>
 
           <button class="botao botao-primario botao-largo" type="submit" id="botao-pedir">Solicitar corrida</button>
         </form>
-
-        <!-- Mapa para ver/escolher os pontos -->
-        <div class="cartao">
-          <div class="mapa mapa-alto" id="mapa-pedido"></div>
-        </div>
       </div>
     </section>
 
@@ -131,6 +102,7 @@
           <div class="cartao" id="acompanhamento"></div>
           <div class="cartao">
             <div class="mapa" id="mapa-acompanhar"></div>
+            <p class="texto-suave texto-pequeno" id="aviso-mapa">O motorista aparece no mapa quando aceitar a corrida e ligar o GPS.</p>
           </div>
         </div>
 
@@ -141,14 +113,19 @@
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <!-- Biblioteca do Supabase (login e dados do cliente) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/utilitarios.js"></script>
   <script src="../js/dados-teste.js"></script>
   <script src="../js/precos.js"></script>
-  <script src="../js/banco-local.js"></script>
-  <script src="../js/simulacao.js"></script>
   <script src="../js/sessao.js"></script>
   <script src="../js/interface.js"></script>
+  <script src="../js/config-supabase.js"></script>
+  <script src="../js/auth-supabase.js"></script>
+  <script src="../js/rastreio.js"></script>
+  <script src="../js/notificacoes.js"></script>
+  <script src="../js/nuvem.js"></script>
   <script src="../js/config-mapa.js"></script>
   <script src="../js/mapa-google.js"></script>
   <script src="../js/mapa.js"></script>

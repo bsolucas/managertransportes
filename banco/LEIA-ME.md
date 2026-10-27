@@ -11,9 +11,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `06-clientes-login-nuvem.sql` | Login do cliente (`definir_login_cliente`), `remover_cliente` e atualização ao vivo de clientes/locais/tarifas |
 | `07-corridas-nuvem.sql` | Corridas e chat no Supabase: trajeto + embarque, ordem das situações, motorista "em corrida", chat liberado só após aceitar, mensagens do sistema (tudo por gatilhos no banco) |
 | `08-painel-dono.sql` | Painel do dono (`/master/`): tabela `donos`, `planos`, assinatura em `empresas` e as funções `dono_*`. Guia: `CONFIGURAR-PAINEL-DONO.md` |
+| `09-portal-cliente.sql` | Portal do cliente: valor do pedido vem sempre do trajeto cadastrado, cliente vê o motorista e o GPS da própria corrida, avisos mostram o trajeto |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07 e o 08, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08 e o 09, no SQL Editor do Supabase.
 
 ## Tabelas
 

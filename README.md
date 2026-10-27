@@ -86,8 +86,8 @@ ProjetoAPP/
 │   ├── utilitarios.js         Formatar dinheiro e datas, distância entre pontos
 │   ├── dados-teste.js         Motoristas, clientes, locais, tarifas e corridas de exemplo
 │   ├── precos.js              Cálculo do preço (fixo ou variável) e soma dos extras
-│   ├── banco-local.js         "Banco de dados" provisório no navegador
-│   ├── simulacao.js           GPS simulado + motoristas automáticos
+│   ├── nuvem.js               Dados da empresa no Supabase (clientes, corridas, chat...)
+│   ├── auth-supabase.js       Login real (gestor, motorista e cliente)
 │   ├── sessao.js              Quem está logado em cada aba
 │   ├── interface.js           Avisos, janelas (modal), selos de status
 │   ├── mapa.js                Mapa ao vivo (biblioteca Leaflet)
@@ -111,8 +111,10 @@ ProjetoAPP/
 - **Etapa 1 (pronta):** o gestor entra com usuário e senha pelo **Supabase Auth**
   (`js/auth-supabase.js`, `js/config-supabase.js`). O logotipo e o nome da empresa vêm do banco.
   Sem login válido, o painel volta para a tela inicial.
-- **Próximas etapas:** ligar clientes, motoristas, corridas, tarifas e chat ao banco
-  (hoje ainda usam o `js/banco-local.js`, no navegador). Motorista e cliente ainda entram sem senha.
+- **Etapas 2 e 3 (prontas):** clientes, motoristas, trajetos/valores, corridas e chat estão no banco
+  (`js/nuvem.js`). Gestor, motorista **e cliente** entram com usuário e senha. O cliente escolhe um
+  trajeto da lista da empresa (o valor vem do banco, não dá para alterar), informa o embarque, acompanha
+  o motorista pelo GPS e conversa no chat. O banco provisório do navegador (`banco-local.js`) foi removido.
 - O SQL do banco está em `banco/` (estrutura, segurança por empresa e dados de teste).
 - Em `js/config-supabase.js` ficam só o endereço do projeto e a chave **pública**; segredos nunca entram no código.
 
@@ -170,10 +172,8 @@ Planilhas `.xls` antigas precisam ser salvas como `.xlsx` antes.
 
 ## Próximos passos (quando formos para o back-end)
 
-- Trocar `js/banco-local.js` por chamadas a uma API: as telas não precisam mudar, porque só chamam `App.banco.*`.
-- Login de verdade com senha, no lugar de `js/sessao.js`.
-- GPS real do celular do motorista, no lugar de `js/simulacao.js`.
-- Chat em tempo real pelo servidor (WebSocket).
+- Planilha gravando no banco, totais por período e fechamento quinzenal/mensal.
+- Push com o app fechado (Firebase) e empacotamento para a Play Store.
 
 ## Landing page (Manager Transportes)
 

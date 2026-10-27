@@ -2,9 +2,8 @@
    nuvem.js — DADOS DA EMPRESA NO SUPABASE (clientes, locais, tarifas, motoristas,
               corridas e chat)
    -----------------------------------------------------------------------------
-   Substitui, aos poucos, o banco provisório do navegador (js/banco-local.js).
-   Usado pelo painel do gestor e pela tela do motorista (o portal do cliente ainda
-   usa o banco local). Depende de js/auth-supabase.js.
+   Substituiu o banco provisório do navegador (removido).
+   Usado pelo painel do gestor, pela tela do motorista e pelo portal do cliente. Depende de js/auth-supabase.js.
 
    Como funciona: ao iniciar, carrega os dados para a memória. Daí em diante:
      • LER é instantâneo (App.nuvem.clientes(), .locais(), .tarifas()...);
@@ -307,7 +306,7 @@ App.nuvem = (function () {
     return c;
   }
 
-  /* Gestor (ou, na Etapa 3, o cliente) pede uma corrida. O valor vem do trajeto, mas pode ser ajustado. */
+  /* Gestor ou o cliente pede uma corrida. O valor vem do trajeto, mas pode ser ajustado. */
   function criarCorrida(d) {
     return sb().from("corridas").insert({
       empresa_id: empresaId(), cliente_id: d.clienteId, trajeto: d.trajeto, embarque: d.embarque || null,

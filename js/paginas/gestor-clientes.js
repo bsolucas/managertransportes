@@ -9,8 +9,7 @@
      5. Ações ............... editar, ativar/desativar e excluir
 
    "Clientes" são as empresas terceirizadas que contratam o transporte e pedem
-   as corridas. Os clientes ficam no Supabase (js/nuvem.js); as corridas ainda no
-   banco local (js/banco-local.js) até a próxima etapa da migração.
+   as corridas. Clientes e corridas ficam no Supabase (js/nuvem.js).
    ============================================================================= */
 
 (function () {

@@ -9,6 +9,7 @@
      App.auth.exigirLogin()           -> Promise; sem login válido, volta para o início
      App.auth.buscarEmpresa()         -> Promise com os dados atuais da empresa
      App.auth.buscarMotorista()       -> Promise com o cadastro do motorista logado
+     App.auth.buscarCliente()         -> Promise com o cadastro do cliente logado
      App.auth.sair()                  -> Promise (encerra o login no Supabase)
 
    O login do Supabase fica guardado no navegador. Além dele, cada aba guarda em
@@ -79,9 +80,22 @@ App.auth = (function () {
     });
   }
 
+  /* Cadastro (tabela "clientes") do cliente logado; a RLS só devolve a linha dele. */
+  function buscarCliente() {
+    return conexao().auth.getUser().then(function (r) {
+      if (!r.data || !r.data.user) throw new Error("Sem login.");
+      return conexao().from("clientes").select("id, nome, empresa_nome, telefone, ativo")
+        .eq("user_id", r.data.user.id).maybeSingle();
+    }).then(function (r) {
+      if (r.error || !r.data) throw new Error("Este usuário não tem cadastro de cliente.");
+      if (r.data.ativo === false) throw new Error("O cadastro deste cliente está desativado. Fale com a empresa.");
+      return r.data;
+    });
+  }
+
   function sair() {
     try { return conexao().auth.signOut(); } catch (e) { return Promise.resolve(); }
   }
 
-  return { entrar: entrar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, sair: sair, conexao: conexao };
+  return { entrar: entrar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao };
 })();

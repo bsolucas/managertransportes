@@ -5,8 +5,8 @@
    Assim você pode ter, ao mesmo tempo, uma aba como Gestor, outra como
    Motorista e outra como Cliente, e testar o fluxo completo.
 
-   Por enquanto não há senha: é uma simulação. No futuro, o login de verdade
-   (com senha e token do servidor) entra aqui.
+   O login de verdade (usuário e senha) é feito no Supabase (js/auth-supabase.js);
+   aqui fica só quem está usando esta aba.
    ============================================================================= */
 
 App.sessao = {
@@ -32,8 +32,8 @@ App.sessao = {
     var u = App.sessao.atual();
     sessionStorage.removeItem(App.sessao.CHAVE);
     var ir = function () { window.location.href = App.sessao.caminhoInicio(); };
-    /* Gestor e motorista também encerram o login real no Supabase. */
-    if (u && (u.tipo === "gestor" || u.tipo === "motorista") && App.auth) App.auth.sair().then(ir, ir); else ir();
+    /* Todos os perfis têm login real no Supabase: encerra junto. */
+    if (u && App.auth) App.auth.sair().then(ir, ir); else ir();
   },
 
   /* Garante que a página só abre para o tipo certo de usuário.

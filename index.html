@@ -40,7 +40,7 @@
         <span class="marca-icone">M</span>
         <span id="nome-app">Manager Transportes</span>
       </div>
-      <p class="texto-suave">Gestão de corridas, motoristas e clientes — versão de demonstração com dados de teste.</p>
+      <p class="texto-suave">Gestão de corridas, motoristas e clientes.</p>
     </header>
 
     <!-- Link para a landing page (apresentação e planos), acima da escolha de perfil -->
@@ -72,18 +72,10 @@
       <article class="cartao perfil">
         <div class="perfil-icone">👤</div>
         <h2>Cliente</h2>
-        <p class="texto-suave">Pede uma corrida, vê o preço antes, acompanha o motorista e conversa no chat.</p>
-        <label class="rotulo" for="escolha-cliente">Cliente de teste</label>
-        <select class="campo" id="escolha-cliente"></select>
+        <p class="texto-suave">Escolhe o trajeto, vê o valor antes de pedir, acompanha o motorista e conversa no chat.</p>
         <button class="botao botao-primario botao-largo" id="entrar-cliente">Entrar como cliente</button>
       </article>
     </section>
-
-    <!-- Rodapé com o botão de recomeçar os testes -->
-    <footer class="login-rodape">
-      <span class="texto-suave texto-pequeno">Os dados de teste ficam salvos neste navegador.</span>
-      <button class="botao botao-secundario botao-pequeno" id="resetar-dados">Resetar dados de teste</button>
-    </footer>
 
     <!-- Acesso do dono do sistema: discreto de propósito. A proteção real está no banco (banco/08-painel-dono.sql). -->
     <a class="acesso-dono" href="master/" title="Acesso restrito" aria-label="Acesso restrito">🔒</a>
@@ -95,10 +87,6 @@
   <!-- Scripts (JavaScript) — a ORDEM importa: config primeiro, a página por último -->
   <script src="js/config.js"></script>
   <script src="js/utilitarios.js"></script>
-  <script src="js/dados-teste.js"></script>
-  <script src="js/precos.js"></script>
-  <script src="js/banco-local.js"></script>
-  <script src="js/simulacao.js"></script>
   <script src="js/sessao.js"></script>
   <script src="js/interface.js"></script>
   <script src="js/config-supabase.js"></script>
