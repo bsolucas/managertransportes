@@ -8,6 +8,9 @@
      4. Cadastro ............ janela para criar e editar um cliente
      5. Ações ............... editar, ativar/desativar e excluir
 
+   No plano Básico "Individual" (quem trabalha sozinho) os clientes são só contatos:
+   a aba vira "Meus clientes" e não há login nem portal (o banco também recusa).
+
    "Clientes" são as empresas terceirizadas que contratam o transporte e pedem
    as corridas. Clientes e corridas ficam no Supabase (js/nuvem.js).
    ============================================================================= */
@@ -20,7 +23,23 @@
      1. EMPRESA DO GESTOR (topo da página)
      ========================================================================== */
   /* A empresa vem do login (guardada na aba) e é atualizada com o que está no banco. */
+  var individual = false;   // plano Básico "Individual": clientes sem login
+
+  function ajustarModo(empresa) {
+    individual = empresa.modo_uso === "individual";
+    var botao = ui.$('[data-aba="clientes"]');
+    botao.innerHTML = '<span class="menu-icone">🏢</span>' + (individual ? "Meus clientes" : "Clientes");
+    var secao = ui.$('[data-painel="clientes"]');
+    secao.classList.toggle("modo-individual", individual);
+    secao.querySelector("h1").textContent = individual ? "Meus clientes" : "Clientes";
+    secao.querySelector(".cabecalho-secao p").textContent = individual
+      ? "Pessoas e empresas que você atende. Ficam só como contatos para marcar nas corridas, sem login."
+      : "Empresas que contratam os serviços de transporte e solicitam as corridas.";
+    document.getElementById("novo-cliente").textContent = "+ Novo cliente";
+  }
+
   function mostrarEmpresa(empresa) {
+    ajustarModo(empresa);
     var logo = empresa.logo_url || empresa.logo;
     var sigla = document.getElementById("empresa-sigla");
     if (logo) {
@@ -99,7 +118,7 @@
     var ativos = todos.filter(function (c) { return c.ativo !== false; }).length;
     document.getElementById("indicadores-clientes").innerHTML = [
       indicador("Clientes cadastrados", todos.length, u.plural(ativos, "ativo", "ativos")),
-      indicador("Inativos", todos.length - ativos, "não aparecem no portal do cliente")
+      indicador("Inativos", todos.length - ativos, individual ? "não aparecem ao criar corrida" : "não aparecem no portal do cliente")
     ].join("");
 
     var lista = todos.filter(function (c) {
@@ -122,8 +141,8 @@
           "<div><strong>" + u.escaparHtml(nomeExibido(c)) + "</strong>" +
           (c.empresa ? "<small>Contato: " + u.escaparHtml(c.nome) + "</small>" : "") +
           (c.email ? "<small>" + u.escaparHtml(c.email) + "</small>" : "") +
-          (c.temLogin ? "<small>🔑 Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
-        '<td data-rotulo="CNPJ" class="nao-quebra">' + u.escaparHtml(c.cnpj || "—") + "</td>" +
+          (c.temLogin && !individual ? "<small>🔑 Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
+        '<td data-rotulo="CNPJ" class="nao-quebra col-cnpj">' + u.escaparHtml(c.cnpj || "—") + "</td>" +
         '<td data-rotulo="Telefone" class="nao-quebra">' + u.escaparHtml(c.telefone || "—") + "</td>" +
         '<td data-rotulo="Corridas" class="direita numero">' + r.corridas + "</td>" +
         '<td data-rotulo="Total" class="direita numero">' + u.moeda(r.total) + "</td>" +
@@ -154,15 +173,16 @@
   function abrirFormulario(id) {
     var c = (id && App.nuvem.buscarCliente(id)) || { ativo: true };
     var idAtual = id;   // vira o id do cliente assim que ele é gravado (evita duplicar se o login falhar)
+    var oculto = individual ? " hidden" : "";   // no modo Individual: sem CNPJ, e-mail nem login
     var v = function (campo) { return u.escaparHtml(c[campo] || ""); };
 
     var corpo = ui.abrirModal(id ? "Editar cliente" : "Novo cliente",
       '<form class="formulario-cliente" id="form-cliente" novalidate>' +
-        '<div class="grupo-campo"><label class="rotulo" for="cli-empresa">Empresa *</label>' +
+        '<div class="grupo-campo"><label class="rotulo" for="cli-empresa">' + (individual ? "Empresa (opcional)" : "Empresa *") + "</label>" +
           '<input class="campo" id="cli-empresa" value="' + v("empresa") + '" placeholder="Ex.: Mendes Consultoria" autocomplete="off" />' +
           '<div class="erro-campo" data-erro="empresa"></div></div>' +
         '<div class="linha-campos">' +
-          '<div class="grupo-campo"><label class="rotulo" for="cli-cnpj">CNPJ</label>' +
+          '<div class="grupo-campo"' + oculto + '><label class="rotulo" for="cli-cnpj">CNPJ</label>' +
             '<input class="campo" id="cli-cnpj" value="' + v("cnpj") + '" placeholder="00.000.000/0000-00" inputmode="numeric" autocomplete="off" />' +
             '<div class="erro-campo" data-erro="cnpj"></div></div>' +
           '<div class="grupo-campo"><label class="rotulo" for="cli-telefone">Telefone</label>' +
@@ -170,10 +190,10 @@
             '<div class="erro-campo" data-erro="telefone"></div></div>' +
         "</div>" +
         '<div class="linha-campos">' +
-          '<div class="grupo-campo"><label class="rotulo" for="cli-nome">Pessoa de contato *</label>' +
+          '<div class="grupo-campo"><label class="rotulo" for="cli-nome">' + (individual ? "Nome do cliente *" : "Pessoa de contato *") + "</label>" +
             '<input class="campo" id="cli-nome" value="' + v("nome") + '" placeholder="Quem pede as corridas" autocomplete="off" />' +
             '<div class="erro-campo" data-erro="nome"></div></div>' +
-          '<div class="grupo-campo"><label class="rotulo" for="cli-email">E-mail</label>' +
+          '<div class="grupo-campo"' + oculto + '><label class="rotulo" for="cli-email">E-mail</label>' +
             '<input class="campo" id="cli-email" type="email" value="' + v("email") + '" placeholder="contato@empresa.com.br" autocomplete="off" />' +
             '<div class="erro-campo" data-erro="email"></div></div>' +
         "</div>" +
@@ -184,6 +204,7 @@
         '<div class="grupo-campo"><label class="rotulo" for="cli-ativo">Situação</label>' +
           '<select class="campo" id="cli-ativo"><option value="1"' + (c.ativo !== false ? " selected" : "") + '>Ativo</option>' +
           '<option value="0"' + (c.ativo === false ? " selected" : "") + ">Inativo</option></select></div>" +
+        '<div' + oculto + '>' +
         '<hr class="separador" />' +
         '<p class="texto-suave texto-pequeno">' + (c.temLogin
           ? "Este cliente já tem acesso ao portal. Para trocar a senha, digite uma nova."
@@ -197,7 +218,7 @@
             '<div class="campo-senha"><input class="campo" id="cli-senha" type="password" autocomplete="new-password" />' +
               '<button type="button" class="botao-olho" id="cli-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">👁</button></div>' +
             '<div class="erro-campo" data-erro="senha"></div></div>' +
-        "</div>" +
+        "</div></div>" +
         '<div class="erro-login" id="cli-erro-geral" role="alert"></div>' +
         '<div class="acoes-modal">' +
           '<button type="button" class="botao botao-secundario" data-fechar-modal>Cancelar</button>' +
@@ -243,8 +264,8 @@
 
       /* Validação: mostra o erro embaixo de cada campo */
       var ok = true;
-      ok = erro("empresa", dados.empresa ? "" : "Informe o nome da empresa.") && ok;
-      ok = erro("nome", dados.nome ? "" : "Informe a pessoa de contato.") && ok;
+      ok = erro("empresa", dados.empresa || individual ? "" : "Informe o nome da empresa.") && ok;
+      ok = erro("nome", dados.nome ? "" : (individual ? "Informe o nome do cliente." : "Informe a pessoa de contato.")) && ok;
       ok = erro("cnpj", !dados.cnpj || cnpjValido(dados.cnpj) ? "" : "CNPJ inválido.") && ok;
       ok = erro("telefone", !dados.telefone || soNumeros(dados.telefone).length >= 10 ? "" : "Telefone incompleto (com DDD).") && ok;
       ok = erro("email", !dados.email || /^\S+@\S+\.\S+$/.test(dados.email) ? "" : "E-mail inválido.") && ok;

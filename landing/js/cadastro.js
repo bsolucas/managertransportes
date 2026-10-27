@@ -46,6 +46,12 @@
     return tipos.some(function (t) { return t.id === id; }) ? id : "";
   }
   function tipoPorId(id) { return tipos.filter(function (t) { return t.id === id; })[0]; }
+  var modos = cfg.modosBasico || [];
+  function modoDaUrl() {
+    var id = parametros.get("modo");
+    return modos.some(function (m) { return m.id === id; }) ? id : "equipe";
+  }
+  function modoPorId(id) { return modos.filter(function (m) { return m.id === id; })[0]; }
   function planoPorId(id) { return planos.filter(function (p) { return p.id === id; })[0]; }
 
   var usuario = null;        // usuário logado (Supabase)
@@ -63,7 +69,7 @@
   /* Volta para esta mesma página (com o plano escolhido) depois do login.
      Esse endereço precisa estar liberado no Supabase (veja o guia em banco/). */
   function enderecoDeVolta() {
-    return location.origin + location.pathname + "?plano=" + encodeURIComponent(planoDaUrl() || "") + "&tipo=" + encodeURIComponent(tipoDaUrl());
+    return location.origin + location.pathname + "?plano=" + encodeURIComponent(planoDaUrl() || "") + "&tipo=" + encodeURIComponent(tipoDaUrl()) + "&modo=" + encodeURIComponent(modoDaUrl());
   }
 
   function entrarCom(provedor) {
@@ -119,6 +125,21 @@
     }).join("");
   }
 
+  /* Individual x Equipe: só no plano Básico (nos outros o modo é sempre "equipe"). */
+  function desenharModos(idSelecionado) {
+    $("opcoes-modo").innerHTML = modos.map(function (m) {
+      return '<label class="opcao-modo"><input type="radio" name="modo" value="' + V.escapar(m.id) + '"' + (m.id === idSelecionado ? " checked" : "") + " />" +
+        "<span><b>" + V.escapar(m.nome) + "</b>" + V.escapar(m.descricao) + "</span></label>";
+    }).join("");
+  }
+  function modoEscolhido() {
+    if ($("cd-plano").value !== "basico") return "equipe";
+    var marcado = document.querySelector('input[name="modo"]:checked');
+    return marcado ? marcado.value : "equipe";
+  }
+  function mostrarModos() { $("grupo-modo").hidden = $("cd-plano").value !== "basico"; }
+  $("cd-plano").addEventListener("change", mostrarModos);
+
   function desenharTipos(idSelecionado) {
     $("cd-tipo").innerHTML = '<option value="">Selecione...</option>' + tipos.map(function (t) {
       return '<option value="' + V.escapar(t.id) + '"' + (t.id === idSelecionado ? " selected" : "") + ">" + V.escapar(t.nome) + "</option>";
@@ -154,6 +175,8 @@
     $("cd-celular").value = c ? V.formatarTelefone(c.celular) : "";
     desenharPlanos(c ? c.plano : planoDaUrl());
     desenharTipos(c ? c.tipo_empresa : tipoDaUrl());
+    desenharModos(c ? c.modo_uso : modoDaUrl());
+    mostrarModos();
     ["nome", "empresa", "tipo", "documento", "celular"].forEach(function (campo) { erroCampo(campo, ""); });
     mensagem("mensagem-form", "");
     mostrar("estado-form");
@@ -180,7 +203,8 @@
       documento: V.soNumeros($("cd-documento").value),
       celular: V.soNumeros($("cd-celular").value),
       plano: $("cd-plano").value,
-      tipo_empresa: $("cd-tipo").value
+      tipo_empresa: $("cd-tipo").value,
+      modo_uso: modoEscolhido()
     };
     var botao = $("botao-salvar");
     botao.disabled = true;
@@ -214,7 +238,8 @@
       [c.tipo_documento === "cnpj" ? "CNPJ" : "CPF", V.formatarDocumento(c.documento)],
       ["Celular", V.formatarTelefone(c.celular)],
       ["E-mail", c.email],
-      ["Plano", plano ? plano.nome + " — " + V.moeda(plano.preco) + "/mês" : c.plano]
+      ["Plano", (plano ? plano.nome + " — " + V.moeda(plano.preco) + "/mês" : c.plano) +
+        (c.plano === "basico" ? " (" + ((modoPorId(c.modo_uso) || {}).nome || "Equipe") + ")" : "")]
     ];
     $("resumo-cadastro").innerHTML = linhas.map(function (l) {
       return "<div><dt>" + V.escapar(l[0]) + "</dt><dd>" + V.escapar(l[1]) + "</dd></div>";

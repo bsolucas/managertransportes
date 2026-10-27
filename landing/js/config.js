@@ -28,13 +28,20 @@ window.CONFIG = {
   /* TIPOS DE EMPRESA — escolhidos no cadastro (landing/cadastro.html) e mostrados ao dono
      no painel /master. O "id" também é gravado no banco (banco/11-tipo-de-empresa.sql). */
   tiposEmpresa: [
-    { id: "taxi",          nome: "Táxi e carros executivos" },
-    { id: "van",           nome: "Vans e fretamento" },
-    { id: "onibus",        nome: "Ônibus" },
-    { id: "frota_pequena", nome: "Frota pequena (até 5 empresas clientes)" },
-    { id: "frota_grande",  nome: "Frota grande (muitos clientes)" },
-    { id: "interno",       nome: "Transporte interno (só funcionários, sem clientes externos)" },
-    { id: "outro",         nome: "Outro tipo de transporte" }
+    { id: "taxi",   nome: "Táxi e carros executivos" },
+    { id: "van",    nome: "Vans e fretamento" },
+    { id: "onibus", nome: "Ônibus" },
+    { id: "frota",  nome: "Frota de veículos (pequeno ou grande porte)" },
+    { id: "interno", nome: "Transporte interno (só funcionários, sem clientes externos)" },
+    { id: "outro",  nome: "Outro tipo de transporte" }
+  ],
+
+  /* DUAS VERSÕES DO PLANO BÁSICO (escolhidas no cadastro; Profissional e Empresarial são sempre "equipe").
+     individual = trabalha sozinho; os clientes são só contatos, sem login.
+     equipe     = motoristas e clientes com login. */
+  modosBasico: [
+    { id: "individual", nome: "Individual", descricao: "Trabalho sozinho e quero controlar minhas corridas e valores. Meus clientes são só contatos, sem login." },
+    { id: "equipe",     nome: "Equipe",     descricao: "Tenho motoristas e meus clientes pedem corridas pelo portal, cada um com seu login." }
   ],
 
   /* PLANOS — o preço aparece na landing e na página de pagamento a partir daqui.

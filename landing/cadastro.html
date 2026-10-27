@@ -95,6 +95,11 @@
         <label for="cd-plano">Plano *</label>
         <select id="cd-plano"></select>
       </div>
+      <!-- Só aparece no plano Básico: usar sozinho ou com equipe -->
+      <fieldset class="campo-grupo modos" id="grupo-modo" hidden>
+        <legend>Como você vai usar o plano Básico? *</legend>
+        <div id="opcoes-modo"></div>
+      </fieldset>
 
       <div class="mensagem" id="mensagem-form" role="status"></div>
       <button class="botao botao-largo" type="submit" id="botao-salvar">Salvar e continuar</button>

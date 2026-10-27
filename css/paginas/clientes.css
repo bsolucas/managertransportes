@@ -34,3 +34,6 @@
 @media (max-width: 640px) {
   .acoes-linha { justify-content: flex-end; width: 100%; }
 }
+
+/* Plano Básico "Individual": clientes são só contatos, sem CNPJ */
+.modo-individual .col-cnpj { display: none; }
