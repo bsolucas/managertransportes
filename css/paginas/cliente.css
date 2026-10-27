@@ -26,3 +26,7 @@
 .acompanhamento-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
 .acompanhamento-motorista { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
 .acompanhamento-previsao { font-size: 1.3rem; font-weight: 700; margin: 6px 0 10px; }
+
+/* Botão "Usar minha localização atual" abaixo do endereço de embarque */
+.botao-localizacao { margin-top: 8px; }
+.dica-campo { display: block; margin-top: 6px; color: var(--cor-texto-suave, #6b7280); font-size: 0.82rem; }

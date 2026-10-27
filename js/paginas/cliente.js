@@ -140,6 +140,39 @@
       });
     });
 
+    /* "Usar minha localização atual": pega o GPS do aparelho e converte em endereço (OpenStreetMap/Nominatim,
+       gratuito). Se não conseguir o endereço, preenche com as coordenadas, que o motorista abre no mapa. */
+    var botaoLoc = document.getElementById("usar-localizacao");
+    var dicaLoc = document.getElementById("dica-localizacao");
+    function rotuloLoc(carregando) { botaoLoc.disabled = !!carregando; botaoLoc.innerHTML = App.icone("map-pin") + (carregando ? " Buscando sua localização..." : " Usar minha localização atual"); }
+    rotuloLoc(false);
+    function dicaLocal(txt) { dicaLoc.hidden = !txt; dicaLoc.textContent = txt || ""; }
+    botaoLoc.addEventListener("click", function () {
+      if (!navigator.geolocation) { ui.aviso("Este aparelho não permite descobrir a localização.", "erro"); return; }
+      rotuloLoc(true); dicaLocal("");
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var lat = pos.coords.latitude, lng = pos.coords.longitude;
+        var coords = lat.toFixed(6) + ", " + lng.toFixed(6);
+        var campo = document.getElementById("pedido-embarque");
+        var ctl = window.AbortController ? new AbortController() : null;
+        var t = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+        fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&accept-language=pt-BR&lat=" + lat + "&lon=" + lng, ctl ? { signal: ctl.signal } : {})
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            var a = j.address || {};
+            var rua = a.road || a.pedestrian || a.footway || "";
+            var partes = [rua && (rua + (a.house_number ? ", " + a.house_number : "")), a.suburb || a.neighbourhood, a.city || a.town || a.village || a.municipality].filter(Boolean);
+            campo.value = (partes.length ? partes.join(" - ") : (j.display_name || coords)).slice(0, 200);
+            dicaLocal("Confira o endereço e ajuste o número ou o ponto exato, se precisar.");
+          })
+          .catch(function () { campo.value = "Localização atual (" + coords + ")"; dicaLocal("Não achei o nome da rua, então enviei suas coordenadas. O motorista abre direto no mapa."); })
+          .then(function () { clearTimeout(t); rotuloLoc(false); });
+      }, function (erro) {
+        rotuloLoc(false);
+        ui.aviso(erro && erro.code === 1 ? "Localização bloqueada. Permita o acesso à localização no navegador e tente de novo." : "Não consegui descobrir sua localização. Digite o endereço.", "erro");
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+    });
+
     /* ========================================================================
        4. MINHAS CORRIDAS
        ======================================================================== */

@@ -34,39 +34,47 @@ App.notificacoes = (function () {
                  corrida_iniciada: "navigation", corrida_concluida: "check-check", corrida_cancelada: "triangle-alert",
                  sem_motorista: "triangle-alert", mensagem: "message-circle" };
 
-  /* Bip curto, gerado pelo navegador (sem arquivo de som). O navegador só libera o áudio depois de
-     o usuário tocar na tela uma vez: por isso o contexto é criado/ativado no primeiro toque ou tecla. */
-  var ctxAudio = null;
-  function contextoAudio() {
-    if (!ctxAudio) {
-      var Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return null;
-      ctxAudio = new Ctx();
-    }
-    if (ctxAudio.state === "suspended") ctxAudio.resume();
-    return ctxAudio;
+  /* Bip: um pequeno arquivo de som (WAV) gerado aqui mesmo e tocado por um elemento <audio>, que
+     funciona em mais navegadores do que o áudio "sintético". O navegador só libera som depois de o
+     usuário tocar na tela uma vez: no primeiro toque/tecla o som é "destravado" em silêncio. */
+  var somAviso = null, somLiberado = false;
+  function criarSom() {
+    var taxa = 22050, tons = [[880, 0.16], [1175, 0.22]], amostras = [];
+    tons.forEach(function (t) {
+      var n = Math.floor(taxa * t[1]);
+      for (var i = 0; i < n; i++) amostras.push(Math.sin(2 * Math.PI * t[0] * i / taxa) * Math.min(1, i / 200, (n - i) / 400) * 0.8);
+    });
+    var buf = new ArrayBuffer(44 + amostras.length * 2), v = new DataView(buf);
+    function txt(pos, str) { for (var i = 0; i < str.length; i++) v.setUint8(pos + i, str.charCodeAt(i)); }
+    txt(0, "RIFF"); v.setUint32(4, 36 + amostras.length * 2, true); txt(8, "WAVE"); txt(12, "fmt ");
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, taxa, true); v.setUint32(28, taxa * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    txt(36, "data"); v.setUint32(40, amostras.length * 2, true);
+    amostras.forEach(function (x, i) { v.setInt16(44 + i * 2, Math.round(x * 32767), true); });
+    var audio = new Audio(URL.createObjectURL(new Blob([buf], { type: "audio/wav" })));
+    audio.preload = "auto";
+    return audio;
   }
   function liberarAudio() {
-    try { contextoAudio(); } catch (e) { /* sem áudio */ }
+    if (somLiberado) return;
+    try {
+      somAviso = somAviso || criarSom();
+      somAviso.muted = true;
+      var p = somAviso.play();
+      var pronto = function () { somAviso.pause(); somAviso.currentTime = 0; somAviso.muted = false; somLiberado = true; };
+      if (p && p.then) p.then(pronto).catch(function () { somAviso.muted = false; }); else pronto();
+    } catch (e) { /* sem áudio */ }
   }
   ["click", "touchstart", "keydown"].forEach(function (ev) { document.addEventListener(ev, liberarAudio, { passive: true }); });
 
+  /* Devolve true se o navegador aceitou tocar. */
   function bip() {
     try {
-      var ctx = contextoAudio();
-      if (!ctx) return;
-      [880, 1175].forEach(function (freq, i) {          // dois tons seguidos, mais fáceis de ouvir
-        var osc = ctx.createOscillator();
-        var ganho = ctx.createGain();
-        var ini = ctx.currentTime + i * 0.18;
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        ganho.gain.setValueAtTime(0.0001, ini);
-        ganho.gain.exponentialRampToValueAtTime(0.3, ini + 0.02);
-        ganho.gain.exponentialRampToValueAtTime(0.0001, ini + 0.16);
-        osc.connect(ganho); ganho.connect(ctx.destination);
-        osc.start(ini); osc.stop(ini + 0.17);
-      });
+      somAviso = somAviso || criarSom();
+      somAviso.muted = false; somAviso.volume = 1; somAviso.currentTime = 0;
+      var p = somAviso.play();
+      if (p && p.catch) p.catch(function () { /* ainda bloqueado: precisa de um toque na página */ });
+      try { if (navigator.vibrate) navigator.vibrate([120, 60, 120]); } catch (e) { /* sem vibração */ }
     } catch (e) { /* sem áudio: tudo bem */ }
   }
 
@@ -172,6 +180,8 @@ App.notificacoes = (function () {
           '<span class="painel-notificacoes-acoes">' +
           '<button type="button" class="botao botao-secundario botao-pequeno" data-ler-todas>' + App.icone("check-check") + " Marcar lidas</button>" +
           '<button type="button" class="botao botao-secundario botao-pequeno" data-limpar title="Apagar todas as notificações da lista">' + App.icone("brush-cleaning") + " Limpar</button></span></div>" +
+        '<button type="button" class="botao botao-secundario botao-pequeno painel-notificacoes-ativar" data-testar-som>' +
+          App.icone("bell") + " Testar som</button>" +
         '<button type="button" class="botao botao-primario botao-pequeno painel-notificacoes-ativar" data-ativar-avisos hidden>' +
           App.icone("bell") + " Ativar avisos neste aparelho</button>" +
         '<div class="painel-notificacoes-lista"></div></div>';
@@ -202,6 +212,7 @@ App.notificacoes = (function () {
         App.ui.aviso("Notificações limpas.", "info");
       });
     });
+    caixa.querySelector("[data-testar-som]").addEventListener("click", function () { liberarAudio(); bip(); });
     elAtivar.addEventListener("click", function () {
       try { Notification.requestPermission().then(desenharSino); } catch (e) { /* ignora */ }
     });
