@@ -61,7 +61,8 @@ App.STATUS_MOTORISTA = {
 
 /* Tipos de serviço que a empresa oferece. */
 App.SERVICOS = {
-  carro:      { rotulo: "Carro (passageiros)",          icone: "🚗" },
-  utilitario: { rotulo: "Utilitário / carga leve",      icone: "🚐" },
-  guincho:    { rotulo: "Guincho plataforma (veículo)", icone: "🚚" }
+  carro:      { rotulo: "Carro / táxi (passageiros)",   icone: "🚗" },
+  van:        { rotulo: "Van / fretamento",             icone: "🚐" },
+  onibus:     { rotulo: "Ônibus",                       icone: "🚌" },
+  utilitario: { rotulo: "Utilitário / carga leve",      icone: "📦" }
 };

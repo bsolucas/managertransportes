@@ -67,7 +67,7 @@ create table public.motoristas (
   nome        text not null,
   telefone    text,
   avaliacao   numeric(2,1) not null default 5.0,
-  servicos    text[] not null default '{}',          -- carro | utilitario | guincho
+  servicos    text[] not null default '{}',          -- carro | van | onibus | utilitario (veja o 10)
   status      text not null default 'offline' check (status in ('disponivel', 'em_corrida', 'offline')),
   veiculo     jsonb not null default '{}',           -- { modelo, placa, cor }
   rota_livre  jsonb not null default '[]',           -- pontos da simulação (teste)

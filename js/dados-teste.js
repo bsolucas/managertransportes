@@ -78,8 +78,9 @@ App.dadosTeste = {
     modoPadrao: "variavel",
     servicos: {
       carro:      { base: 6.00,  porKm: 2.40, porMinuto: 0.35, minimo: 12.00 },
-      utilitario: { base: 15.00, porKm: 3.80, porMinuto: 0.50, minimo: 35.00 },
-      guincho:    { base: 90.00, porKm: 6.50, porMinuto: 0.80, minimo: 150.00 }
+      van:        { base: 12.00, porKm: 3.20, porMinuto: 0.45, minimo: 30.00 },
+      onibus:     { base: 40.00, porKm: 6.00, porMinuto: 0.80, minimo: 120.00 },
+      utilitario: { base: 15.00, porKm: 3.80, porMinuto: 0.50, minimo: 35.00 }
     },
     ocasioes: {
       pico:    { rotulo: "Horário de pico", multiplicador: 1.30 },
@@ -90,8 +91,6 @@ App.dadosTeste = {
     },
     tabelaFixa: [
       { id: "tf1", origemId: "l1", destinoId: "l2", servico: "carro",   valor: 85.00 },
-      { id: "tf2", origemId: "l9", destinoId: "l10", servico: "guincho", valor: 160.00 },
-      { id: "tf3", origemId: "l9", destinoId: "l11", servico: "guincho", valor: 190.00 },
       { id: "tf4", origemId: "l3", destinoId: "l8", servico: "utilitario", valor: 90.00 }
     ]
   },
