@@ -24,7 +24,7 @@ window.CONFIG = {
 
   /* MODO TESTE: com "true", o cadastro aceita CPF/CNPJ com dígitos inválidos (11 ou 14 números).
      DESLIGUE ("false") antes de divulgar o site, e rode o comando de banco/19-modo-teste-documento.sql. */
-  aceitarDocumentoInvalido: true,
+  aceitarDocumentoInvalido: false,
 
   /* Dias de teste grátis (mostrado na página de pagamento). 0 = sem teste. */
   diasTeste: 14,
