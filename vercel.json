@@ -1,0 +1,4 @@
+{
+  "crons": [{ "path": "/api/ping", "schedule": "0 12 * * *" }],
+  "functions": { "api/ping.js": { "includeFiles": "js/config-supabase.js" } }
+}
