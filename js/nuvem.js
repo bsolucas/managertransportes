@@ -357,6 +357,21 @@ App.nuvem = (function () {
     });
   }
 
+  /* Remove corridas CANCELADAS (o banco recusa qualquer outra). Apaga junto o chat e as notificações delas.
+     ids = lista de ids; sem argumento, remove todas as canceladas. Devolve quantas foram removidas. */
+  function removerCanceladas(ids) {
+    var alvo = ids || dados.corridas.filter(function (c) { return c.status === "cancelada"; }).map(function (c) { return c.id; });
+    if (!alvo.length) return Promise.resolve(0);
+    return sb().from("corridas").delete().in("id", alvo).eq("status", "cancelada").select("id").then(function (r) {
+      if (r.error) throw erroPara(r.error, "Não foi possível remover as corridas.");
+      var apagadas = r.data.map(function (l) { return l.id; });
+      dados.corridas = dados.corridas.filter(function (c) { return apagadas.indexOf(c.id) === -1; });
+      apagadas.forEach(function (id) { delete dados.mensagens[id]; });
+      avisar("corridas");
+      return apagadas.length;
+    });
+  }
+
   /* O banco garante que só UM motorista consegue aceitar. */
   function aceitarCorrida(id, motoristaId) {
     return mudarCorrida(id, { status: "aceita", motorista_id: motoristaId }, { status: "aguardando" },
@@ -422,7 +437,7 @@ App.nuvem = (function () {
     recarregarMotoristas: carregarMotoristas, definirStatusMotorista: definirStatusMotorista,
     corridas: corridas, buscarCorrida: buscarCorrida, corridaAtivaDoMotorista: corridaAtivaDoMotorista,
     criarCorrida: criarCorrida, registrarCorridaPropria: registrarCorridaPropria, aceitarCorrida: aceitarCorrida, iniciarCorrida: iniciarCorrida,
-    concluirCorrida: concluirCorrida, cancelarCorrida: cancelarCorrida, alterarValores: alterarValores,
+    concluirCorrida: concluirCorrida, cancelarCorrida: cancelarCorrida, removerCanceladas: removerCanceladas, alterarValores: alterarValores,
     listarMensagens: listarMensagens, carregarMensagens: carregarMensagens, enviarMensagem: enviarMensagem,
     naoLidas: naoLidas, marcarLidas: marcarLidas,
     clientes: clientes, buscarCliente: buscarCliente, salvarCliente: salvarCliente,

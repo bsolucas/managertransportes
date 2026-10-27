@@ -26,6 +26,7 @@ App.notificacoes = (function () {
   var canal = null;
   var lista = [];            // mais nova primeiro
   var aoAbrir = null;
+  var meuId = null;
   var elSino = null, elContador = null, elPainel = null, elLista = null, elAtivar = null;
   var MAXIMO = 30;
 
@@ -147,7 +148,9 @@ App.notificacoes = (function () {
         App.icone("bell") + '<span class="sino-contador" hidden>0</span></button>' +
       '<div class="painel-notificacoes" hidden role="dialog" aria-label="Notificações">' +
         '<div class="painel-notificacoes-topo"><strong>Notificações</strong>' +
-          '<button type="button" class="botao botao-secundario botao-pequeno" data-ler-todas>' + App.icone("check-check") + " Marcar como lidas</button></div>" +
+          '<span class="painel-notificacoes-acoes">' +
+          '<button type="button" class="botao botao-secundario botao-pequeno" data-ler-todas>' + App.icone("check-check") + " Marcar lidas</button>" +
+          '<button type="button" class="botao botao-secundario botao-pequeno" data-limpar title="Apagar todas as notificações da lista">' + App.icone("brush-cleaning") + " Limpar</button></span></div>" +
         '<button type="button" class="botao botao-primario botao-pequeno painel-notificacoes-ativar" data-ativar-avisos hidden>' +
           App.icone("bell") + " Ativar avisos neste aparelho</button>" +
         '<div class="painel-notificacoes-lista"></div></div>';
@@ -168,6 +171,15 @@ App.notificacoes = (function () {
 
     caixa.querySelector("[data-ler-todas]").addEventListener("click", function () {
       marcarLidas(lista.filter(function (n) { return !n.lida; }).map(function (n) { return n.id; }));
+    });
+    caixa.querySelector("[data-limpar]").addEventListener("click", function () {
+      if (!lista.length || !meuId) return;
+      App.auth.conexao().from("notificacoes").delete().eq("user_id", meuId).then(function (r) {
+        if (r.error) { App.ui.aviso("Não foi possível limpar as notificações.", "erro"); return; }
+        lista = [];
+        desenharSino();
+        App.ui.aviso("Notificações limpas.", "info");
+      });
     });
     elAtivar.addEventListener("click", function () {
       try { Notification.requestPermission().then(desenharSino); } catch (e) { /* ignora */ }
@@ -209,6 +221,7 @@ App.notificacoes = (function () {
     sb.auth.getUser().then(function (r) {
       if (!r.data || !r.data.user || canal) return;
       var uid = r.data.user.id;
+      meuId = uid;
       /* Últimas notificações (inclui as que chegaram com o app fechado). */
       sb.from("notificacoes").select("*").order("criada_em", { ascending: false }).limit(MAXIMO).then(function (resp) {
         if (resp.data) { lista = resp.data; desenharSino(); }

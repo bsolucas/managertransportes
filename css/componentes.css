@@ -350,3 +350,5 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .notificacao-secao-pendente { color: var(--cor-aguardando); }
 .notificacao-item.pendente { background: rgba(245, 165, 36, 0.10); color: var(--texto); }
 .notificacao-item.pendente .notificacao-icone { color: var(--cor-aguardando); background: rgba(245, 165, 36, 0.16); }
+
+.painel-notificacoes-acoes { display: inline-flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }

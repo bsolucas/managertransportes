@@ -24,9 +24,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `19-modo-teste-documento.sql` | MODO TESTE: cadastro aceita CPF/CNPJ com dígitos inválidos (desligar antes de divulgar; o comando está no arquivo) |
 | `20-limpeza-de-notificacoes.sql` | Todo dia às 03:00 (Brasília) apaga notificações com mais de 60 dias (pg_cron) |
 | `21-aviso-por-email.sql` | E-mail para o gestor quando um cliente pede corrida (Resend ou Google Apps Script); chaves na tabela privada privado.parametros |
+| `22-remover-corridas-canceladas.sql` | O gestor pode apagar corridas CANCELADAS (chat e notificações vão junto); o banco recusa apagar qualquer outra |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15, o 16, o 17, o 18, o 19, o 20 e o 21, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15, o 16, o 17, o 18, o 19, o 20, o 21 e o 22, no SQL Editor do Supabase.
 
 ## Tabelas
 

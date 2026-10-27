@@ -172,7 +172,25 @@
     document.getElementById(id).addEventListener("input", desenharTabela);
   });
 
+  /* Botão "Remover canceladas": só aparece quando há alguma. */
+  function atualizarBotaoCanceladas() {
+    var qtd = nuvem.corridas().filter(function (c) { return c.status === "cancelada"; }).length;
+    var b = document.getElementById("remover-canceladas");
+    b.hidden = !qtd;
+    b.innerHTML = App.icone("trash-2") + " Remover canceladas (" + qtd + ")";
+  }
+  document.getElementById("remover-canceladas").addEventListener("click", function () {
+    var qtd = nuvem.corridas().filter(function (c) { return c.status === "cancelada"; }).length;
+    if (!qtd) return;
+    ui.confirmar("Remover " + u.plural(qtd, "corrida cancelada", "corridas canceladas") + "? O chat e as notificações delas também serão apagados. Isso não pode ser desfeito.").then(function (sim) {
+      if (!sim) return;
+      nuvem.removerCanceladas().then(function (n) { ui.aviso(u.plural(n, "corrida removida", "corridas removidas") + ".", "sucesso"); })
+        .catch(function (e) { ui.aviso(e.message, "erro"); });
+    });
+  });
+
   function desenharTabela() {
+    atualizarBotaoCanceladas();
     var busca = document.getElementById("filtro-busca").value.trim().toLowerCase();
     var status = document.getElementById("filtro-status").value;
     var servico = document.getElementById("filtro-servico").value;
@@ -382,6 +400,7 @@
       '<div class="acoes-corrida">' +
         (c.motoristaId && !finalizada ? '<button class="botao botao-secundario" data-acao="ver-mapa">Ver motorista no mapa</button>' : "") +
         (!finalizada ? '<button class="botao botao-perigo" data-acao="cancelar">Cancelar corrida</button>' : "") +
+        (c.status === "cancelada" ? '<button class="botao botao-perigo" data-acao="remover">' + App.icone("trash-2") + " Remover corrida</button>" : "") +
       "</div>";
   }
 
@@ -429,6 +448,16 @@
         if (!sim) return;
         nuvem.cancelarCorrida(id, "cancelada pelo gestor").then(function () {
           ui.aviso("Corrida cancelada.", "info");
+        }).catch(erro);
+      });
+    }
+    if (acao === "remover") {
+      ui.confirmar("Remover esta corrida cancelada? O chat e as notificações dela também serão apagados.").then(function (sim) {
+        if (!sim) return;
+        nuvem.removerCanceladas([id]).then(function () {
+          ui.fecharModal();
+          detalheAberto = null;
+          ui.aviso("Corrida removida.", "info");
         }).catch(erro);
       });
     }
