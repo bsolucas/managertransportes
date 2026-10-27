@@ -36,7 +36,34 @@
       ? "Pessoas e empresas que você atende. Ficam só como contatos para marcar nas corridas, sem login."
       : "Empresas que contratam os serviços de transporte e solicitam as corridas.";
     document.getElementById("novo-cliente").textContent = "+ Novo cliente";
+    document.getElementById("cartao-aviso-email").hidden = individual;   // sozinho: não há clientes pedindo corrida
+    var campoEmail = document.getElementById("email-avisos");
+    if (document.activeElement !== campoEmail) campoEmail.value = empresa.email_avisos || "";
   }
+
+  /* Aviso por e-mail: salvar e enviar teste */
+  (function () {
+    var campo = document.getElementById("email-avisos");
+    var msg = document.getElementById("aviso-email-msg");
+    function dizer(texto, ok) { msg.textContent = texto; msg.style.color = ok ? "var(--cor-andamento)" : "var(--cor-cancelada)"; }
+    document.getElementById("salvar-email-avisos").addEventListener("click", function () {
+      var valor = campo.value.trim();
+      if (valor && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(valor)) { dizer("E-mail inválido.", false); return; }
+      var s = App.sessao.atual() || {};
+      App.auth.conexao().from("empresas").update({ email_avisos: valor || null }).eq("id", s.empresa && s.empresa.id).select("email_avisos").then(function (r) {
+        if (r.error || !r.data || !r.data.length) { dizer("Não foi possível salvar. Tente novamente.", false); return; }
+        if (s.empresa) { s.empresa.email_avisos = valor || null; App.sessao.entrar(s); }
+        dizer(valor ? "Salvo. Os avisos irão para " + valor + "." : "Aviso por e-mail desligado.", true);
+      });
+    });
+    document.getElementById("testar-email-avisos").addEventListener("click", function () {
+      dizer("Enviando...", true);
+      App.auth.conexao().rpc("enviar_email_teste").then(function (r) {
+        if (r.error) { dizer(r.error.message || "Não foi possível enviar o teste.", false); return; }
+        dizer("Teste enviado para " + r.data + ". Pode levar um minuto; veja também a caixa de spam.", true);
+      });
+    });
+  })();
 
   function mostrarEmpresa(empresa) {
     ajustarModo(empresa);

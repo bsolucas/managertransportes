@@ -389,6 +389,18 @@
           <button class="botao botao-primario" id="novo-cliente">+ Novo cliente</button>
         </div>
 
+        <!-- Aviso por e-mail: cópia da notificação de nova corrida (js/paginas/gestor-clientes.js) -->
+        <div class="cartao aviso-email" id="cartao-aviso-email">
+          <h2>Aviso por e-mail</h2>
+          <p class="texto-suave texto-pequeno">Quando um cliente pedir uma corrida, enviamos um e-mail para este endereço, mesmo com o app fechado.</p>
+          <div class="aviso-email-linha">
+            <input class="campo" id="email-avisos" type="email" inputmode="email" autocomplete="off" placeholder="seu-email@exemplo.com" aria-label="E-mail para avisos" />
+            <button class="botao botao-primario" id="salvar-email-avisos">Salvar</button>
+            <button class="botao botao-secundario" id="testar-email-avisos">Enviar e-mail de teste</button>
+          </div>
+          <p class="texto-pequeno" id="aviso-email-msg" role="status"></p>
+        </div>
+
         <div class="indicadores" id="indicadores-clientes"></div>
 
         <div class="filtros filtros-clientes">

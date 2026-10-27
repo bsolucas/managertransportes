@@ -37,3 +37,9 @@
 
 /* Plano Individual: clientes são só contatos, sem CNPJ */
 .modo-individual .col-cnpj { display: none; }
+
+/* Aviso por e-mail (aba Clientes) */
+.aviso-email { margin-bottom: var(--espaco); }
+.aviso-email-linha { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 6px; }
+.aviso-email-linha .campo { flex: 1 1 240px; }
+@media (max-width: 760px) { .aviso-email-linha .botao { flex: 1 1 140px; } }
