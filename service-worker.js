@@ -10,7 +10,7 @@
    Ao mudar a lista abaixo, aumente a VERSAO_CACHE para limpar o cache antigo.
    ============================================================================= */
 
-const VERSAO_CACHE = 'manager-v13';
+const VERSAO_CACHE = 'manager-v14';
 
 /* Páginas e arquivos essenciais, guardados na instalação */
 const ARQUIVOS_BASICOS = [
@@ -69,6 +69,26 @@ self.addEventListener('fetch', (evento) => {
 });
 
 /* Clicar numa notificação traz o app para a frente (ou abre, se estiver fechado). */
+/* Push do Firebase (app fechado ou em segundo plano). Mensagem só com dados: o aviso é montado aqui.
+   Se o app já está aberto na tela, não repete (a própria página mostra o aviso e toca o som). */
+self.addEventListener('push', (evento) => {
+  let d = {};
+  try { const j = evento.data.json(); d = j.data || j; } catch (e) { /* sem conteúdo legível */ }
+  evento.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
+      if (janelas.some((j) => j.visibilityState === 'visible' && j.focused)) return;
+      return self.registration.showNotification(d.titulo || 'Manager Transportes', {
+        body: d.corpo || '',
+        icon: './icones/icone-192.png',
+        badge: './icones/icone-192.png',
+        tag: d.id || undefined,
+        data: { corrida: d.corrida || '' },
+        vibrate: [120, 60, 120]
+      });
+    })
+  );
+});
+
 self.addEventListener('notificationclick', (evento) => {
   evento.notification.close();
   evento.waitUntil(

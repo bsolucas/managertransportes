@@ -107,7 +107,10 @@ App.auth = (function () {
   }
 
   function sair() {
-    try { return conexao().auth.signOut(); } catch (e) { return Promise.resolve(); }
+    var fim = function () { try { return conexao().auth.signOut(); } catch (e) { return Promise.resolve(); } };
+    /* Antes de encerrar, o aparelho deixa de receber os avisos (push) desta conta; no máximo 2 s de espera. */
+    var desvincular = App.push && App.push.desvincular ? App.push.desvincular() : Promise.resolve();
+    return Promise.race([desvincular, new Promise(function (ok) { setTimeout(ok, 2000); })]).then(fim, fim);
   }
 
   return { entrar: entrar, restaurar: restaurar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao };

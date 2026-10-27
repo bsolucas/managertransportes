@@ -237,7 +237,7 @@ App.notificacoes = (function () {
     });
     caixa.querySelector("[data-testar-som]").addEventListener("click", function () { liberarAudio(); bip(); });
     elAtivar.addEventListener("click", function () {
-      try { Notification.requestPermission().then(desenharSino); } catch (e) { /* ignora */ }
+      try { Notification.requestPermission().then(function () { desenharSino(); if (App.push) App.push.registrar(); }); } catch (e) { /* ignora */ }
     });
     elLista.addEventListener("click", function (ev) {
       var pendente = ev.target.closest("[data-pendente]");
@@ -269,6 +269,7 @@ App.notificacoes = (function () {
   function iniciar(quandoAbrir) {
     aoAbrir = quandoAbrir || null;
     montarSino();
+    if (App.push) App.push.registrar();   // aparelho já autorizado: garante o token do push (app fechado)
     setTimeout(function () { if (somBloqueado()) pedirToqueParaSom(); }, 800);   // logo após recarregar/entrar sozinho
     /* A seção Pendentes acompanha as corridas ao vivo (e o tempo relativo é atualizado a cada minuto). */
     var conhecidas = null;   // corridas "aguardando" já vistas: uma nova que aparece toca o som, mesmo sem a notificação
@@ -300,7 +301,7 @@ App.notificacoes = (function () {
       document.addEventListener("click", function pedir(ev) {
         if (ev.target.closest && ev.target.closest(".sino-caixa")) return;   // o botão do sino tem o próprio pedido
         document.removeEventListener("click", pedir);
-        try { Notification.requestPermission().then(desenharSino); } catch (e) { /* ignora */ }
+        try { Notification.requestPermission().then(function () { desenharSino(); if (App.push) App.push.registrar(); }); } catch (e) { /* ignora */ }
       });
     }
   }
