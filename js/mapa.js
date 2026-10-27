@@ -15,15 +15,20 @@
 App.mapa = {
 
   criar: function (idElemento) {
-    var u = App.utils;
-
     /* Com chave do Google em config-mapa.js, usa o Google Maps (mapa-google.js) — mas só para
-       quem estiver marcado em "googleEm" (os outros seguem no mapa livre, sem custo). */
+       quem estiver marcado em "googleEm" (os outros seguem no mapa livre, sem custo).
+       Se o Google falhar (chave vencida, sem faturamento, sem internet...), o mapa livre assume. */
     var perfil = (App.sessao && App.sessao.atual() || {}).tipo;
     var quemUsaGoogle = (App.mapaConfig && App.mapaConfig.googleEm) || {};
     if (App.mapaConfig && App.mapaConfig.googleChave && App.mapaGoogle && quemUsaGoogle[perfil]) {
-      return App.mapaGoogle.criar(idElemento);
+      return App.mapaGoogle.criar(idElemento, function () { return App.mapa._criarLivre(idElemento); });
     }
+    return App.mapa._criarLivre(idElemento);
+  },
+
+  /* Mapa livre (Leaflet + OpenStreetMap). */
+  _criarLivre: function (idElemento) {
+    var u = App.utils;
 
     /* Se o Leaflet não carregou (sem internet), mostra um aviso no lugar. */
     if (typeof L === "undefined") {

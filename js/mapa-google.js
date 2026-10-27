@@ -15,6 +15,7 @@ App.mapaGoogle = {
   /* Carrega o script do Google uma única vez e avisa quem estiver esperando. */
   _esperando: [],
   _estado: "parado",          // parado | carregando | pronto | erro
+  _falhas: [],                // funções que trocam cada mapa para o mapa livre se o Google falhar
 
   carregar: function (aoPronto, aoErro) {
     var g = App.mapaGoogle;
@@ -30,8 +31,14 @@ App.mapaGoogle = {
       g._esperando = [];
     }
     window.__mapaGoogleCallback = function () { terminar(true); };
-    /* Se a chave for recusada, o Google chama esta função global. */
-    window.gm_authFailure = function () { terminar(false); };
+    /* Se a chave for recusada, o Google chama esta função global (mesmo com o script já carregado). */
+    window.gm_authFailure = function () {
+      terminar(false);
+      var trocas = g._falhas; g._falhas = [];
+      /* O Google escreve a mensagem de erro dentro do mapa logo DEPOIS de chamar esta função:
+         espera um instante para só então limpar e trocar para o mapa livre. */
+      setTimeout(function () { trocas.forEach(function (trocar) { trocar(); }); }, 300);
+    };
 
     var s = document.createElement("script");
     s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(App.mapaConfig.googleChave) +
@@ -41,16 +48,56 @@ App.mapaGoogle = {
     document.head.appendChild(s);
   },
 
-  criar: function (idElemento) {
+  /* "alternativa" (opcional): função que cria o mapa livre; é usada se o Google não carregar
+     ou recusar a chave, e recebe de volta tudo o que já estava desenhado. */
+  criar: function (idElemento, alternativa) {
     var fila = [];
     var real = null;
+    var noGoogle = false;
+    /* Guarda o que a tela pediu, para repetir no mapa livre se for preciso trocar. */
+    var memoria = { ultimas: {}, pontos: [], cliques: [] };
+
+    function lembrar(nome, args) {
+      if (nome === "aoClicar") memoria.cliques.push(args[0]);
+      else if (nome === "marcarPonto") memoria.pontos.push(args);
+      else if (nome === "limparPontos") memoria.pontos = [];
+      else memoria.ultimas[nome] = args;
+    }
 
     /* Delega para a implementação real, ou guarda na fila até ela existir. */
     function delegar(nome) {
       return function () {
+        lembrar(nome, arguments);
         if (real) return real[nome].apply(null, arguments);
         fila.push([nome, arguments]);
       };
+    }
+
+    function mostrarIndisponivel() {
+      var el = document.getElementById(idElemento);
+      if (el) el.innerHTML = '<div class="mapa-indisponivel">Google Maps indisponível: confira a chave em js/config-mapa.js e a conexão.</div>';
+    }
+
+    /* Troca para o mapa livre (uma vez só) e repete o que já estava na tela. */
+    function usarMapaLivre() {
+      if (!alternativa) { mostrarIndisponivel(); return; }
+      if (real && !noGoogle) return;
+      var el = document.getElementById(idElemento);
+      if (el) el.innerHTML = "";                      // tira o aviso de erro do Google
+      real = alternativa();
+      noGoogle = false;
+      memoria.cliques.forEach(function (fn) { real.aoClicar(fn); });
+      memoria.pontos.forEach(function (a) { real.marcarPonto.apply(null, a); });
+      ["mostrarCorrida", "mostrarMotoristas", "enquadrar", "focar", "redimensionar"].forEach(function (n) {
+        if (memoria.ultimas[n]) real[n].apply(null, memoria.ultimas[n]);
+      });
+      fila = [];
+      /* Sobras do Google (a mensagem de erro dele chega por último) saem do caminho do mapa livre. */
+      setTimeout(function () {
+        var c = document.getElementById(idElemento);
+        if (c) [].forEach.call(c.querySelectorAll(".gm-err-container, .gm-style"), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+      }, 600);
+      if (window.console) console.warn("Google Maps indisponível: usando o mapa gratuito.");
     }
     var nomes = ["mostrarMotoristas", "mostrarCorrida", "limparCorrida", "marcarPonto",
                  "limparPontos", "aoClicar", "focar", "enquadrar", "redimensionar"];
@@ -59,12 +106,12 @@ App.mapaGoogle = {
 
     App.mapaGoogle.carregar(function () {
       real = App.mapaGoogle._montar(idElemento);
+      noGoogle = true;
       fila.forEach(function (c) { real[c[0]].apply(null, c[1]); });
       fila = [];
-    }, function () {
-      var el = document.getElementById(idElemento);
-      if (el) el.innerHTML = '<div class="mapa-indisponivel">Google Maps indisponível: confira a chave em js/config-mapa.js e a conexão.</div>';
-    });
+      /* Se o Google recusar a chave DEPOIS de carregar (chave vencida, sem faturamento...), troca. */
+      App.mapaGoogle._falhas.push(usarMapaLivre);
+    }, usarMapaLivre);
     return fachada;
   },
 
