@@ -51,6 +51,16 @@ App.nuvem = (function () {
     return s && s.empresa ? s.empresa.id : null;
   }
   function avisar(chave) { ouvintes.forEach(function (fn) { fn(chave); }); }
+
+  /* Recarregar a cada aviso do Realtime (e de 30 em 30 s) não deve redesenhar a tela se nada mudou:
+     redesenhar no meio de um toque ou clique faz o clique se perder. Guarda a última versão de cada lista. */
+  var ultimaVersao = {};
+  function mudou(chave, linhas) {
+    var texto = JSON.stringify(linhas);
+    if (ultimaVersao[chave] === texto) return false;
+    ultimaVersao[chave] = texto;
+    return true;
+  }
   function aoMudar(fn) { ouvintes.push(fn); }
 
   /* Traduz o erro do banco para uma mensagem clara. */
@@ -90,21 +100,21 @@ App.nuvem = (function () {
      ------------------------------------------------------------------------ */
   function carregarClientes() {
     return sb().from("clientes").select("*").then(function (r) {
-      if (r.error) return;
+      if (r.error || !mudou("clientes", r.data)) return;
       dados.clientes = r.data.map(doBanco);
       avisar("clientes");
     });
   }
   function carregarLocais() {
     return sb().from("locais").select("id, nome, lat, lng").order("nome").then(function (r) {
-      if (r.error) return;
+      if (r.error || !mudou("locais", r.data)) return;
       dados.locais = r.data;
       avisar("locais");
     });
   }
   function carregarTarifas() {
     return sb().from("tarifas").select("dados").maybeSingle().then(function (r) {
-      if (r.error) return;
+      if (r.error || !mudou("tarifas", r.data)) return;
       dados.tarifas = r.data ? r.data.dados : null;
       avisar("tarifas");
     });
@@ -143,7 +153,7 @@ App.nuvem = (function () {
 
   function carregarMotoristas() {
     return sb().from("motoristas").select("id, nome, telefone, avaliacao, servicos, status, veiculo").order("nome").then(function (r) {
-      if (r.error) return;
+      if (r.error || !mudou("motoristas", r.data)) return;
       dados.motoristas = r.data.map(motoristaDoBanco);
       avisar("motoristas");
     });
@@ -153,7 +163,7 @@ App.nuvem = (function () {
   function carregarCorridas() {
     return sb().from("corridas").select("*").eq("fonte", "app").order("criada_em", { ascending: false }).limit(500)
       .then(function (r) {
-        if (r.error) return;
+        if (r.error || !mudou("corridas", r.data)) return;
         dados.corridas = r.data.map(corridaDoBanco);
         avisar("corridas");
       });

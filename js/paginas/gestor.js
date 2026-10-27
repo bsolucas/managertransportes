@@ -107,7 +107,7 @@
   function cardCorrida(c, opcoes) {
     opcoes = opcoes || {};
     var naoLidas = opcoes.mostrarNaoLidas ? nuvem.naoLidas(c.id, App.sessao.chaveUsuario()) : 0;
-    return '<div class="item-corrida' + (opcoes.selecionada === c.id ? " selecionado" : "") + '" data-corrida="' + c.id + '">' +
+    return '<div class="item-corrida' + (opcoes.selecionada === c.id ? " selecionado" : "") + '" tabindex="0" role="button" data-corrida="' + c.id + '">' +
              '<div class="item-corrida-topo"><span class="item-corrida-codigo">' + c.codigo + " " +
                (App.SERVICOS[c.servico] || {}).icone + "</span>" +
                (naoLidas ? '<span class="contador-nao-lidas">' + naoLidas + "</span>" : ui.seloStatus(c.status)) + "</div>" +
@@ -160,7 +160,7 @@
     })));
   ui.preencherSelect(document.getElementById("filtro-servico"),
     [{ valor: "", texto: "Todos os serviços" }].concat(Object.keys(App.SERVICOS).map(function (k) {
-      return { valor: k, texto: App.SERVICOS[k].icone + " " + App.SERVICOS[k].rotulo };
+      return { valor: k, texto: App.SERVICOS[k].rotulo };
     })));
 
   ["filtro-busca", "filtro-status", "filtro-servico"].forEach(function (id) {
@@ -183,12 +183,12 @@
     }).sort(function (a, b) { return b.criadaEm - a.criadaEm; });
 
     document.getElementById("tabela-corridas").innerHTML = lista.length ? lista.map(function (c) {
-      return '<tr class="clicavel" data-corrida="' + c.id + '">' +
+      return '<tr class="clicavel" tabindex="0" role="button" data-corrida="' + c.id + '">' +
         '<td data-rotulo="Corrida"><strong>' + c.codigo + "</strong></td>" +
         '<td data-rotulo="Cliente">' + u.escaparHtml(nomeCliente(c)) + "</td>" +
         '<td data-rotulo="Trajeto" class="trajeto-celula"><strong>' + u.escaparHtml(c.trajeto) + "</strong>" +
           (c.embarque ? "<br><span>Embarque:</span> " + u.escaparHtml(c.embarque) : "") + "</td>" +
-        '<td data-rotulo="Serviço">' + (App.SERVICOS[c.servico] || {}).icone + " " + (App.SERVICOS[c.servico] || {}).rotulo + "</td>" +
+        '<td data-rotulo="Serviço"><span>' + (App.SERVICOS[c.servico] || {}).icone + " " + (App.SERVICOS[c.servico] || {}).rotulo + "</span></td>" +
         '<td data-rotulo="Motorista">' + u.escaparHtml(nomeMotorista(c.motoristaId)) + "</td>" +
         '<td data-rotulo="Status">' + ui.seloStatus(c.status) + "</td>" +
         '<td data-rotulo="Total" class="direita numero">' + u.moeda(App.precos.totalCorrida(c)) + "</td>" +
@@ -223,7 +223,7 @@
         '<div class="linha-campos">' +
           '<div class="grupo-campo"><label class="rotulo" for="nc-servico">Serviço *</label>' +
             '<select class="campo" id="nc-servico">' + Object.keys(App.SERVICOS).map(function (k) {
-              return '<option value="' + k + '">' + App.SERVICOS[k].icone + " " + App.SERVICOS[k].rotulo + "</option>";
+              return '<option value="' + k + '">' + App.SERVICOS[k].rotulo + "</option>";
             }).join("") + "</select></div>" +
           '<div class="grupo-campo"><label class="rotulo" for="nc-valor">Valor (R$) *</label>' +
             '<input class="campo" id="nc-valor" type="number" step="0.01" min="0" inputmode="decimal" /></div>' +

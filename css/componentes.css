@@ -283,3 +283,30 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .mensagem-papel { font-weight: 400; opacity: 0.8; }
 .mensagem-texto { white-space: pre-wrap; word-wrap: break-word; }
 .mensagem-hora { font-size: 0.7rem; opacity: 0.7; text-align: right; margin-top: 2px; }
+
+
+/* ===================== 9. TOQUE E CLIQUE (PC E CELULAR) ===================== */
+/* Sem o "zoom por toque duplo" e sem o clarão cinza do navegador: o toque responde na hora */
+.botao, .botao-icone, .menu-item, .aba, .pilula, .item-corrida, .tabela tr.clicavel, summary, select, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Retorno visual ao apertar */
+.botao:active:not(:disabled) { transform: translateY(1px) scale(0.985); }
+.botao-icone:active { background: var(--superficie-3); transform: scale(0.94); }
+.menu-item:active, .aba:active { background: var(--azul-suave); }
+.item-corrida:active, .tabela tbody tr.clicavel:active td { background: var(--superficie-3); }
+/* Foco visível para quem usa o teclado (e não aparece no clique com o mouse) */
+.botao:focus-visible, .botao-icone:focus-visible, .menu-item:focus-visible, .aba:focus-visible,
+.item-corrida:focus-visible, .tabela tr.clicavel:focus-visible, .pilula:has(input:focus-visible) {
+  outline: 2px solid var(--azul-claro); outline-offset: 2px;
+}
+.item-corrida { cursor: pointer; }
+/* Em telas de toque o "hover" fica preso depois do toque: só vale com mouse */
+@media (hover: none) {
+  .menu-item:hover:not(.ativo) { background: transparent; color: var(--texto-suave); }
+  .tabela tbody tr.clicavel:hover td { background: var(--superficie-2); }
+  .item-corrida:hover:not(.selecionado) { border-color: var(--borda); }
+  .botao-secundario:hover:not(:disabled) { background: var(--superficie-2); }
+  .botao-primario:hover:not(:disabled) { background: var(--azul); }
+}

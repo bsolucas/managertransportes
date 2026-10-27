@@ -144,14 +144,24 @@
 .grade-mapa-lateral { display: grid; grid-template-columns: 1fr 380px; gap: var(--espaco); }
 .grade-lateral-mapa { display: grid; grid-template-columns: 400px 1fr; gap: var(--espaco); }
 .pilha { display: flex; flex-direction: column; gap: var(--espaco); }
+/* Filhos de grade podem encolher (sem isso uma tabela larga estoura o cartão no celular) */
+.grade-2 > *, .grade-mapa-lateral > *, .grade-lateral-mapa > *, .pilha > * { min-width: 0; }
 
 /* Telas menores: as colunas viram uma embaixo da outra */
 @media (max-width: 1100px) {
   .grade-mapa-lateral, .grade-lateral-mapa, .grade-2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
-  .pagina-com-menu { grid-template-columns: 1fr; }
-  .menu-lateral { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--borda); }
+  /* Duas linhas: o menu (altura do conteúdo, nunca esticado) e a seção */
+  .pagina-com-menu { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; }
+  /* Menu vira uma faixa que rola para o lado e fica grudada embaixo do topo ao rolar a página */
+  .menu-lateral {
+    position: sticky; top: var(--altura-topo); z-index: 40;
+    flex-direction: row; align-self: start; overflow-x: auto;
+    border-right: 0; border-bottom: 1px solid var(--borda);
+    scroll-snap-type: x proximity; overscroll-behavior-x: contain;
+  }
+  .menu-item { width: auto; flex-shrink: 0; white-space: nowrap; scroll-snap-align: center; }
   .menu-rodape { display: none; }
   .conteudo { padding: 16px; }
 }

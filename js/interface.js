@@ -124,9 +124,22 @@ App.ui = {
         App.ui.$$("[data-painel]").forEach(function (p) {
           p.hidden = p.getAttribute("data-painel") !== alvo;
         });
+        App.ui.mostrarAbaNoMenu(botao);
         if (aoTrocar) aoTrocar(alvo);
       });
     });
+  },
+
+  /* No celular o menu é uma faixa que rola para o lado: traz o item ativo para o meio da faixa
+     e, se a página estava rolada para baixo, volta ao topo da nova seção. */
+  mostrarAbaNoMenu: function (botao) {
+    var faixa = botao.parentNode;
+    if (faixa && faixa.scrollWidth > faixa.clientWidth + 1) {
+      var alvo = botao.offsetLeft - (faixa.clientWidth - botao.offsetWidth) / 2;
+      if (faixa.scrollTo) faixa.scrollTo({ left: Math.max(0, alvo), behavior: "auto" }); else faixa.scrollLeft = alvo;
+    }
+    var topoDaPagina = window.scrollY || document.documentElement.scrollTop || 0;
+    if (topoDaPagina > 120 && window.matchMedia("(max-width: 760px)").matches) window.scrollTo(0, 0);
   },
 
   /* Preenche um <select> com opções [{valor, texto}]. */
@@ -137,3 +150,12 @@ App.ui = {
     }).join("");
   }
 };
+
+/* Linhas e cartões clicáveis (role="button") também funcionam com Enter ou Espaço. */
+document.addEventListener("keydown", function (ev) {
+  if (ev.key !== "Enter" && ev.key !== " ") return;
+  var alvo = ev.target;
+  if (!alvo || alvo.getAttribute("role") !== "button" || alvo.tagName === "BUTTON") return;
+  ev.preventDefault();
+  alvo.click();
+});

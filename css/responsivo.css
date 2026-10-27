@@ -7,8 +7,8 @@
    Pontos de quebra usados:
      • até 900px ... tablet: colunas viram uma embaixo da outra (já feito nos
                      arquivos de layout e de cada página)
-     • até 640px ... celular: topo compacto, tabelas viram cartões, janelas
-                     ocupam a tela toda, campos maiores para o toque
+     • até 760px ... celular (e tablet em pé): menu em faixa, tabelas viram cartões,
+                     janelas ocupam a tela toda, campos maiores para o toque
      • até 380px ... celulares bem pequenos: mais um aperto nos espaços
 
    Índice:
@@ -26,7 +26,7 @@
   .oculto-celular { display: none !important; }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
 
   /* ======================= 1. TOPO ======================= */
   .topo { padding: 0 12px; gap: 8px; }
@@ -37,7 +37,7 @@
   /* Menu do gestor: faixa que rola para o lado, sem barra de rolagem visível */
   .menu-lateral { padding: 8px; gap: 6px; scrollbar-width: none; }
   .menu-lateral::-webkit-scrollbar { display: none; }
-  .menu-item { width: auto; flex-shrink: 0; white-space: nowrap; padding: 9px 12px; }
+  .menu-item { padding: 11px 14px; min-height: 44px; }
   .menu-item.ativo { box-shadow: inset 0 -3px 0 var(--azul); }
 
   .abas-topo { padding: 6px 8px 0; overflow-x: auto; scrollbar-width: none; }
@@ -68,7 +68,7 @@
   .campo { font-size: 16px; padding: 11px 12px; }
   .botao { min-height: 44px; }
   .botao-pequeno { min-height: 40px; padding: 8px 12px; }
-  .botao-icone { width: 40px; height: 40px; }
+  .botao-icone { width: 44px; height: 44px; }
   .pilula { padding: 9px 14px; }
   .acoes-corrida .botao, .acoes-modal .botao { flex: 1 1 140px; }
 
@@ -100,6 +100,35 @@
     font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave);
   }
   .tabela-cartoes .tabela-vazia { text-align: center; justify-content: center; }
+  /* Células com ícone + texto: ficam juntas (sem isso o ícone vai para o outro lado do cartão) */
+  .tabela-cartoes td > span { display: inline-flex; align-items: center; gap: 6px; text-align: right; }
+  /* Cartões clicáveis: dão para o dedo */
+  .tabela-cartoes tr.clicavel { cursor: pointer; }
+  .tabela-cartoes tr.clicavel:active { background: var(--superficie-3); }
+  .tabela-cartoes .acoes-linha { justify-content: flex-end; }
+
+  /* Corridas: cartão compacto de 2 colunas (em vez de oito linhas empilhadas) */
+  #tabela-corridas tr.clicavel {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 12px;
+    grid-template-areas: "cod status" "traj traj" "cli tot" "mot ped" "serv serv";
+  }
+  #tabela-corridas td { width: auto; padding: 2px 0; justify-content: flex-start; text-align: left; min-width: 0; }
+  #tabela-corridas td::before { display: none; }                       /* rótulos só onde ajudam: */
+  #tabela-corridas td:nth-child(5)::before { display: inline; margin-right: 8px; }   /* "Motorista" (o "—" sozinho confunde) */
+  #tabela-corridas td:nth-child(1) { grid-area: cod; font-size: 1.05rem; }
+  #tabela-corridas td:nth-child(6) { grid-area: status; justify-content: flex-end; }
+  #tabela-corridas td:nth-child(3) { grid-area: traj; padding: 6px 0; }
+  #tabela-corridas td:nth-child(2) { grid-area: cli; }
+  #tabela-corridas td:nth-child(7) { grid-area: tot; justify-content: flex-end; font-size: 1.05rem; }
+  #tabela-corridas td:nth-child(5) { grid-area: mot; }
+  #tabela-corridas td:nth-child(8) { grid-area: ped; justify-content: flex-end; }
+  #tabela-corridas td:nth-child(4) { grid-area: serv; }
+  #tabela-corridas .selo { white-space: nowrap; }
+
+  /* Tabelas comuns (Financeiro etc.) cabem na largura do celular, sem cortar a última coluna */
+  .tabela:not(.tabela-cartoes) th, .tabela:not(.tabela-cartoes) td { padding: 9px 8px; font-size: 0.82rem; }
+  .tabela:not(.tabela-cartoes) th { letter-spacing: 0; }
+  .grade-2 > .cartao, .pilha > .cartao { padding: 12px; }
   /* "Trajeto" tem duas linhas (De / Para): rótulo em cima e texto alinhado à esquerda */
   .tabela-cartoes td.trajeto-celula { display: block; text-align: left; }
   .tabela-cartoes td.trajeto-celula::before { display: block; margin-bottom: 4px; }
