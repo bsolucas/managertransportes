@@ -141,7 +141,7 @@
           "<div><strong>" + u.escaparHtml(nomeExibido(c)) + "</strong>" +
           (c.empresa ? "<small>Contato: " + u.escaparHtml(c.nome) + "</small>" : "") +
           (c.email ? "<small>" + u.escaparHtml(c.email) + "</small>" : "") +
-          (c.temLogin && !individual ? "<small>" + App.icone("key-round") + " Login: " + u.escaparHtml(c.usuarioLogin) + "</small>" : "") + "</div></div></td>" +
+          (c.temLogin && !individual ? "<small>" + App.icone("key-round") + " Login: " + u.escaparHtml(c.usuarioLogin) + (c.modoSolicitacao === "automatico" ? " • pedido automático" : "") + "</small>" : "") + "</div></div></td>" +
         '<td data-rotulo="CNPJ" class="nao-quebra col-cnpj">' + u.escaparHtml(c.cnpj || "—") + "</td>" +
         '<td data-rotulo="Telefone" class="nao-quebra">' + u.escaparHtml(c.telefone || "—") + "</td>" +
         '<td data-rotulo="Corridas" class="direita numero">' + r.corridas + "</td>" +
@@ -205,6 +205,14 @@
           '<select class="campo" id="cli-ativo"><option value="1"' + (c.ativo !== false ? " selected" : "") + '>Ativo</option>' +
           '<option value="0"' + (c.ativo === false ? " selected" : "") + ">Inativo</option></select></div>" +
         '<div' + oculto + '>' +
+        '<div class="grupo-campo"><label class="rotulo" for="cli-solicitacao">Como o cliente solicita corridas</label>' +
+          '<select class="campo" id="cli-solicitacao">' +
+            '<option value="gestor"' + (c.modoSolicitacao !== "automatico" ? " selected" : "") + ">Direto para o gestor (o gestor escolhe o motorista)</option>" +
+            '<option value="automatico"' + (c.modoSolicitacao === "automatico" ? " selected" : "") + ">Automático (o sistema escolhe um motorista livre)</option>" +
+          "</select>" +
+          '<p class="texto-suave texto-pequeno">No automático, o motorista livre há mais tempo e que atende o serviço recebe a corrida na hora. Sem motorista livre, ela fica na fila e o gestor é avisado.</p></div>' +
+        "</div>" +
+        '<div' + oculto + '>' +
         '<hr class="separador" />' +
         '<p class="texto-suave texto-pequeno">' + (c.temLogin
           ? "Este cliente já tem acesso ao portal. Para trocar a senha, digite uma nova."
@@ -259,7 +267,8 @@
         email: corpo.querySelector("#cli-email").value.trim(),
         endereco: corpo.querySelector("#cli-endereco").value.trim(),
         observacoes: corpo.querySelector("#cli-obs").value.trim(),
-        ativo: corpo.querySelector("#cli-ativo").value === "1"
+        ativo: corpo.querySelector("#cli-ativo").value === "1",
+        modoSolicitacao: corpo.querySelector("#cli-solicitacao").value
       };
 
       /* Validação: mostra o erro embaixo de cada campo */

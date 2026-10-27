@@ -10,7 +10,7 @@
    Ao mudar a lista abaixo, aumente a VERSAO_CACHE para limpar o cache antigo.
    ============================================================================= */
 
-const VERSAO_CACHE = 'manager-v4';
+const VERSAO_CACHE = 'manager-v5';
 
 /* Páginas e arquivos essenciais, guardados na instalação */
 const ARQUIVOS_BASICOS = [
@@ -65,5 +65,15 @@ self.addEventListener('fetch', (evento) => {
           guardado || (pedido.mode === 'navigate' ? caches.match('./index.html') : Response.error())
         )
       )
+  );
+});
+
+/* Clicar numa notificação traz o app para a frente (ou abre, se estiver fechado). */
+self.addEventListener('notificationclick', (evento) => {
+  evento.notification.close();
+  evento.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) =>
+      janelas.length ? janelas[0].focus() : self.clients.openWindow('./')
+    )
   );
 });

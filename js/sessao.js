@@ -31,6 +31,7 @@ App.sessao = {
   sair: function () {
     var u = App.sessao.atual();
     sessionStorage.removeItem(App.sessao.CHAVE);
+    try { localStorage.removeItem(App.config.PREFIXO_ARMAZENAMENTO + "lembrar"); } catch (e) { /* sem armazenamento */ }   // "Sair" desfaz a entrada automática
     var ir = function () { window.location.href = App.sessao.caminhoInicio(); };
     /* Todos os perfis têm login real no Supabase: encerra junto. */
     if (u && App.auth) App.auth.sair().then(ir, ir); else ir();

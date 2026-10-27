@@ -27,7 +27,12 @@
      ========================================================================== */
   var usuario = App.sessao.exigir("gestor");
   if (!usuario) return;
-  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(); iniciarRastreioReal(); nuvem.iniciar(); }); // sem login válido, volta para o início
+  App.auth.exigirLogin().then(function () { App.notificacoes.iniciar(function (n) {
+    /* Clicou numa notificação: abre a corrida dela. */
+    if (!n.corrida_id) return;
+    ui.$('.menu-item[data-aba="corridas"]').click();
+    if (nuvem.buscarCorrida(n.corrida_id)) abrirDetalhe(n.corrida_id);
+  }); iniciarRastreioReal(); nuvem.iniciar(); }); // sem login válido, volta para o início
   ui.montarTopo();
   document.getElementById("usuario-avatar").textContent = u.iniciais(usuario.nome);
 

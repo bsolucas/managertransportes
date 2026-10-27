@@ -29,7 +29,10 @@
   App.auth.exigirLogin()
     .then(function () { return nuvem.iniciar(); })
     .then(function () {
-      App.notificacoes.iniciar();   // aviso e bip quando a corrida é aceita, concluída ou cancelada
+      App.notificacoes.iniciar(function (n) {   // aviso, bip e sininho; clicar abre a corrida
+        ui.$('[data-aba="minhas"]').click();
+        if (n.corrida_id && App.__selecionarCorrida) App.__selecionarCorrida(n.corrida_id);
+      });
       montar();
     })
     .catch(function (e) {
@@ -43,6 +46,7 @@
     var chat = App.chat.criar(document.getElementById("chat-cliente"), nuvem);
     var abaAtual = "pedir";
     var corridaSelecionada = null;
+    App.__selecionarCorrida = function (id) { corridaSelecionada = id; desenharMinhas(); desenharAcompanhamento(); };   // usado pelo sininho
 
     ui.ligarAbas(function (aba) {
       abaAtual = aba;
@@ -99,6 +103,12 @@
     /* ========================================================================
        3. ENVIAR O PEDIDO
        ======================================================================== */
+    /* Avisa o cliente o que acontece depois que ele pede (depende de como a empresa configurou). */
+    var meuCadastro = nuvem.buscarCliente(usuario.id);
+    document.getElementById("aviso-modo-pedido").textContent = meuCadastro && meuCadastro.modoSolicitacao === "automatico"
+      ? "Assim que você pedir, o sistema procura um motorista livre para atender."
+      : "Seu pedido chega ao gestor, que escolhe o motorista.";
+
     document.getElementById("formulario-pedido").addEventListener("submit", function (ev) {
       ev.preventDefault();
       var t = trajetoEscolhido();
@@ -116,7 +126,7 @@
         valor: t.valor,   // o banco troca pelo valor oficial do trajeto
         observacoes: document.getElementById("pedido-observacoes").value.trim()
       }).then(function (corrida) {
-        ui.aviso("Corrida " + corrida.codigo + " solicitada! Aguardando um motorista.", "sucesso");
+        ui.aviso("Corrida " + corrida.codigo + " solicitada!", "sucesso");
         document.getElementById("pedido-embarque").value = "";
         document.getElementById("pedido-destino").value = "";
         document.getElementById("pedido-observacoes").value = "";

@@ -79,3 +79,10 @@
   transition: opacity 0.15s;
 }
 .acesso-dono:hover, .acesso-dono:focus-visible { opacity: 0.8; }
+
+/* Aviso de entrada automática (quem marcou "salvar meu login") */
+.entrada-automatica {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+  max-width: 900px; margin: 0 auto 16px; padding: 12px 14px;
+  border: 1px solid var(--azul); border-radius: var(--raio); background: var(--azul-suave);
+}

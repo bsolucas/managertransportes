@@ -6,6 +6,7 @@
      • js/config-supabase.js (endereço e chave pública do projeto)
 
      App.auth.entrar(usuario, senha)  -> Promise com { id, nome, papel, empresa }
+     App.auth.restaurar()             -> Promise com { id, nome, papel, empresa } do login que já existe aqui
      App.auth.exigirLogin()           -> Promise; sem login válido, volta para o início
      App.auth.buscarEmpresa()         -> Promise com os dados atuais da empresa
      App.auth.buscarMotorista()       -> Promise com o cadastro do motorista logado
@@ -45,6 +46,18 @@ App.auth = (function () {
       if (r.error) throw new Error("Usuário ou senha incorretos.");
       return carregarPerfil(r.data.user.id).then(function (perfil) {
         return { id: r.data.user.id, nome: perfil.nome, papel: perfil.papel, empresa: perfil.empresa };
+      });
+    });
+  }
+
+  /* Já existe um login do Supabase neste aparelho? Devolve os mesmos dados de "entrar" sem pedir senha
+     (usado na entrada automática de quem marcou "salvar meu login"). */
+  function restaurar() {
+    return conexao().auth.getSession().then(function (r) {
+      if (!r.data || !r.data.session) throw new Error("Sem login.");
+      var user = r.data.session.user;
+      return carregarPerfil(user.id).then(function (perfil) {
+        return { id: user.id, nome: perfil.nome, papel: perfil.papel, empresa: perfil.empresa };
       });
     });
   }
@@ -97,5 +110,5 @@ App.auth = (function () {
     try { return conexao().auth.signOut(); } catch (e) { return Promise.resolve(); }
   }
 
-  return { entrar: entrar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao };
+  return { entrar: entrar, restaurar: restaurar, exigirLogin: exigirLogin, buscarEmpresa: buscarEmpresa, buscarMotorista: buscarMotorista, buscarCliente: buscarCliente, sair: sair, conexao: conexao };
 })();

@@ -33,7 +33,7 @@
     .then(function () { return nuvem.iniciar(); })
     .then(function () {
       if (!nuvem.meuMotorista()) throw new Error("Cadastro de motorista não encontrado.");
-      App.notificacoes.iniciar();   // aviso e bip quando chega corrida nova
+      App.notificacoes.iniciar(function () { ui.$('[data-aba="corridas"]').click(); });   // aviso, bip e sininho
       montar();
     })
     .catch(function (e) {

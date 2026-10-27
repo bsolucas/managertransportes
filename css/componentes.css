@@ -310,3 +310,35 @@ textarea.campo { resize: vertical; min-height: 70px; }
   .botao-secundario:hover:not(:disabled) { background: var(--superficie-2); }
   .botao-primario:hover:not(:disabled) { background: var(--azul); }
 }
+
+/* ===================== 10. SININHO DE NOTIFICAÇÕES ===================== */
+.sino-caixa { position: relative; }
+.sino { position: relative; width: 38px; height: 38px; }
+.sino .ico { width: 20px; height: 20px; }
+.sino-contador {
+  position: absolute; top: 1px; right: 0; min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 99px; background: var(--azul); color: #fff; font-size: 0.68rem; font-weight: 700;
+  display: grid; place-items: center; border: 2px solid var(--superficie);
+}
+.painel-notificacoes {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 600;
+  width: min(380px, calc(100vw - 24px));
+  background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+  box-shadow: var(--sombra); overflow: hidden;
+}
+.painel-notificacoes-topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--borda); }
+.painel-notificacoes-ativar { width: calc(100% - 24px); margin: 10px 12px 0; }
+.painel-notificacoes-lista { max-height: min(60vh, 420px); overflow-y: auto; }
+.notificacao-item {
+  display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 11px 12px;
+  background: transparent; border: 0; border-bottom: 1px solid var(--borda); text-align: left; color: var(--texto-suave); cursor: pointer;
+}
+.notificacao-item:last-child { border-bottom: 0; }
+.notificacao-item.nova { background: var(--azul-suave); color: var(--texto); }
+.notificacao-item:active { background: var(--superficie-3); }
+.notificacao-icone { flex: none; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--superficie-2); color: var(--azul-claro); }
+.notificacao-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 0.88rem; }
+.notificacao-texto strong { color: var(--texto); }
+.notificacao-texto small { color: var(--texto-suave); font-size: 0.74rem; }
+.notificacao-vazia { padding: 22px; text-align: center; color: var(--texto-suave); margin: 0; }
+@media (max-width: 760px) { .painel-notificacoes { position: fixed; right: 12px; left: 12px; top: calc(var(--altura-topo) + 6px); width: auto; } }

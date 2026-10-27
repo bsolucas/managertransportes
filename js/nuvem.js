@@ -79,14 +79,14 @@ App.nuvem = (function () {
       id: l.id, nome: l.nome, empresa: l.empresa_nome || "", cnpj: l.cnpj || "",
       telefone: l.telefone || "", email: l.email || "", endereco: l.endereco || "",
       observacoes: l.observacoes || "", ativo: l.ativo !== false,
-      temLogin: !!l.user_id, usuarioLogin: l.usuario_login || ""
+      temLogin: !!l.user_id, usuarioLogin: l.usuario_login || "", modoSolicitacao: l.modo_solicitacao || "gestor"
     };
   }
 
   /* Só leva ao banco os campos que vieram em "d" (permite alterar só o "ativo"). */
   function paraBanco(d) {
     var colunas = { nome: "nome", empresa: "empresa_nome", cnpj: "cnpj", telefone: "telefone",
-                    email: "email", endereco: "endereco", observacoes: "observacoes", ativo: "ativo" };
+                    email: "email", endereco: "endereco", observacoes: "observacoes", ativo: "ativo", modoSolicitacao: "modo_solicitacao" };
     var linha = {};
     Object.keys(colunas).forEach(function (campo) {
       if (d[campo] === undefined) return;
