@@ -15,6 +15,6 @@
    ============================================================================= */
 
 App.mapaConfig = {
-  googleChave: "",
+  googleChave: "AIzaSyCSdlVoSevIrjhTXE9cBaclSOl7EHI1Nlk",
   googleEm: { motorista: false, gestor: true, cliente: false }
 };
