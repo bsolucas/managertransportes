@@ -30,3 +30,79 @@
 /* Botão "Usar minha localização atual" abaixo do endereço de embarque */
 .botao-localizacao { margin-top: 8px; }
 .dica-campo { display: block; margin-top: 6px; color: var(--cor-texto-suave, #6b7280); font-size: 0.82rem; }
+
+/* =============================================================================
+   FORMULÁRIO "PEDIR CORRIDA" — passos numerados, cartões grandes e barra de valor fixa embaixo
+   ============================================================================= */
+.cartao-pedido { padding: 20px 18px 0; overflow: visible; }
+.cartao-pedido > h2 { font-size: 1.45rem; margin-bottom: 18px; }
+.rotulo-secao { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; color: var(--texto-suave); }
+.rotulo-secao b { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--azul-suave); color: var(--azul-claro); font-size: 0.78rem; }
+.cartao-pedido .grupo-campo { margin-bottom: 22px; }
+
+/* Marca de "escolhido" (círculo com um visto) usada nos cartões de trajeto e nos azulejos de serviço */
+.marca-ok { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--azul); color: #fff; opacity: 0; transform: scale(0.6); transition: opacity 0.15s, transform 0.15s; flex: none; }
+.marca-ok .ico { width: 14px; height: 14px; stroke-width: 3; }
+.trajeto:has(input:checked) .marca-ok, .servico:has(input:checked) .marca-ok { opacity: 1; transform: scale(1); }
+.trajeto input, .servico input { position: absolute; opacity: 0; pointer-events: none; }
+
+/* 1. Trajetos: um cartão por linha, com o valor bem visível à direita */
+.lista-trajetos { display: grid; gap: 10px; }
+.trajeto { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; border: 2px solid var(--borda); background: var(--superficie-2); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
+.trajeto:hover { background: var(--superficie-3); }
+.trajeto:active { transform: scale(0.99); }
+.trajeto:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
+.trajeto:has(input:focus-visible), .servico:has(input:focus-visible) { outline: 3px solid var(--azul-claro); outline-offset: 2px; }
+.trajeto-icone { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--superficie-3); color: var(--azul-claro); flex: none; }
+.trajeto:has(input:checked) .trajeto-icone { background: var(--azul); color: #fff; }
+.trajeto-nome { flex: 1; font-weight: 600; line-height: 1.25; }
+.trajeto-valor { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* 2. Embarque e destino: uma caixa só, com bolinha (origem) e quadradinho (destino) ligados por um traço */
+.caixa-rota { position: relative; border-radius: 14px; background: var(--superficie-3); border: 1.5px solid transparent; transition: border-color 0.15s, box-shadow 0.15s; }
+.caixa-rota:focus-within { border-color: var(--azul); box-shadow: 0 0 0 4px var(--azul-suave); }
+.linha-rota { display: flex; align-items: center; gap: 12px; padding: 0 8px 0 16px; min-height: 54px; }
+.linha-rota + .linha-rota { border-top: 1px solid var(--borda); }
+.caixa-rota::before { content: ""; position: absolute; left: 21px; top: 38px; bottom: 38px; width: 2px; background: var(--borda); }
+.ponto { width: 12px; height: 12px; flex: none; position: relative; z-index: 1; }
+.ponto-origem { border-radius: 50%; background: var(--azul-claro); box-shadow: 0 0 0 4px var(--azul-suave); }
+.ponto-destino { border-radius: 3px; background: var(--texto); }
+.campo-rota { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--texto); font-size: 1rem; padding: 14px 0; outline: none; }
+.campo-rota::placeholder { color: #6f788c; }
+.botao-gps { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--azul-suave); color: var(--azul-claro); cursor: pointer; flex: none; margin: 0; }
+.botao-gps:hover { background: var(--azul); color: #fff; }
+.botao-gps .ico { width: 18px; height: 18px; }
+.botao-gps.carregando { animation: pulsar 1s infinite; }
+@keyframes pulsar { 50% { opacity: 0.45; } }
+
+/* 3. Tipo de veículo: azulejos grandes, 2 por linha */
+.grade-servicos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.servico { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; min-height: 108px; border-radius: 14px; border: 2px solid var(--borda); background: var(--superficie-2); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
+.servico:hover { background: var(--superficie-3); }
+.servico:active { transform: scale(0.98); }
+.servico:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
+.servico-icone { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--superficie-3); color: var(--texto-suave); margin-bottom: 4px; }
+.servico-icone .ico { width: 24px; height: 24px; }
+.servico:has(input:checked) .servico-icone { background: var(--azul); color: #fff; }
+.servico-nome { font-weight: 700; line-height: 1.2; }
+.servico-detalhe { font-size: 0.8rem; color: var(--texto-suave); }
+.servico .marca-ok { position: absolute; top: 10px; right: 10px; }
+
+/* Observação: escondida até o cliente querer escrever */
+.obs-pedido { margin-bottom: 18px; }
+.obs-pedido summary { cursor: pointer; color: var(--azul-claro); font-weight: 600; padding: 6px 0; list-style: none; }
+.obs-pedido summary::-webkit-details-marker { display: none; }
+.obs-pedido summary::before { content: "+ "; }
+.obs-pedido[open] summary::before { content: "− "; }
+.obs-pedido textarea { margin-top: 8px; }
+
+/* Barra de baixo: o valor e o botão acompanham a rolagem */
+.barra-pedido { position: sticky; bottom: 0; z-index: 5; margin: 0 -18px; padding: 14px 18px calc(14px + env(safe-area-inset-bottom)); background: var(--superficie); border-top: 1px solid var(--borda); border-radius: 0 0 var(--raio) var(--raio); box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.35); }
+.barra-pedido .previa-preco { margin: 0 0 8px; padding: 0; border: 0; background: transparent; }
+.previa-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.previa-rotulo { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--texto-suave); }
+.previa-nome { display: block; font-weight: 600; }
+.previa-valor { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.previa-vazia { margin: 0 0 4px; }
+.barra-pedido .texto-pequeno { margin: 4px 0 10px; }
+.botao-grande { min-height: 52px; font-size: 1.05rem; border-radius: 14px; }

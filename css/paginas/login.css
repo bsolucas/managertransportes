@@ -5,7 +5,7 @@
 /* Fundo com um brilho azul suave no alto */
 .pagina-login {
   background:
-    radial-gradient(900px 400px at 50% -10%, rgba(0, 71, 255, 0.35), transparent 70%),
+    radial-gradient(900px 400px at 50% -10%, rgba(59, 111, 214, 0.35), transparent 70%),
     var(--preto);
   min-height: 100vh;
 }

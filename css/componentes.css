@@ -56,18 +56,23 @@
 /* ===================== 2. CAMPOS DE FORMULÁRIO =========================== */
 .campo {
   width: 100%;
-  padding: 9px 12px;
-  border-radius: var(--raio-pequeno);
-  border: 1px solid var(--borda);
-  background: var(--superficie-2);
+  min-height: 46px;              /* fácil de tocar no celular */
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  background: var(--superficie-3);
   color: var(--texto);
+  font-size: 1rem;               /* 16px: o iPhone não dá zoom ao digitar */
   outline: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
-.campo:focus { border-color: var(--azul); box-shadow: 0 0 0 3px var(--azul-suave); }
+.campo::placeholder { color: #6f788c; }
+.campo:hover { background: #262b37; }
+.campo:focus { border-color: var(--azul); background: var(--superficie-2); box-shadow: 0 0 0 4px var(--azul-suave); }
 .campo:disabled { opacity: 0.55; }
 textarea.campo { resize: vertical; min-height: 70px; }
 
-.rotulo { display: block; margin-bottom: 6px; font-size: 0.85rem; color: var(--texto-suave); }
+.rotulo { display: block; margin-bottom: 7px; font-size: 0.84rem; font-weight: 600; color: var(--texto-suave); }
 .grupo-campo { margin-bottom: 14px; }
 /* Campo de senha com o botão "olho" (mostrar/esconder) dentro, à direita */
 .campo-senha { position: relative; }
@@ -361,10 +366,10 @@ textarea.campo { resize: vertical; min-height: 70px; }
 
 /* Faixa "Toque para ativar o som": aparece só quando o navegador bloqueou o som dos avisos */
 .faixa-som {
-  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 2000;
+  position: fixed; left: 50%; top: 66px; transform: translateX(-50%); z-index: 2000;
   display: flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px);
-  padding: 10px 16px; border: 0; border-radius: 999px; cursor: pointer;
-  background: var(--azul); color: var(--texto-sobre-azul); font-weight: 600; font-size: 0.9rem;
+  padding: 7px 12px; border: 0; border-radius: 999px; cursor: pointer; white-space: nowrap; font-size: 0.8rem;
+  background: var(--azul); color: var(--texto-sobre-azul); font-weight: 600;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 .faixa-som .ico { width: 18px; height: 18px; }

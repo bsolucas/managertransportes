@@ -4,7 +4,7 @@
    ============================================================================= */
 
 :root {
-  --azul: #0047ff; --azul-escuro: #0033c2; --azul-claro: #4d7fff; --azul-suave: rgba(0, 71, 255, .14);
+  --azul: #3b6fd6; --azul-escuro: #2f58ad; --azul-claro: #7ea2e8; --azul-suave: rgba(59, 111, 214, .14);
   --preto: #07080b; --superficie: #101218; --superficie-2: #171a22; --borda: #272c38;
   --texto: #f1f3f8; --texto-suave: #9aa3b6; --verde: #22c55e; --amarelo: #f5a524; --vermelho: #ef4444;
   --fonte: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -63,7 +63,7 @@ input:focus, select:focus { outline: none; border-color: var(--azul); box-shadow
 .indicador-rotulo { color: var(--texto-suave); font-size: .85rem; }
 .indicador-valor { font-size: 1.8rem; font-weight: 800; margin: 4px 0; white-space: nowrap; }
 .indicador-detalhe { color: var(--texto-suave); font-size: .8rem; }
-.indicador-destaque { border-color: var(--azul); background: linear-gradient(180deg, rgba(0, 71, 255, .16), var(--superficie)); }
+.indicador-destaque { border-color: var(--azul); background: linear-gradient(180deg, rgba(59, 111, 214, .16), var(--superficie)); }
 
 /* ---------- Abas e filtros ---------- */
 .abas { display: flex; gap: 6px; border-bottom: 1px solid var(--borda); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }

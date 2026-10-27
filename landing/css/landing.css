@@ -5,10 +5,10 @@
 
 /* ---------- Cores e medidas ---------- */
 :root {
-  --azul: #0047ff;
-  --azul-escuro: #0033c2;
-  --azul-claro: #4d7fff;
-  --azul-suave: rgba(0, 71, 255, 0.14);
+  --azul: #3b6fd6;
+  --azul-escuro: #2f58ad;
+  --azul-claro: #7ea2e8;
+  --azul-suave: rgba(59, 111, 214, 0.14);
   --preto: #07080b;
   --superficie: #101218;
   --superficie-2: #171a22;
@@ -58,7 +58,7 @@ ul, ol { margin: 0; padding: 0; }
 .menu-botao { display: none; background: none; border: 1px solid var(--borda); color: var(--texto); font-size: 1.3rem; border-radius: 8px; width: 42px; height: 42px; cursor: pointer; }
 
 /* ---------- Hero ---------- */
-.hero { padding: 72px 0 80px; background: radial-gradient(900px 400px at 80% 0%, rgba(0, 71, 255, .25), transparent 60%); }
+.hero { padding: 72px 0 80px; background: radial-gradient(900px 400px at 80% 0%, rgba(59, 111, 214, .25), transparent 60%); }
 .hero-interno { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
 .hero-texto > p { font-size: 1.12rem; max-width: 560px; }
 .hero h1 em { font-style: normal; color: var(--azul-claro); }
@@ -67,7 +67,7 @@ ul, ol { margin: 0; padding: 0; }
 .hero-lista { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--texto-suave); font-size: .92rem; }
 
 /* Painel ilustrativo */
-.painel { background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; padding: 18px; box-shadow: 0 30px 60px rgba(0, 0, 0, .5), 0 0 0 1px rgba(0, 71, 255, .15); }
+.painel { background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; padding: 18px; box-shadow: 0 30px 60px rgba(0, 0, 0, .5), 0 0 0 1px rgba(59, 111, 214, .15); }
 .painel-topo { display: flex; gap: 6px; margin-bottom: 16px; }
 .painel-topo i { width: 10px; height: 10px; border-radius: 50%; background: var(--borda); }
 .painel-numeros { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
@@ -116,7 +116,7 @@ ul, ol { margin: 0; padding: 0; }
 /* ---------- Planos ---------- */
 .planos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; align-items: stretch; }
 .plano { position: relative; display: flex; flex-direction: column; background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; padding: 30px 26px; }
-.plano-destaque { border: 2px solid var(--azul); background: linear-gradient(180deg, rgba(0, 71, 255, .14), var(--superficie) 60%); transform: scale(1.04); box-shadow: 0 20px 50px rgba(0, 71, 255, .2); }
+.plano-destaque { border: 2px solid var(--azul); background: linear-gradient(180deg, rgba(59, 111, 214, .14), var(--superficie) 60%); transform: scale(1.04); box-shadow: 0 20px 50px rgba(59, 111, 214, .2); }
 .plano-faixa { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--azul); color: #fff; font-size: .8rem; font-weight: 700; padding: 4px 14px; border-radius: 999px; white-space: nowrap; }
 .plano-para { margin-bottom: 14px; }
 .preco { color: #fff; font-size: 3rem; font-weight: 800; line-height: 1; margin: 6px 0 20px; }

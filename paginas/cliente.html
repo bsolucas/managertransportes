@@ -16,7 +16,7 @@
 
   <!-- PWA: deixa o app instalável no celular (Android/iPhone) -->
   <link rel="manifest" href="../manifest.json" />
-  <meta name="theme-color" content="#0047ff" />
+  <meta name="theme-color" content="#3b6fd6" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Manager" />
@@ -56,41 +56,50 @@
     <!-- ===================== ABA: PEDIR CORRIDA ===================== -->
     <section data-painel="pedir">
       <div class="coluna-pedido">
-        <form class="cartao" id="formulario-pedido" autocomplete="off">
-          <h2>Nova corrida</h2>
+        <form class="cartao cartao-pedido" id="formulario-pedido" autocomplete="off">
+          <h2>Para onde vamos?</h2>
 
+          <!-- 1. Trajeto: lista de cartões (o <select> escondido guarda o valor; o JavaScript mantém os dois iguais) -->
           <div class="grupo-campo">
-            <label class="rotulo" for="pedido-trajeto">Trajeto</label>
-            <select class="campo" id="pedido-trajeto"></select>
+            <span class="rotulo-secao"><b>1</b> Escolha o trajeto</span>
+            <select id="pedido-trajeto" hidden aria-hidden="true" tabindex="-1"></select>
+            <div class="lista-trajetos" id="lista-trajetos" role="radiogroup" aria-label="Trajeto"></div>
           </div>
 
+          <!-- 2. De onde sai e para onde vai (as duas linhas ficam ligadas por um traço, como num mapa) -->
           <div class="grupo-campo">
-            <label class="rotulo" for="pedido-embarque">Endereço de embarque (de onde sair)</label>
-            <input class="campo" id="pedido-embarque" maxlength="200" placeholder="Ex.: Rua das Flores, 100 - Centro" />
-            <button type="button" class="botao botao-secundario botao-pequeno botao-localizacao" id="usar-localizacao"></button>
+            <span class="rotulo-secao"><b>2</b> De onde sai e para onde vai</span>
+            <div class="caixa-rota">
+              <div class="linha-rota">
+                <span class="ponto ponto-origem" aria-hidden="true"></span>
+                <input class="campo-rota" id="pedido-embarque" maxlength="200" placeholder="Endereço de embarque" aria-label="Endereço de embarque (de onde sair)" />
+                <button type="button" class="botao-gps" id="usar-localizacao"></button>
+              </div>
+              <div class="linha-rota">
+                <span class="ponto ponto-destino" aria-hidden="true"></span>
+                <input class="campo-rota" id="pedido-destino" maxlength="200" placeholder="Destino (opcional)" aria-label="Endereço de destino (opcional)" />
+              </div>
+            </div>
             <small class="dica-campo" id="dica-localizacao" hidden></small>
           </div>
 
+          <!-- 3. Tipo de veículo -->
           <div class="grupo-campo">
-            <label class="rotulo" for="pedido-destino">Endereço de destino (opcional)</label>
-            <input class="campo" id="pedido-destino" maxlength="200" placeholder="Para onde vai? O motorista abre a rota no celular" />
+            <span class="rotulo-secao"><b>3</b> Tipo de veículo</span>
+            <div class="grade-servicos" id="pedido-servicos" role="radiogroup" aria-label="Tipo de veículo"></div>
           </div>
 
-          <div class="grupo-campo">
-            <span class="rotulo">Serviço</span>
-            <div class="opcoes-pilula" id="pedido-servicos"></div>
-          </div>
-
-          <div class="grupo-campo">
-            <label class="rotulo" for="pedido-observacoes">Observações (opcional)</label>
+          <details class="obs-pedido">
+            <summary>Adicionar observação</summary>
             <textarea class="campo" id="pedido-observacoes" maxlength="300" placeholder="Ex.: veículo não liga, precisa de plataforma; levar 2 malas..."></textarea>
+          </details>
+
+          <!-- Barra de baixo: valor + botão (fica visível enquanto se rola o formulário) -->
+          <div class="barra-pedido">
+            <div class="previa-preco" id="previa-preco"></div>
+            <p class="texto-suave texto-pequeno" id="aviso-modo-pedido"></p>
+            <button class="botao botao-primario botao-largo botao-grande" type="submit" id="botao-pedir">Solicitar corrida</button>
           </div>
-
-          <!-- Valor do trajeto escolhido -->
-          <div class="previa-preco" id="previa-preco"></div>
-
-          <p class="texto-suave texto-pequeno" id="aviso-modo-pedido"></p>
-          <button class="botao botao-primario botao-largo" type="submit" id="botao-pedir">Solicitar corrida</button>
         </form>
       </div>
     </section>

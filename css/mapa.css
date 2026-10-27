@@ -46,7 +46,7 @@
 .marcador-motorista.motorista-disponivel { border-color: var(--cor-andamento); }
 .marcador-motorista.motorista-em-corrida { border-color: var(--azul); background: var(--azul); }
 .marcador-motorista.motorista-offline    { opacity: 0.55; }
-.marcador-destaque { transform: scale(1.25); z-index: 1000 !important; box-shadow: 0 0 0 4px rgba(0, 71, 255, 0.45); }
+.marcador-destaque { transform: scale(1.25); z-index: 1000 !important; box-shadow: 0 0 0 4px rgba(59, 111, 214, 0.45); }
 
 .marcador-icone {
   position: absolute; right: -9px; bottom: -7px;

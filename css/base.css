@@ -3,15 +3,15 @@
    -----------------------------------------------------------------------------
    As cores do app ficam todas aqui, como "variáveis" (--nome-da-cor).
    Para mudar a cor do app inteiro, basta alterar os valores abaixo.
-   Paleta atual: AZUL FORTE + PRETO.
+   Paleta atual: AZUL CALMO + PRETO.
    ============================================================================= */
 
 :root {
   /* --- Cores principais ---------------------------------------------------- */
-  --azul: #0047ff;            /* azul forte: botões, destaques, links         */
-  --azul-escuro: #0033c2;     /* azul ao passar o mouse / pressionado         */
-  --azul-claro: #4d7fff;      /* azul em textos sobre fundo preto             */
-  --azul-suave: rgba(0, 71, 255, 0.14); /* fundo azulado de itens ativos     */
+  --azul: #3b6fd6;            /* azul calmo: botões, destaques, links         */
+  --azul-escuro: #2f58ad;     /* azul ao passar o mouse / pressionado         */
+  --azul-claro: #7ea2e8;      /* azul em textos sobre fundo preto             */
+  --azul-suave: rgba(59, 111, 214, 0.14); /* fundo azulado de itens ativos     */
 
   --preto: #07080b;           /* fundo da página                              */
   --superficie: #101218;      /* fundo de cartões e painéis                   */
@@ -25,7 +25,7 @@
 
   /* --- Cores de status (situação das corridas/motoristas) ----------------- */
   --cor-aguardando: #f5a524;  /* amarelo: esperando motorista                 */
-  --cor-aceita: #4d7fff;      /* azul: motorista a caminho                    */
+  --cor-aceita: #6b95e6;      /* azul: motorista a caminho                    */
   --cor-andamento: #22c55e;   /* verde: em andamento / disponível             */
   --cor-concluida: #8b95a9;   /* cinza: concluída                             */
   --cor-cancelada: #ef4444;   /* vermelho: cancelada / erro                   */

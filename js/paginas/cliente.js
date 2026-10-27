@@ -77,15 +77,39 @@
         [{ valor: "", texto: lista.length ? "Selecione..." : "A empresa ainda não cadastrou trajetos" }]
           .concat(lista.map(function (t) { return { valor: t.id, texto: t.nome }; })),
         selTrajeto.value);
+      desenharTrajetos();
     }
+
+    /* Lista de trajetos em cartões (nome + valor). Tocar num cartão escolhe o trajeto no <select> escondido. */
+    function desenharTrajetos() {
+      var lista = trajetos(), caixa = document.getElementById("lista-trajetos");
+      if (!lista.length) { caixa.innerHTML = '<p class="texto-suave">A empresa ainda não cadastrou trajetos.</p>'; return; }
+      caixa.innerHTML = lista.map(function (t) {
+        return '<label class="trajeto"><input type="radio" name="trajeto" value="' + u.escaparHtml(t.id) + '"' + (t.id === selTrajeto.value ? " checked" : "") + " />" +
+          '<span class="trajeto-icone">' + App.icone("navigation") + "</span>" +
+          '<span class="trajeto-nome">' + u.escaparHtml(t.nome) + "</span>" +
+          '<span class="trajeto-valor">' + u.moeda(t.valor) + "</span>" +
+          '<span class="marca-ok">' + App.icone("check") + "</span></label>";
+      }).join("");
+    }
+    document.getElementById("lista-trajetos").addEventListener("change", function (ev) {
+      if (ev.target.name !== "trajeto") return;
+      selTrajeto.value = ev.target.value;
+      selTrajeto.dispatchEvent(new Event("change"));
+    });
 
     function trajetoEscolhido() {
       return trajetos().filter(function (t) { return t.id === selTrajeto.value; })[0] || null;
     }
 
+    /* Tipo de veículo em azulejos grandes: ícone, nome e (se tiver) a explicação pequena. */
     document.getElementById("pedido-servicos").innerHTML = Object.keys(App.SERVICOS).map(function (s, i) {
-      return '<label class="pilula"><input type="radio" name="servico" value="' + s + '"' + (i === 0 ? " checked" : "") + " /> " +
-             App.SERVICOS[s].icone + " " + App.SERVICOS[s].rotulo + "</label>";
+      var partes = App.SERVICOS[s].rotulo.split(" ("), nome = partes[0], detalhe = partes[1] ? partes[1].replace(")", "") : "";
+      return '<label class="servico"><input type="radio" name="servico" value="' + s + '"' + (i === 0 ? " checked" : "") + " />" +
+             '<span class="servico-icone">' + App.SERVICOS[s].icone + "</span>" +
+             '<span class="servico-nome">' + nome + "</span>" +
+             (detalhe ? '<span class="servico-detalhe">' + detalhe + "</span>" : "") +
+             '<span class="marca-ok">' + App.icone("check") + "</span></label>";
     }).join("");
 
     /* Mostra o valor do trajeto antes de pedir. */
@@ -93,10 +117,10 @@
       var t = trajetoEscolhido();
       document.getElementById("botao-pedir").disabled = !t;
       document.getElementById("previa-preco").innerHTML = t
-        ? "<h3>Valor</h3>" +
-          '<table class="composicao-preco"><tr class="linha-total"><td>' + u.escaparHtml(t.nome) + "</td><td>" + u.moeda(t.valor) + "</td></tr></table>" +
+        ? '<div class="previa-linha"><div><span class="previa-rotulo">Valor da corrida</span><span class="previa-nome">' + u.escaparHtml(t.nome) + "</span></div>" +
+          '<strong class="previa-valor">' + u.moeda(t.valor) + "</strong></div>" +
           '<p class="texto-suave texto-pequeno">Pedágios, esperas e outros extras podem ser somados depois.</p>'
-        : '<p class="texto-suave">Escolha o trajeto para ver o valor.</p>';
+        : '<p class="texto-suave previa-vazia">Escolha o trajeto para ver o valor.</p>';
     }
     selTrajeto.addEventListener("change", atualizarPrevia);
 
@@ -131,6 +155,7 @@
         document.getElementById("pedido-destino").value = "";
         document.getElementById("pedido-observacoes").value = "";
         selTrajeto.value = "";
+        desenharTrajetos();
         atualizarPrevia();
         corridaSelecionada = corrida.id;
         document.querySelector('[data-aba="minhas"]').click();
@@ -144,7 +169,11 @@
        gratuito). Se não conseguir o endereço, preenche com as coordenadas, que o motorista abre no mapa. */
     var botaoLoc = document.getElementById("usar-localizacao");
     var dicaLoc = document.getElementById("dica-localizacao");
-    function rotuloLoc(carregando) { botaoLoc.disabled = !!carregando; botaoLoc.innerHTML = App.icone("map-pin") + (carregando ? " Buscando sua localização..." : " Usar minha localização atual"); }
+    function rotuloLoc(carregando) {
+      botaoLoc.disabled = !!carregando; botaoLoc.classList.toggle("carregando", !!carregando);
+      botaoLoc.innerHTML = App.icone("navigation");
+      botaoLoc.title = botaoLoc.ariaLabel = carregando ? "Buscando sua localização..." : "Usar minha localização atual";
+    }
     rotuloLoc(false);
     function dicaLocal(txt) { dicaLoc.hidden = !txt; dicaLoc.textContent = txt || ""; }
     botaoLoc.addEventListener("click", function () {
