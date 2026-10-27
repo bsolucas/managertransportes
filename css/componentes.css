@@ -358,3 +358,13 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .botao-recarregar:hover { opacity: 1; }
 .botao-recarregar.girando .ico { animation: girar-recarregar 0.7s linear infinite; }
 @keyframes girar-recarregar { to { transform: rotate(360deg); } }
+
+/* Faixa "Toque para ativar o som": aparece só quando o navegador bloqueou o som dos avisos */
+.faixa-som {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 2000;
+  display: flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px);
+  padding: 10px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--azul); color: var(--texto-sobre-azul); font-weight: 600; font-size: 0.9rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.faixa-som .ico { width: 18px; height: 18px; }

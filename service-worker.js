@@ -10,7 +10,7 @@
    Ao mudar a lista abaixo, aumente a VERSAO_CACHE para limpar o cache antigo.
    ============================================================================= */
 
-const VERSAO_CACHE = 'manager-v12';
+const VERSAO_CACHE = 'manager-v13';
 
 /* Páginas e arquivos essenciais, guardados na instalação */
 const ARQUIVOS_BASICOS = [

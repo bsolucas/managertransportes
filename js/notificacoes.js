@@ -67,16 +67,36 @@ App.notificacoes = (function () {
   }
   ["click", "touchstart", "keydown"].forEach(function (ev) { document.addEventListener(ev, liberarAudio, { passive: true }); });
 
-  /* Devolve true se o navegador aceitou tocar. */
+  /* Depois de recarregar a página ou de entrar sozinho (login salvo), o navegador zera a "permissão de
+     som" e bloqueia o bip até a pessoa tocar na tela. Quando isso acontece, aparece uma faixa discreta
+     pedindo um toque; qualquer toque na página libera o som e a faixa some. */
+  var faixaSom = null;
+  function pedirToqueParaSom() {
+    if (faixaSom || !document.body) return;
+    faixaSom = document.createElement("button");
+    faixaSom.type = "button";
+    faixaSom.className = "faixa-som";
+    faixaSom.innerHTML = App.icone("bell") + " Toque aqui para ativar o som dos avisos";
+    faixaSom.addEventListener("click", function () { liberarAudio(); bip(true); });
+    document.body.appendChild(faixaSom);
+  }
+  function esconderFaixaSom() { if (faixaSom) { faixaSom.remove(); faixaSom = null; } }
+  ["click", "touchstart", "keydown"].forEach(function (ev) { document.addEventListener(ev, esconderFaixaSom, { passive: true, capture: true }); });
+  function somBloqueado() {
+    var ua = navigator.userActivation;
+    return ua ? !ua.hasBeenActive : !somLiberado;
+  }
+
   var ultimoBip = 0;
-  function bip() {
-    if (Date.now() - ultimoBip < 1500) return;
+  function bip(forcar) {
+    if (!forcar && Date.now() - ultimoBip < 1500) return;
+    if (somBloqueado()) pedirToqueParaSom();
     ultimoBip = Date.now();
     try {
       somAviso = somAviso || criarSom();
       somAviso.muted = false; somAviso.volume = 1; somAviso.currentTime = 0;
       var p = somAviso.play();
-      if (p && p.catch) p.catch(function () { /* ainda bloqueado: precisa de um toque na página */ });
+      if (p && p.catch) p.catch(function () { pedirToqueParaSom(); });   // bloqueado: precisa de um toque na página
       try { if (navigator.vibrate) navigator.vibrate([120, 60, 120]); } catch (e) { /* sem vibração */ }
     } catch (e) { /* sem áudio: tudo bem */ }
   }
@@ -249,6 +269,7 @@ App.notificacoes = (function () {
   function iniciar(quandoAbrir) {
     aoAbrir = quandoAbrir || null;
     montarSino();
+    setTimeout(function () { if (somBloqueado()) pedirToqueParaSom(); }, 800);   // logo após recarregar/entrar sozinho
     /* A seção Pendentes acompanha as corridas ao vivo (e o tempo relativo é atualizado a cada minuto). */
     var conhecidas = null;   // corridas "aguardando" já vistas: uma nova que aparece toca o som, mesmo sem a notificação
     if (App.nuvem && App.nuvem.aoMudar) App.nuvem.aoMudar(function (chave) {
