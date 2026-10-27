@@ -15,9 +15,11 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `10-tipos-de-servico.sql` | Serviços válidos: carro/táxi, van, ônibus e utilitário (o guincho saiu) |
 | `11-tipo-de-empresa.sql` | Tipo de empresa (táxi, van, ônibus, frota pequena/grande, interno) no cadastro e na empresa; aparece no painel do dono |
 | `12-modos-do-plano-basico.sql` | Plano Básico em dois modos (Individual: clientes sem login; Equipe) e tipo "frota" único; o banco recusa login de cliente no modo Individual |
+| `13-despesas.sql` | Tabela de despesas (só o gestor da empresa lê e grava) |
+| `14-plano-individual.sql` | Plano Básico vira "Individual" (R$ 99,90); Profissional e Empresarial seguem iguais |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11 e o 12, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13 e o 14, no SQL Editor do Supabase.
 
 ## Tabelas
 

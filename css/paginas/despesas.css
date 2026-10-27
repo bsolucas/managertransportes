@@ -1,0 +1,16 @@
+/* =============================================================================
+   paginas/despesas.css — VISUAL DA ABA "DESPESAS" (plano Individual)
+   ============================================================================= */
+
+.filtros-despesas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: var(--espaco); }
+.filtros-despesas label { color: var(--texto-suave); font-size: 0.9rem; }
+
+/* Saldo negativo em vermelho */
+.valor-negativo { color: var(--cor-cancelada); }
+
+/* Barras por categoria: só o azul da marca */
+.barra-categoria { margin-bottom: 14px; }
+.barra-categoria-topo { display: flex; justify-content: space-between; gap: 12px; font-size: 0.92rem; margin-bottom: 6px; }
+.barra-categoria-topo span { color: var(--texto-suave); }
+.barra-fundo { height: 8px; border-radius: 99px; background: var(--superficie-2); overflow: hidden; }
+.barra-preenchida { height: 100%; border-radius: 99px; background: var(--azul); }

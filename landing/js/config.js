@@ -36,21 +36,13 @@ window.CONFIG = {
     { id: "outro",  nome: "Outro tipo de transporte" }
   ],
 
-  /* DUAS VERSÕES DO PLANO BÁSICO (escolhidas no cadastro; Profissional e Empresarial são sempre "equipe").
-     individual = trabalha sozinho; os clientes são só contatos, sem login.
-     equipe     = motoristas e clientes com login. */
-  modosBasico: [
-    { id: "individual", nome: "Individual", descricao: "Trabalho sozinho e quero controlar minhas corridas e valores. Meus clientes são só contatos, sem login." },
-    { id: "equipe",     nome: "Equipe",     descricao: "Tenho motoristas e meus clientes pedem corridas pelo portal, cada um com seu login." }
-  ],
-
   /* PLANOS — o preço aparece na landing e na página de pagamento a partir daqui.
      Valor em reais, com ponto decimal (129.90 = R$ 129,90).
-     "limites": empresas clientes e funcionários por empresa (null = ilimitado). Por enquanto
+     "limites": empresas clientes e funcionários por empresa (null = ilimitado; no Individual os clientes são só contatos). Por enquanto
      é só informativo: o sistema ainda não bloqueia cadastros acima do limite. */
   planos: [
-    { id: "basico",       nome: "Básico",       preco: 129.90, descricao: "Até 5 empresas e 100 funcionários por empresa",
-      limites: { empresas: 5, funcionariosPorEmpresa: 100 } },
+    { id: "individual",    nome: "Individual",    preco: 99.90,  descricao: "Para quem trabalha sozinho: corridas, valores e despesas",
+      limites: { empresas: null, funcionariosPorEmpresa: null } },
     { id: "profissional", nome: "Profissional", preco: 249.90, descricao: "Até 10 empresas e 1.000 funcionários por empresa + conversão de planilha",
       limites: { empresas: 10, funcionariosPorEmpresa: 1000 } },
     { id: "empresarial",  nome: "Empresarial",  preco: 329.90, descricao: "Empresas e funcionários ilimitados + ajustes sob medida",

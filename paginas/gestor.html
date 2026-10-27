@@ -7,7 +7,7 @@
        • Topo ........... logotipo e nome da empresa do gestor (ex.: GT Garcia
                           Transportes), usuário, botão Sair
        • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
-                          Planilhas | Trajetos e valores | Chat | Clientes
+                          Planilhas | Trajetos e valores | Chat | Clientes | Despesas (só plano Individual)
        • Seções ......... uma <section data-painel="..."> para cada item do menu
      ============================================================================= -->
 <html lang="pt-BR">
@@ -36,6 +36,7 @@
   <link rel="stylesheet" href="../css/paginas/gestor.css" />
   <link rel="stylesheet" href="../css/paginas/planilhas.css" />
   <link rel="stylesheet" href="../css/paginas/clientes.css" />
+  <link rel="stylesheet" href="../css/paginas/despesas.css" />
   <link rel="stylesheet" href="../css/responsivo.css" /> <!-- ajustes de celular: sempre por último -->
 </head>
 <body>
@@ -74,6 +75,8 @@
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
       <button class="menu-item" data-aba="clientes"><span class="menu-icone">🏢</span>Clientes</button>
+      <!-- Só aparece no plano Individual (js/paginas/gestor-despesas.js) -->
+      <button class="menu-item" data-aba="despesas" hidden><span class="menu-icone">🧾</span>Despesas</button>
     </nav>
 
     <main class="conteudo">
@@ -366,6 +369,40 @@
         </div>
       </section>
 
+      <!-- ===================== SEÇÃO: DESPESAS (plano Individual) ===================== -->
+      <section data-painel="despesas" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Despesas</h1>
+            <p class="texto-suave">Lance o que você gasta (combustível, manutenção, pedágio...) e veja o saldo do mês: o que recebeu menos o que gastou.</p>
+          </div>
+          <button class="botao botao-primario" id="nova-despesa">+ Nova despesa</button>
+        </div>
+
+        <div class="filtros-despesas">
+          <label for="despesas-mes">Mês</label>
+          <input class="campo campo-estreito" type="month" id="despesas-mes" />
+        </div>
+
+        <div class="indicadores" id="indicadores-despesas"></div>
+
+        <div class="grade-2">
+          <div class="cartao">
+            <h2>Por categoria</h2>
+            <div id="despesas-categorias"></div>
+          </div>
+          <div class="cartao">
+            <h2>Lançamentos</h2>
+            <div class="tabela-container">
+              <table class="tabela tabela-cartoes">
+                <thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th class="direita">Valor</th><th></th></tr></thead>
+                <tbody id="tabela-despesas"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -394,10 +431,12 @@
   <script src="../js/rastreio.js"></script>
   <script src="../js/nuvem.js"></script>
   <script src="../js/motoristas-supabase.js"></script>
+  <script src="../js/despesas-supabase.js"></script>
   <script src="../js/paginas/gestor-motoristas.js"></script>
   <script src="../js/paginas/gestor.js"></script>
   <script src="../js/paginas/gestor-planilhas.js"></script>
   <script src="../js/paginas/gestor-clientes.js"></script>
+  <script src="../js/paginas/gestor-despesas.js"></script>
 
   <!-- PWA: registra o service worker -->
   <script src="../js/pwa.js"></script>

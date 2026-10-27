@@ -39,7 +39,7 @@ só vê "Esta conta não tem acesso a este painel."
 - O painel ainda não tem verificação em duas etapas (2FA) própria. Se quiser, é uma boa próxima melhoria.
 
 ## Preços e planos
-A tabela `planos` do banco (Básico 129,90 · Profissional 249,90 · Empresarial 329,90) é o que o painel
+A tabela `planos` do banco (Individual 99,90 · Profissional 249,90 · Empresarial 329,90) é o que o painel
 usa para somar a receita. Os preços da landing ficam em `landing/js/config.js`: se mudar um, mude o outro
 (`update public.planos set preco = ... where id = '...'`).
 Para marcar o plano de uma empresa: `update public.empresas set plano = 'profissional', assinatura_status = 'ativa' where nome = '...';`

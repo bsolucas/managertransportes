@@ -40,11 +40,3 @@
   .acoes .botao { width: 100%; }
 }
 
-/* Escolha Individual x Equipe (plano Básico) */
-.modos { border: 0; padding: 0; margin: 0 0 18px; min-width: 0; }
-.modos legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
-.opcao-modo { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--borda); border-radius: 10px; cursor: pointer; }
-.opcao-modo:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
-.opcao-modo input { margin-top: 4px; accent-color: var(--azul); }
-.opcao-modo b { display: block; color: #fff; }
-.opcao-modo span { color: var(--texto-suave); font-size: .92rem; }

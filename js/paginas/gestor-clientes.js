@@ -8,7 +8,7 @@
      4. Cadastro ............ janela para criar e editar um cliente
      5. Ações ............... editar, ativar/desativar e excluir
 
-   No plano Básico "Individual" (quem trabalha sozinho) os clientes são só contatos:
+   No plano Individual (quem trabalha sozinho) os clientes são só contatos:
    a aba vira "Meus clientes" e não há login nem portal (o banco também recusa).
 
    "Clientes" são as empresas terceirizadas que contratam o transporte e pedem
@@ -23,7 +23,7 @@
      1. EMPRESA DO GESTOR (topo da página)
      ========================================================================== */
   /* A empresa vem do login (guardada na aba) e é atualizada com o que está no banco. */
-  var individual = false;   // plano Básico "Individual": clientes sem login
+  var individual = false;   // plano Individual: clientes sem login
 
   function ajustarModo(empresa) {
     individual = empresa.modo_uso === "individual";
