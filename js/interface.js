@@ -159,3 +159,29 @@ document.addEventListener("keydown", function (ev) {
   ev.preventDefault();
   alvo.click();
 });
+
+/* Botão discreto de recarregar ao lado do logo (gestor, motorista e cliente). Pede ao service worker
+   uma versão nova e recarrega a página; a sessão (login) é mantida. */
+document.addEventListener("DOMContentLoaded", function () {
+  var marca = document.querySelector("header.topo .marca");
+  if (!marca) return;
+  var b = document.createElement("button");
+  b.type = "button";
+  b.className = "botao-icone botao-recarregar";
+  b.title = "Recarregar o app";
+  b.setAttribute("aria-label", "Recarregar o app");
+  b.innerHTML = App.icone("refresh-cw");
+  b.addEventListener("click", function () {
+    b.classList.add("girando");
+    var recarregar = function () { location.reload(); };
+    try {
+      if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+        navigator.serviceWorker.getRegistration().then(function (reg) { return reg && reg.update(); }).then(recarregar, recarregar);
+        setTimeout(recarregar, 1500);
+        return;
+      }
+    } catch (e) { /* segue para o reload simples */ }
+    recarregar();
+  });
+  marca.parentNode.insertBefore(b, marca.nextSibling);
+});

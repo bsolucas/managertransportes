@@ -68,7 +68,10 @@ App.notificacoes = (function () {
   ["click", "touchstart", "keydown"].forEach(function (ev) { document.addEventListener(ev, liberarAudio, { passive: true }); });
 
   /* Devolve true se o navegador aceitou tocar. */
+  var ultimoBip = 0;
   function bip() {
+    if (Date.now() - ultimoBip < 1500) return;
+    ultimoBip = Date.now();
     try {
       somAviso = somAviso || criarSom();
       somAviso.muted = false; somAviso.volume = 1; somAviso.currentTime = 0;
@@ -247,7 +250,15 @@ App.notificacoes = (function () {
     aoAbrir = quandoAbrir || null;
     montarSino();
     /* A seção Pendentes acompanha as corridas ao vivo (e o tempo relativo é atualizado a cada minuto). */
-    if (App.nuvem && App.nuvem.aoMudar) App.nuvem.aoMudar(function (chave) { if (chave === "corridas" || chave === "motoristas") desenharSino(); });
+    var conhecidas = null;   // corridas "aguardando" já vistas: uma nova que aparece toca o som, mesmo sem a notificação
+    if (App.nuvem && App.nuvem.aoMudar) App.nuvem.aoMudar(function (chave) {
+      if (chave === "corridas" || chave === "motoristas") desenharSino();
+      if (chave === "corridas") {
+        var ids = pendentes().map(function (c) { return c.id; });
+        if (conhecidas && ids.some(function (id) { return conhecidas.indexOf(id) === -1; })) bip();
+        conhecidas = ids;
+      }
+    });
     setInterval(desenharSino, 60000);
     var sb = App.auth.conexao();
     sb.auth.getUser().then(function (r) {

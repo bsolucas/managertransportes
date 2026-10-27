@@ -352,3 +352,9 @@ textarea.campo { resize: vertical; min-height: 70px; }
 .notificacao-item.pendente .notificacao-icone { color: var(--cor-aguardando); background: rgba(245, 165, 36, 0.16); }
 
 .painel-notificacoes-acoes { display: inline-flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+
+/* Botão de recarregar ao lado do logo: pequeno e discreto */
+.botao-recarregar { opacity: 0.55; margin-left: -4px; }
+.botao-recarregar:hover { opacity: 1; }
+.botao-recarregar.girando .ico { animation: girar-recarregar 0.7s linear infinite; }
+@keyframes girar-recarregar { to { transform: rotate(360deg); } }
