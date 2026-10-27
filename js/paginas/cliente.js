@@ -111,12 +111,14 @@
         clienteId: usuario.id,
         trajeto: t.nome,
         embarque: embarque,
+        destinoEndereco: document.getElementById("pedido-destino").value.trim(),
         servico: (ui.$('input[name="servico"]:checked') || {}).value,
         valor: t.valor,   // o banco troca pelo valor oficial do trajeto
         observacoes: document.getElementById("pedido-observacoes").value.trim()
       }).then(function (corrida) {
         ui.aviso("Corrida " + corrida.codigo + " solicitada! Aguardando um motorista.", "sucesso");
         document.getElementById("pedido-embarque").value = "";
+        document.getElementById("pedido-destino").value = "";
         document.getElementById("pedido-observacoes").value = "";
         selTrajeto.value = "";
         atualizarPrevia();
@@ -187,6 +189,7 @@
         '<dl class="lista-dados">' +
           "<dt>Trajeto</dt><dd>" + u.escaparHtml(c.trajeto) + "</dd>" +
           "<dt>Embarque</dt><dd>" + u.escaparHtml(c.embarque || "—") + "</dd>" +
+          (c.destinoEndereco ? "<dt>Destino</dt><dd>" + u.escaparHtml(c.destinoEndereco) + "</dd>" : "") +
           "<dt>Serviço</dt><dd>" + App.SERVICOS[c.servico].icone + " " + App.SERVICOS[c.servico].rotulo + "</dd>" +
           (c.observacoes ? "<dt>Observações</dt><dd>" + u.escaparHtml(c.observacoes) + "</dd>" : "") +
           "<dt>Valor</dt><dd>" + u.moeda(c.valor) + (App.precos.totalExtras(c) ? " + extras " + u.moeda(App.precos.totalExtras(c)) : "") +

@@ -22,7 +22,7 @@
      Motoristas: motoristas()  buscarMotorista(id)  recarregarMotoristas()
                  meuMotorista()  definirStatusMotorista(id, status)
      Corridas:  corridas()  buscarCorrida(id)  corridaAtivaDoMotorista(id)
-                criarCorrida({ clienteId, trajeto, embarque, servico, valor, observacoes })
+                criarCorrida({ clienteId, trajeto, embarque, destinoEndereco, servico, valor, observacoes })
                 registrarCorridaPropria({ valor, trajeto, clienteId, concluidaEm, observacoes })  (modo individual)
                 aceitarCorrida(id, motoristaId)  iniciarCorrida(id)  concluirCorrida(id)
                 cancelarCorrida(id, motivo)  alterarValores(id, valor, extras)
@@ -134,7 +134,7 @@ App.nuvem = (function () {
     return {
       id: l.id, codigo: "#" + l.codigo, clienteId: l.cliente_id,
       clienteNome: l.cliente_nome || "", clienteTelefone: l.cliente_telefone || "",
-      motoristaId: l.motorista_id, trajeto: l.trajeto || "", embarque: l.embarque || "",
+      motoristaId: l.motorista_id, trajeto: l.trajeto || "", embarque: l.embarque || "", destinoEndereco: l.destino_endereco || "",
       servico: l.servico, valor: Number(l.valor) || 0, extras: l.extras || [],
       observacoes: l.observacoes || "", status: l.status,
       criadaEm: ms(l.criada_em), aceitaEm: ms(l.aceita_em), iniciadaEm: ms(l.iniciada_em),
@@ -322,7 +322,7 @@ App.nuvem = (function () {
   /* Gestor ou o cliente pede uma corrida. O valor vem do trajeto, mas pode ser ajustado. */
   function criarCorrida(d) {
     return sb().from("corridas").insert({
-      empresa_id: empresaId(), cliente_id: d.clienteId, trajeto: d.trajeto, embarque: d.embarque || null,
+      empresa_id: empresaId(), cliente_id: d.clienteId, trajeto: d.trajeto, embarque: d.embarque || null, destino_endereco: d.destinoEndereco || null,
       servico: d.servico || "carro", valor: d.valor, observacoes: d.observacoes || null,
       modo_preco: "fixo", fonte: "app"
     }).select().single().then(function (r) {

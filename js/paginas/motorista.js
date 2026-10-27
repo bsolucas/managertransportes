@@ -119,13 +119,27 @@
         ? "Vá até o embarque: " + (c.embarque || "endereço não informado")
         : "Leve o cliente: " + c.trajeto;
 
+      /* Navegar: abre o Google Maps ou o Waze do celular do motorista (links externos, sem custo para o sistema).
+         Antes de iniciar a corrida o destino é o embarque; depois, o endereço de destino. */
+      var paraOnde = c.status === "aceita" ? c.embarque : c.destinoEndereco;
+      var nomeDestino = c.status === "aceita" ? "o embarque" : "o destino";
+      var alvo = encodeURIComponent(paraOnde || "");
+      var blocoNavegar = paraOnde
+        ? '<div class="navegar"><div class="navegar-titulo">' + App.icone("navigation") + " Navegar até " + nomeDestino + ": " + u.escaparHtml(paraOnde) + "</div>" +
+            '<div class="navegar-botoes">' +
+              '<a class="botao botao-secundario" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=' + alvo + '&travelmode=driving">' + App.icone("map-pin") + " Google Maps</a>" +
+              '<a class="botao botao-secundario" target="_blank" rel="noopener" href="https://waze.com/ul?q=' + alvo + '&navigate=yes">' + App.icone("navigation") + " Waze</a>" +
+            "</div></div>"
+        : '<p class="texto-suave texto-pequeno">' + (c.status === "aceita" ? "O embarque não tem endereço: combine com o cliente pelo chat." : "O destino não foi informado: confirme com o cliente pelo chat.") + "</p>";
+
       area.innerHTML =
         '<div class="cartao-cabecalho"><h2>Corrida ' + c.codigo + "</h2>" + ui.seloStatus(c.status) + "</div>" +
-        '<div class="corrida-atual-etapa">' + u.escaparHtml(etapa) + "</div>" +
+        '<div class="corrida-atual-etapa">' + u.escaparHtml(etapa) + "</div>" + blocoNavegar +
         '<dl class="lista-dados detalhe-espacado">' +
           "<dt>Cliente</dt><dd>" + u.escaparHtml(c.clienteNome || "—") + (c.clienteTelefone ? " • " + u.escaparHtml(c.clienteTelefone) : "") + "</dd>" +
           "<dt>Trajeto</dt><dd>" + u.escaparHtml(c.trajeto) + "</dd>" +
           "<dt>Embarque</dt><dd>" + u.escaparHtml(c.embarque || "—") + "</dd>" +
+          (c.destinoEndereco ? "<dt>Destino</dt><dd>" + u.escaparHtml(c.destinoEndereco) + "</dd>" : "") +
           "<dt>Serviço</dt><dd>" + App.SERVICOS[c.servico].icone + " " + App.SERVICOS[c.servico].rotulo + "</dd>" +
           (c.observacoes ? "<dt>Observações</dt><dd>" + u.escaparHtml(c.observacoes) + "</dd>" : "") +
           "<dt>Valor</dt><dd><strong>" + u.moeda(App.precos.totalCorrida(c)) + "</strong></dd>" +

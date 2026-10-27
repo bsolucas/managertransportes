@@ -28,3 +28,10 @@
 
 /* Aba Ganhos: seletor de período */
 .filtros-ganhos { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: var(--espaco); }
+
+/* Botões "Navegar" (abrem o Google Maps ou o Waze do celular) */
+.navegar { margin: 12px 0; padding: 12px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie-2); }
+.navegar-titulo { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; font-size: 0.92rem; }
+.navegar-titulo .ico { margin-top: 2px; color: var(--azul-claro); }
+.navegar-botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.navegar-botoes .botao { flex: 1 1 140px; text-decoration: none; }

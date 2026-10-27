@@ -230,6 +230,8 @@
         "</div>" +
         '<div class="grupo-campo"><label class="rotulo" for="nc-embarque">Endereço de embarque</label>' +
           '<input class="campo" id="nc-embarque" placeholder="Rua, número, ponto de referência" autocomplete="off" /></div>' +
+        '<div class="grupo-campo"><label class="rotulo" for="nc-destino">Endereço de destino (opcional)</label>' +
+          '<input class="campo" id="nc-destino" placeholder="Para o motorista abrir a rota no Google Maps ou Waze" autocomplete="off" /></div>' +
         '<div class="grupo-campo"><label class="rotulo" for="nc-obs">Observações</label>' +
           '<textarea class="campo" id="nc-obs" placeholder="Ex.: 2 passageiros, levar placa de identificação"></textarea></div>' +
         '<div class="erro-login" id="nc-erro" role="alert"></div>' +
@@ -257,6 +259,7 @@
         clienteId: corpo.querySelector("#nc-cliente").value,
         trajeto: trajetos[Number(seletorTrajeto.value)].nome,
         embarque: corpo.querySelector("#nc-embarque").value.trim(),
+        destinoEndereco: corpo.querySelector("#nc-destino").value.trim(),
         servico: corpo.querySelector("#nc-servico").value,
         valor: u.arredondar(valor),
         observacoes: corpo.querySelector("#nc-obs").value.trim()
@@ -351,6 +354,7 @@
       '<div class="detalhe-bloco"><h3>Trajeto</h3><dl class="lista-dados">' +
         "<dt>Trajeto</dt><dd>" + u.escaparHtml(c.trajeto) + "</dd>" +
         "<dt>Embarque</dt><dd>" + u.escaparHtml(c.embarque || "—") + "</dd>" +
+        (c.destinoEndereco ? "<dt>Destino</dt><dd>" + u.escaparHtml(c.destinoEndereco) + "</dd>" : "") +
         "<dt>Serviço</dt><dd>" + (App.SERVICOS[c.servico] || {}).icone + " " + (App.SERVICOS[c.servico] || {}).rotulo + "</dd>" +
         (c.observacoes ? "<dt>Observações</dt><dd>" + u.escaparHtml(c.observacoes) + "</dd>" : "") +
       "</dl></div>" +

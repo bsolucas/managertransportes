@@ -19,9 +19,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `14-plano-individual.sql` | Plano Básico vira "Individual" (R$ 99,90); Profissional e Empresarial seguem iguais |
 | `15-administracao-do-negocio.sql` | Plano volta a ser "Básico" (R$ 99,90, sozinho ou pequena frota); tabela `diario` (km e faturamento por dia); `empresas.modulos`; corrida própria já concluída para quem trabalha sozinho |
 | `16-pagamentos-motoristas.sql` | Comissão padrão e por motorista, CLT (salário só do gestor), comissão gravada na corrida concluída; reforços: só o gestor edita a empresa e o motorista só muda a própria situação |
+| `17-destino-da-corrida.sql` | Endereço de destino (opcional) na corrida, para o motorista abrir a rota no Google Maps/Waze |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15 e o 16, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14, o 15, o 16 e o 17, no SQL Editor do Supabase.
 
 ## Tabelas
 
