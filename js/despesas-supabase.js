@@ -1,5 +1,5 @@
 /* =============================================================================
-   despesas-supabase.js — DESPESAS NO SUPABASE (plano Individual)
+   despesas-supabase.js — DESPESAS NO SUPABASE
    -----------------------------------------------------------------------------
    Lê e grava a tabela "despesas" (banco/13-despesas.sql). Só o gestor da empresa
    enxerga. Cada consulta traz um MÊS inteiro (as telas mostram um mês por vez).

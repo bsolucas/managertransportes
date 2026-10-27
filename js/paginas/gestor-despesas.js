@@ -1,14 +1,15 @@
 /* =============================================================================
-   paginas/gestor-despesas.js — ABA "DESPESAS" DO GESTOR (plano Individual)
+   paginas/gestor-despesas.js — ABA "DESPESAS" DO GESTOR
    -----------------------------------------------------------------------------
    Organização:
-     1. Preparação (a aba só existe para quem tem o plano Individual)
+     1. Preparação
      2. Resumo do mês: recebido, despesas e saldo
      3. Por categoria e lista de lançamentos
      4. Cadastro (janela): nova despesa ou edição
      5. Atualização
 
-   "Recebido" = soma das corridas CONCLUÍDAS no mês (valor + extras).
+   "Recebido" = faturamento lançado no Diário + corridas CONCLUÍDAS no mês (valor + extras).
+   Quem lança o dia no Diário não precisa registrar a mesma corrida de novo.
    ============================================================================= */
 
 (function () {
@@ -23,22 +24,13 @@
   var secao = ui.$('[data-painel="despesas"]');
   var campoMes = document.getElementById("despesas-mes");
   var lancamentos = [];    // despesas do mês mostrado
+  var faturadoDiario = 0;  // faturamento lançado no Diário no mês mostrado
 
   function mesAtual() {
     var d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
   }
   campoMes.value = mesAtual();
-
-  /* Só o plano Individual usa esta aba; os demais planos nem a veem. */
-  function liberarSeIndividual(empresa) {
-    var individual = empresa && empresa.modo_uso === "individual";
-    botaoMenu.hidden = !individual;
-    if (!individual) secao.hidden = true;
-  }
-  var sessao = App.sessao.atual() || {};
-  liberarSeIndividual(sessao.empresa);
-  App.auth.buscarEmpresa().then(liberarSeIndividual).catch(function () { /* mantém o que já está */ });
 
   function abaAberta() { return !secao.hidden; }
   function indicador(rotulo, valor, detalhe, classe) {
@@ -60,12 +52,13 @@
   }
 
   function desenhar() {
-    var recebido = recebidoNoMes(campoMes.value);
+    var corridas = recebidoNoMes(campoMes.value);
+    var recebido = { total: corridas.total + faturadoDiario };
     var gasto = lancamentos.reduce(function (s, d) { return s + d.valor; }, 0);
     var saldo = recebido.total - gasto;
 
     document.getElementById("indicadores-despesas").innerHTML = [
-      indicador("Recebido", u.moeda(recebido.total), u.plural(recebido.qtd, "corrida concluída", "corridas concluídas")),
+      indicador("Recebido", u.moeda(recebido.total), "diário " + u.moeda(faturadoDiario) + " + corridas " + u.moeda(corridas.total)),
       indicador("Despesas", u.moeda(gasto), u.plural(lancamentos.length, "lançamento", "lançamentos")),
       indicador("Saldo do mês", u.moeda(saldo), saldo >= 0 ? "recebido menos despesas" : "gastou mais do que recebeu", saldo < 0 ? "valor-negativo" : "")
     ].join("");
@@ -96,9 +89,10 @@
 
   function carregar() {
     var mes = campoMes.value;
-    return App.despesas.doMes(mes).then(function (lista) {
+    return Promise.all([App.despesas.doMes(mes), App.diario.doMes(mes)]).then(function (r) {
       if (mes !== campoMes.value) return;   // o gestor já trocou de mês
-      lancamentos = lista;
+      lancamentos = r[0];
+      faturadoDiario = r[1].reduce(function (soma, d) { return soma + d.faturamento; }, 0);
       desenhar();
     }).catch(function (e) { ui.aviso(e.message, "erro"); });
   }

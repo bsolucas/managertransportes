@@ -1,5 +1,5 @@
 /* =============================================================================
-   paginas/despesas.css — VISUAL DA ABA "DESPESAS" (plano Individual)
+   paginas/despesas.css — VISUAL DA ABA "DESPESAS"
    ============================================================================= */
 
 .filtros-despesas { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: var(--espaco); }

@@ -209,7 +209,7 @@
       return "<tr>" +
         '<td data-rotulo="Quando" class="nao-quebra">' + dataHora(c.criado_em) + "</td>" +
         '<td data-rotulo="Responsável">' + escapar(c.nome_responsavel) + "</td>" +
-        '<td data-rotulo="Empresa"><div class="empresa-celula">' + escapar(c.empresa_nome) + "<small>" + escapar(tipoTexto(c.tipo_empresa) + (c.modo_uso === "individual" ? " · Individual" : "")) + "</small></div></td>" +
+        '<td data-rotulo="Empresa"><div class="empresa-celula">' + escapar(c.empresa_nome) + "<small>" + escapar(tipoTexto(c.tipo_empresa) + (c.modo_uso === "individual" ? " · trabalha sozinho" : "")) + "</small></div></td>" +
         '<td data-rotulo="' + (c.tipo_documento === "cnpj" ? "CNPJ" : "CPF") + '" class="nao-quebra">' + escapar(formatarDocumento(c.documento)) + "</td>" +
         '<td data-rotulo="Contato"><div class="empresa-celula">' + escapar(formatarCelular(c.celular)) + "<small>" + escapar(c.email) + "</small></div>" +
           (zap.length >= 10 ? ' <a class="botao botao-borda botao-pequeno" target="_blank" rel="noopener" href="https://wa.me/55' + zap + '">WhatsApp</a>' : "") + "</td>" +
@@ -259,7 +259,7 @@
     $("modal-titulo").textContent = e.nome;
     $("modal-corpo").innerHTML = '<dl class="lista-dados">' +
       "<dt>Situação</dt><dd>" + selo(e.assinatura_status) + "</dd>" +
-      "<dt>Tipo de empresa</dt><dd>" + escapar(tipoTexto(e.tipo_empresa) + (e.modo_uso === "individual" ? " · uso individual" : "")) + "</dd>" +
+      "<dt>Tipo de empresa</dt><dd>" + escapar(tipoTexto(e.tipo_empresa) + (e.modo_uso === "individual" ? " · trabalha sozinho" : "")) + "</dd>" +
       "<dt>Plano</dt><dd>" + escapar(e.plano_nome || "Sem plano definido") + (e.plano ? " · " + moeda(e.valor_mensal) + "/mês" : "") + "</dd>" +
       "<dt>Cidade</dt><dd>" + escapar([e.cidade, e.uf].filter(Boolean).join(" / ") || "—") + "</dd>" +
       "<dt>Cliente desde</dt><dd>" + data(e.criada_em) + "</dd>" +

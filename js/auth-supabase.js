@@ -32,7 +32,7 @@ App.auth = (function () {
   /* Perfil (nome, papel) e empresa do usuário logado. A segurança do banco
      (RLS) já devolve só o que é dele. */
   function carregarPerfil(userId) {
-    return conexao().from("perfis").select("nome, papel, empresa:empresas(id, nome, sigla, logo_url, modo_uso)")
+    return conexao().from("perfis").select("nome, papel, empresa:empresas(id, nome, sigla, logo_url, modo_uso, tipo_empresa, modulos)")
       .eq("user_id", userId).single().then(function (r) {
         if (r.error || !r.data) throw new Error("Este usuário não está ligado a nenhuma empresa.");
         return r.data;

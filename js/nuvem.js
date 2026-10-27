@@ -23,6 +23,7 @@
                  meuMotorista()  definirStatusMotorista(id, status)
      Corridas:  corridas()  buscarCorrida(id)  corridaAtivaDoMotorista(id)
                 criarCorrida({ clienteId, trajeto, embarque, servico, valor, observacoes })
+                registrarCorridaPropria({ valor, trajeto, clienteId, concluidaEm, observacoes })  (modo individual)
                 aceitarCorrida(id, motoristaId)  iniciarCorrida(id)  concluirCorrida(id)
                 cancelarCorrida(id, motivo)  alterarValores(id, valor, extras)
      Chat:      listarMensagens(corridaId)  carregarMensagens(corridaId)
@@ -318,6 +319,20 @@ App.nuvem = (function () {
     });
   }
 
+  /* Quem trabalha sozinho (plano Básico, modo individual) registra a PRÓPRIA corrida já concluída,
+     com o valor que recebeu. d = { valor, trajeto?, clienteId?, concluidaEm? (ms), observacoes? } */
+  function registrarCorridaPropria(d) {
+    return sb().from("corridas").insert({
+      empresa_id: empresaId(), status: "concluida", valor: d.valor, trajeto: d.trajeto || null,
+      cliente_id: d.clienteId || null, observacoes: d.observacoes || null, servico: "carro",
+      modo_preco: "fixo", fonte: "app",
+      concluida_em: d.concluidaEm ? new Date(d.concluidaEm).toISOString() : null
+    }).select().single().then(function (r) {
+      if (r.error) throw erroPara(r.error, "Não foi possível registrar a corrida.");
+      return guardarCorrida(r.data);
+    });
+  }
+
   /* Muda a corrida. "somenteSe" (ex.: { status: "aguardando" }) evita pisar em outra mudança:
      se a condição não vale mais, nenhuma linha é alterada. */
   function mudarCorrida(id, campos, somenteSe, textoSeFalhar) {
@@ -394,7 +409,7 @@ App.nuvem = (function () {
     motoristas: motoristas, buscarMotorista: buscarMotorista, meuMotorista: meuMotorista,
     recarregarMotoristas: carregarMotoristas, definirStatusMotorista: definirStatusMotorista,
     corridas: corridas, buscarCorrida: buscarCorrida, corridaAtivaDoMotorista: corridaAtivaDoMotorista,
-    criarCorrida: criarCorrida, aceitarCorrida: aceitarCorrida, iniciarCorrida: iniciarCorrida,
+    criarCorrida: criarCorrida, registrarCorridaPropria: registrarCorridaPropria, aceitarCorrida: aceitarCorrida, iniciarCorrida: iniciarCorrida,
     concluirCorrida: concluirCorrida, cancelarCorrida: cancelarCorrida, alterarValores: alterarValores,
     listarMensagens: listarMensagens, carregarMensagens: carregarMensagens, enviarMensagem: enviarMensagem,
     naoLidas: naoLidas, marcarLidas: marcarLidas,

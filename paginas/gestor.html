@@ -7,7 +7,7 @@
        • Topo ........... logotipo e nome da empresa do gestor (ex.: GT Garcia
                           Transportes), usuário, botão Sair
        • Menu lateral ... Visão geral | Corridas | Motoristas | Financeiro |
-                          Planilhas | Trajetos e valores | Chat | Clientes | Despesas (só plano Individual)
+                          Planilhas | Trajetos e valores | Chat | Clientes | Diário | Despesas
        • Seções ......... uma <section data-painel="..."> para cada item do menu
      ============================================================================= -->
 <html lang="pt-BR">
@@ -75,8 +75,8 @@
       <button class="menu-item" data-aba="chat"><span class="menu-icone">💬</span>Chat
         <span class="menu-contador" id="contador-chat" hidden>0</span></button>
       <button class="menu-item" data-aba="clientes"><span class="menu-icone">🏢</span>Clientes</button>
-      <!-- Só aparece no plano Individual (js/paginas/gestor-despesas.js) -->
-      <button class="menu-item" data-aba="despesas" hidden><span class="menu-icone">🧾</span>Despesas</button>
+      <button class="menu-item" data-aba="diario"><span class="menu-icone">📅</span>Diário</button>
+      <button class="menu-item" data-aba="despesas"><span class="menu-icone">🧾</span>Despesas</button>
     </nav>
 
     <main class="conteudo">
@@ -135,6 +135,8 @@
             <p class="texto-suave">Clique numa corrida para ver detalhes, designar motorista, ajustar valores ou conversar.</p>
           </div>
           <button class="botao botao-primario" id="nova-corrida">+ Nova corrida</button>
+          <!-- Só para quem trabalha sozinho (js/paginas/gestor-modulos.js) -->
+          <button class="botao botao-primario" id="registrar-corrida" hidden>+ Registrar corrida</button>
         </div>
 
         <!-- Filtros -->
@@ -369,7 +371,34 @@
         </div>
       </section>
 
-      <!-- ===================== SEÇÃO: DESPESAS (plano Individual) ===================== -->
+      <!-- ===================== SEÇÃO: DIÁRIO ===================== -->
+      <section data-painel="diario" hidden>
+        <div class="cabecalho-secao">
+          <div>
+            <h1>Diário</h1>
+            <p class="texto-suave">Lance, dia a dia, o km inicial e final e o quanto faturou. O sistema soma o mês e mostra quanto cada km rendeu.</p>
+          </div>
+          <button class="botao botao-primario" id="novo-dia">+ Lançar dia</button>
+        </div>
+
+        <div class="filtros-despesas">
+          <label for="diario-mes">Mês</label>
+          <input class="campo campo-estreito" type="month" id="diario-mes" />
+        </div>
+
+        <div class="indicadores" id="indicadores-diario"></div>
+
+        <div class="cartao">
+          <div class="tabela-container">
+            <table class="tabela tabela-cartoes">
+              <thead><tr><th>Dia</th><th class="direita">Km inicial</th><th class="direita">Km final</th><th class="direita">Rodados</th><th class="direita">Corridas</th><th class="direita">Faturamento</th><th></th></tr></thead>
+              <tbody id="tabela-diario"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== SEÇÃO: DESPESAS ===================== -->
       <section data-painel="despesas" hidden>
         <div class="cabecalho-secao">
           <div>
@@ -432,11 +461,15 @@
   <script src="../js/nuvem.js"></script>
   <script src="../js/motoristas-supabase.js"></script>
   <script src="../js/despesas-supabase.js"></script>
+  <script src="../js/diario-supabase.js"></script>
+  <script src="../js/modulos.js"></script>
   <script src="../js/paginas/gestor-motoristas.js"></script>
   <script src="../js/paginas/gestor.js"></script>
   <script src="../js/paginas/gestor-planilhas.js"></script>
   <script src="../js/paginas/gestor-clientes.js"></script>
+  <script src="../js/paginas/gestor-diario.js"></script>
   <script src="../js/paginas/gestor-despesas.js"></script>
+  <script src="../js/paginas/gestor-modulos.js"></script>
 
   <!-- PWA: registra o service worker -->
   <script src="../js/pwa.js"></script>

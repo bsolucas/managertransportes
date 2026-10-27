@@ -36,12 +36,21 @@ window.CONFIG = {
     { id: "outro",  nome: "Outro tipo de transporte" }
   ],
 
+  /* DUAS FORMAS DE USAR O PLANO BÁSICO (perguntado no cadastro; Profissional e Empresarial são sempre "equipe").
+     individual = a pessoa mesma faz as corridas (táxi, van escolar...): sem motoristas, clientes só como contatos.
+     equipe     = pequena frota com motoristas (cada um com seu acesso) e clientes que pedem corridas.
+     Para abrir outras opções no futuro, é só acrescentar aqui e em banco/ (empresas.modulos liga/desliga cada parte). */
+  modosBasico: [
+    { id: "individual", nome: "Trabalho sozinho", descricao: "Eu mesmo faço as corridas (táxi, van escolar...). Quero controlar faturamento, km e despesas." },
+    { id: "equipe",     nome: "Tenho mais veículos ou motoristas", descricao: "Pequena frota: cada motorista com seu acesso e clientes que pedem corridas." }
+  ],
+
   /* PLANOS — o preço aparece na landing e na página de pagamento a partir daqui.
      Valor em reais, com ponto decimal (129.90 = R$ 129,90).
      "limites": empresas clientes e funcionários por empresa (null = ilimitado; no Individual os clientes são só contatos). Por enquanto
      é só informativo: o sistema ainda não bloqueia cadastros acima do limite. */
   planos: [
-    { id: "individual",    nome: "Individual",    preco: 99.90,  descricao: "Para quem trabalha sozinho: corridas, valores e despesas",
+    { id: "basico",        nome: "Básico",        preco: 99.90,  descricao: "Sozinho ou com pequena frota: corridas, diário, despesas e rotas",
       limites: { empresas: null, funcionariosPorEmpresa: null } },
     { id: "profissional", nome: "Profissional", preco: 249.90, descricao: "Até 10 empresas e 1.000 funcionários por empresa + conversão de planilha",
       limites: { empresas: 10, funcionariosPorEmpresa: 1000 } },

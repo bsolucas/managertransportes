@@ -17,9 +17,10 @@ Arquivos SQL do banco do Manager Transportes. **Não há senhas nem chaves aqui.
 | `12-modos-do-plano-basico.sql` | Plano Básico em dois modos (Individual: clientes sem login; Equipe) e tipo "frota" único; o banco recusa login de cliente no modo Individual |
 | `13-despesas.sql` | Tabela de despesas (só o gestor da empresa lê e grava) |
 | `14-plano-individual.sql` | Plano Básico vira "Individual" (R$ 99,90); Profissional e Empresarial seguem iguais |
+| `15-administracao-do-negocio.sql` | Plano volta a ser "Básico" (R$ 99,90, sozinho ou pequena frota); tabela `diario` (km e faturamento por dia); `empresas.modulos`; corrida própria já concluída para quem trabalha sozinho |
 | `02-dados-teste.sql` | Cadastra a empresa de exemplo (Garcia Transportes), locais, motoristas, clientes e tarifas |
 
-Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13 e o 14, no SQL Editor do Supabase.
+Ordem: rode o 01, o 02, o 03, o 04, o 05, o 06, o 07, o 08, o 09, o 10, o 11, o 12, o 13, o 14 e o 15, no SQL Editor do Supabase.
 
 ## Tabelas
 
