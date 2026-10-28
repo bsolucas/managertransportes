@@ -56,3 +56,4 @@ Decisões tomadas pelo Claude que você pode mudar: veja `DECISOES.md`.
 - 27-sem-valor-para-o-cliente.sql — o chat não mostra mais o total ao concluir a corrida (cliente não vê preço por enquanto)
 - 28-valor-definido-pelo-gestor.sql — cliente pede só com embarque e destino (sem trajeto nem preço); o gestor define o valor de cada corrida (corridas.valor_definido)
 - 29-uso-das-sugestoes-de-endereco.sql — conta as buscas de sugestão de endereço (Google Places) no monitor do dono e no alerta de 80%/95%
+- 30-google-modo-demonstracao.sql — Google em modo demonstração (sem cartão) x cobrança, com botão no painel do dono; alertas do Google só no modo cobrança

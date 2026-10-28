@@ -154,6 +154,20 @@
   }
 
   $("botao-atualizar").addEventListener("click", function () { carregar(); });
+  $("uso-google").addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-google-modo]");
+    if (!b) return;
+    var modo = b.getAttribute("data-google-modo");
+    var pergunta = modo === "faturamento"
+      ? "Confirma que o cartão já está ligado no Google Cloud? O painel vai passar a comparar o uso com a cota gratuita e a mandar e-mail aos 80% e 95%."
+      : "Voltar ao modo demonstração? Os alertas de Google (80% e 95%) deixam de ser enviados.";
+    if (!window.confirm(pergunta)) return;
+    b.disabled = true;
+    sb.rpc("dono_google_modo", { p_modo: modo }).then(function (r) {
+      if (r.error) { b.disabled = false; window.alert("Não foi possível trocar o modo agora."); return; }
+      carregar();
+    });
+  });
 
   /* ==========================================================================
      4. DESENHAR
@@ -254,6 +268,23 @@
   function diaCurto(iso) { var p = String(iso).split("-"); return p[2] + "/" + p[1]; }
   function somar(dias, campo) { return dias.reduce(function (t, d) { return t + Number(d[campo] || 0); }, 0); }
 
+  /* Cartão do Google na chave de demonstração: mostra o volume, sem barra de limite (o limite diário não é publicado). */
+  function cartaoDemo(titulo, usado, dica, extra) {
+    return '<div class="uso-cartao uso-demo"><div class="uso-topo"><span>' + titulo + '</span><span class="uso-selo">Demonstração</span></div>' +
+      '<div class="uso-valor">' + num(usado) + " <small>nos últimos 30 dias</small></div>" +
+      '<div class="uso-rodape">Sem custo e sem risco de cobrança' + (extra ? " · " + extra : "") + "</div>" +
+      '<div class="uso-dica">' + dica + " Na chave de demonstração o Google limita por dia (número não publicado) e pausa o uso até o dia seguinte.</div></div>";
+  }
+  function caixaGoogle(demo) {
+    return demo
+      ? '<div class="uso-aviso uso-aviso-demo"><div><strong>Google em modo demonstração</strong> (chave de teste, sem cartão). Não gera cobrança e serve só para testes: o Google diz que ela não é para uso em produção. ' +
+        'Antes de vender para empresas, ligue um cartão no Google Cloud (use o orçamento com alerta) e depois passe para o modo cobrança.</div>' +
+        '<button class="botao botao-borda botao-pequeno" data-google-modo="faturamento">Já coloquei o cartão</button></div>'
+      : '<div class="uso-aviso uso-aviso-fat"><div><strong>Google com cobrança ativa.</strong> Os cartões abaixo comparam o uso com a cota gratuita mensal de referência (10 mil mapas e 10 mil sugestões de endereço) ' +
+        'e você recebe e-mail aos 80% e 95%. Confira os números oficiais no Google Cloud.</div>' +
+        '<button class="botao botao-borda botao-pequeno" data-google-modo="demonstracao">Voltar ao modo demonstração</button></div>';
+  }
+
   function cartaoLimite(titulo, usado, limite, textoUsado, dica, extra) {
     var pct = limite ? usado / limite * 100 : 0;
     var nivel = pct >= 90 ? "alto" : pct >= 70 ? "medio" : "ok";
@@ -270,17 +301,19 @@
     var u = estado.uso;
     if (!u) {
       $("uso-intro").textContent = "O monitor de uso ainda não está ativo: aplique o arquivo banco/25-monitor-de-uso.sql no Supabase.";
-      $("uso-limites").innerHTML = ""; $("uso-dias").innerHTML = ""; $("uso-tabelas").innerHTML = ""; $("uso-links").innerHTML = "";
+      $("uso-google").innerHTML = ""; $("uso-limites").innerHTML = ""; $("uso-dias").innerHTML = ""; $("uso-tabelas").innerHTML = ""; $("uso-links").innerHTML = "";
       return;
     }
     var dias = u.dias || [];                           // do mais antigo ao de hoje
     var hoje = dias[dias.length - 1] || {};
     var mapas30 = somar(dias, "google_maps");
     var places30 = somar(dias, "places");
+    var demo = u.google_modo !== "faturamento";   // padrão: chave de demonstração do Google (sem cartão)
     var custoMapas = Math.max(0, mapas30 - LIMITES.mapas) / 1000 * 7;
     $("uso-intro").textContent = "Contadores de Google Maps, sugestões de endereço, e-mails, push e logins" + (u.desde ? " começam em " + data(u.desde + "T12:00:00") : "") +
-      ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico. Você recebe um e-mail quando um limite passa de 80% e outro aos 95% (conferido de hora em hora).";
+      ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico. Você recebe um e-mail quando um limite passa de 80% e outro aos 95% (conferido de hora em hora; os do Google só no modo cobrança).";
 
+    $("uso-google").innerHTML = caixaGoogle(demo);
     $("uso-limites").innerHTML =
       cartaoLimite("Banco de dados (Supabase)", u.banco.bytes, u.banco.limite || LIMITES.banco,
         tamanho(u.banco.bytes) + " <small>de " + tamanho(u.banco.limite || LIMITES.banco) + "</small>",
@@ -289,16 +322,16 @@
       cartaoLimite("Usuários ativos (30 dias)", u.usuarios.ativos_30d, u.usuarios.limite || LIMITES.usuarios,
         num(u.usuarios.ativos_30d) + " <small>de " + num(u.usuarios.limite || LIMITES.usuarios) + "</small>",
         "Conta quem entrou nos últimos 30 dias. Total de logins criados: " + num(u.usuarios.total) + ".") +
-      cartaoLimite("Google Maps (30 dias)", mapas30, LIMITES.mapas,
+      (demo ? cartaoDemo("Google Maps (30 dias)", mapas30, "Cada mapa aberto no painel do gestor conta 1.", "hoje: " + num(hoje.google_maps)) : cartaoLimite("Google Maps (30 dias)", mapas30, LIMITES.mapas,
         num(mapas30) + " <small>de " + num(LIMITES.mapas) + "</small>",
         "Cada mapa aberto no painel do gestor conta 1. Depois do limite: cerca de US$ 7 por 1.000." +
         (custoMapas > 0 ? " Estimativa do excesso: US$ " + custoMapas.toFixed(2).replace(".", ",") + "." : "") +
         " Estimativa nossa; o Google tem o número oficial.",
-        "hoje: " + num(hoje.google_maps)) +
-      cartaoLimite("Sugestões de endereço (Google, 30 dias)", places30, LIMITES.places,
+        "hoje: " + num(hoje.google_maps))) +
+      (demo ? cartaoDemo("Sugestões de endereço (Google, 30 dias)", places30, "Cada busca enquanto o cliente digita o endereço conta 1.", "hoje: " + num(hoje.places)) : cartaoLimite("Sugestões de endereço (Google, 30 dias)", places30, LIMITES.places,
         num(places30) + " <small>de ~" + num(LIMITES.places) + "</small>",
         "Cada busca enquanto o cliente digita o endereço conta 1. Passando da cota gratuita o Google cobra por busca (confira o valor atual no Google Cloud). Se subir demais, dá para exigir mais letras antes de buscar ou desligar as sugestões.",
-        "hoje: " + num(hoje.places)) +
+        "hoje: " + num(hoje.places))) +
       cartaoLimite("E-mails hoje (Gmail do script)", hoje.email || 0, LIMITES.emails,
         num(hoje.email) + " <small>de ~" + num(LIMITES.emails) + " por dia</small>",
         "Limite da conta Google dona do script, somando todas as empresas. Perto de 70%, migre para domínio próprio + Resend.") +

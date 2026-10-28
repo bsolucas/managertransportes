@@ -164,3 +164,9 @@ input:focus, select:focus { outline: none; border-color: var(--azul); box-shadow
 .uso-linha span:last-child { text-align: right; }
 .uso-links { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (max-width: 640px) { .uso-linha { grid-template-columns: 100px 1fr 64px; } }
+
+/* Aviso do modo do Google (demonstração x cobrança) e cartão sem barra de limite */
+.uso-aviso { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin: 12px 0 4px; padding: 12px 16px; border-radius: 12px; font-size: .9rem; line-height: 1.45; background: var(--azul-suave); border: 1px solid var(--azul); }
+.uso-aviso > div { flex: 1 1 360px; }
+.uso-aviso-fat { background: rgba(34, 197, 94, .1); border-color: rgba(34, 197, 94, .45); }
+.uso-demo .uso-selo { background: var(--azul-suave); color: var(--azul-claro); }
