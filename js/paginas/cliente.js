@@ -67,40 +67,6 @@
     /* ========================================================================
        2. FORMULÁRIO "PEDIR CORRIDA"
        ======================================================================== */
-    var selTrajeto = document.getElementById("pedido-trajeto");
-
-    function trajetos() { return (nuvem.tarifas() || {}).trajetos || []; }
-
-    function preencherTrajetos() {
-      var lista = trajetos();
-      ui.preencherSelect(selTrajeto,
-        [{ valor: "", texto: lista.length ? "Selecione..." : "A empresa ainda não cadastrou trajetos" }]
-          .concat(lista.map(function (t) { return { valor: t.id, texto: t.nome }; })),
-        selTrajeto.value);
-      desenharTrajetos();
-    }
-
-    /* Lista de trajetos em cartões (o cliente NÃO vê preço por enquanto). Tocar num cartão escolhe o trajeto no <select> escondido. */
-    function desenharTrajetos() {
-      var lista = trajetos(), caixa = document.getElementById("lista-trajetos");
-      if (!lista.length) { caixa.innerHTML = '<p class="texto-suave">A empresa ainda não cadastrou trajetos.</p>'; return; }
-      caixa.innerHTML = lista.map(function (t) {
-        return '<label class="trajeto"><input type="radio" name="trajeto" value="' + u.escaparHtml(t.id) + '"' + (t.id === selTrajeto.value ? " checked" : "") + " />" +
-          '<span class="trajeto-icone">' + App.icone("navigation") + "</span>" +
-          '<span class="trajeto-nome">' + u.escaparHtml(t.nome) + "</span>" +
-          '<span class="marca-ok">' + App.icone("check") + "</span></label>";
-      }).join("");
-    }
-    document.getElementById("lista-trajetos").addEventListener("change", function (ev) {
-      if (ev.target.name !== "trajeto") return;
-      selTrajeto.value = ev.target.value;
-      selTrajeto.dispatchEvent(new Event("change"));
-    });
-
-    function trajetoEscolhido() {
-      return trajetos().filter(function (t) { return t.id === selTrajeto.value; })[0] || null;
-    }
-
     /* Tipo de veículo em azulejos grandes: ícone, nome e (se tiver) a explicação pequena. */
     document.getElementById("pedido-servicos").innerHTML = Object.keys(App.SERVICOS).map(function (s, i) {
       var partes = App.SERVICOS[s].rotulo.split(" ("), nome = partes[0], detalhe = partes[1] ? partes[1].replace(")", "") : "";
@@ -111,16 +77,17 @@
              '<span class="marca-ok">' + App.icone("check") + "</span></label>";
     }).join("");
 
-    /* Resumo do trajeto escolhido (sem preço: o valor é combinado com a empresa). */
+    /* Resumo na barra de baixo. O cliente NÃO vê preço: o gestor define o valor olhando o destino. */
+    var campoEmbarque = document.getElementById("pedido-embarque"), campoDestino = document.getElementById("pedido-destino");
     function atualizarPrevia() {
-      var t = trajetoEscolhido();
-      document.getElementById("botao-pedir").disabled = !t;
-      document.getElementById("previa-preco").innerHTML = t
-        ? '<span class="previa-rotulo">Trajeto escolhido</span><span class="previa-nome">' + u.escaparHtml(t.nome) + "</span>" +
-          '<p class="texto-suave texto-pequeno">O valor é combinado com a empresa.</p>'
-        : '<p class="texto-suave previa-vazia">Escolha o trajeto para continuar.</p>';
+      var destino = campoDestino.value.trim(), pronto = !!campoEmbarque.value.trim() && !!destino;
+      document.getElementById("botao-pedir").disabled = !pronto;
+      document.getElementById("previa-preco").innerHTML = pronto
+        ? '<span class="previa-rotulo">Para onde</span><span class="previa-nome">' + u.escaparHtml(destino) + "</span>"
+        : '<p class="texto-suave previa-vazia">Informe o embarque e o destino para continuar.</p>';
     }
-    selTrajeto.addEventListener("change", atualizarPrevia);
+    campoEmbarque.addEventListener("input", atualizarPrevia);
+    campoDestino.addEventListener("input", atualizarPrevia);
 
     /* ========================================================================
        3. ENVIAR O PEDIDO
@@ -133,27 +100,24 @@
 
     document.getElementById("formulario-pedido").addEventListener("submit", function (ev) {
       ev.preventDefault();
-      var t = trajetoEscolhido();
-      if (!t) return;
-      var embarque = document.getElementById("pedido-embarque").value.trim();
+      var embarque = campoEmbarque.value.trim(), destino = campoDestino.value.trim();
       if (!embarque) { ui.aviso("Informe o endereço de embarque.", "erro"); return; }
+      if (!destino) { ui.aviso("Informe o endereço de destino.", "erro"); return; }
       var botao = document.getElementById("botao-pedir");
       botao.disabled = true;
       nuvem.criarCorrida({
         clienteId: usuario.id,
-        trajeto: t.nome,
+        trajeto: "Para " + destino,   // o banco refaz este texto; o valor fica "a definir" (o gestor preenche)
         embarque: embarque,
-        destinoEndereco: document.getElementById("pedido-destino").value.trim(),
+        destinoEndereco: destino,
         servico: (ui.$('input[name="servico"]:checked') || {}).value,
-        valor: t.valor,   // o banco troca pelo valor oficial do trajeto
+        valor: 0,
         observacoes: document.getElementById("pedido-observacoes").value.trim()
       }).then(function (corrida) {
         ui.aviso("Corrida " + corrida.codigo + " solicitada!", "sucesso");
         document.getElementById("pedido-embarque").value = "";
         document.getElementById("pedido-destino").value = "";
         document.getElementById("pedido-observacoes").value = "";
-        selTrajeto.value = "";
-        desenharTrajetos();
         atualizarPrevia();
         corridaSelecionada = corrida.id;
         document.querySelector('[data-aba="minhas"]').click();
@@ -191,8 +155,9 @@
             var partes = [rua && (rua + (a.house_number ? ", " + a.house_number : "")), a.suburb || a.neighbourhood, a.city || a.town || a.village || a.municipality].filter(Boolean);
             campo.value = (partes.length ? partes.join(" - ") : (j.display_name || coords)).slice(0, 200);
             dicaLocal("Confira o endereço e ajuste o número ou o ponto exato, se precisar.");
+            atualizarPrevia();
           })
-          .catch(function () { campo.value = "Localização atual (" + coords + ")"; dicaLocal("Não achei o nome da rua, então enviei suas coordenadas. O motorista abre direto no mapa."); })
+          .catch(function () { campo.value = "Localização atual (" + coords + ")"; atualizarPrevia(); dicaLocal("Não achei o nome da rua, então enviei suas coordenadas. O motorista abre direto no mapa."); })
           .then(function () { clearTimeout(t); rotuloLoc(false); });
       }, function (erro) {
         rotuloLoc(false);
@@ -277,7 +242,6 @@
         '<div class="acompanhamento-topo"><h2>Corrida ' + c.codigo + "</h2>" + ui.seloStatus(c.status) + "</div>" +
         blocoMotorista +
         '<dl class="lista-dados">' +
-          "<dt>Trajeto</dt><dd>" + u.escaparHtml(c.trajeto) + "</dd>" +
           "<dt>Embarque</dt><dd>" + u.escaparHtml(c.embarque || "—") + "</dd>" +
           (c.destinoEndereco ? "<dt>Destino</dt><dd>" + u.escaparHtml(c.destinoEndereco) + "</dd>" : "") +
           "<dt>Serviço</dt><dd>" + App.SERVICOS[c.servico].icone + " " + App.SERVICOS[c.servico].rotulo + "</dd>" +
@@ -324,7 +288,6 @@
        5. ATUALIZAÇÃO AUTOMÁTICA
        ======================================================================== */
     nuvem.aoMudar(function (chave) {
-      if (chave === "tarifas") { preencherTrajetos(); atualizarPrevia(); }
       if (chave === "corridas" || chave === "motoristas" || chave === "mensagens") {
         if (abaAtual === "minhas") { desenharAcompanhamento(); desenharMinhas(); }
         desenharContador();
@@ -332,7 +295,6 @@
     });
 
     /* Primeiro desenho */
-    preencherTrajetos();
     atualizarPrevia();
     desenharContador();
   }

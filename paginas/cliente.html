@@ -3,8 +3,9 @@
      paginas/cliente.html — PORTAL DO CLIENTE
      -----------------------------------------------------------------------------
      Duas abas:
-       • Pedir corrida ..... escolhe o trajeto (lista da empresa), informa o embarque
-                             e o serviço (o valor NÃO aparece para o cliente por enquanto)
+       • Pedir corrida ..... informa embarque, destino e tipo de veículo. O cliente NÃO escolhe
+                             trajeto e NÃO vê preço: o gestor define o valor de cada corrida,
+                             olhando o destino (banco/28)
        • Minhas corridas ... acompanha o motorista no mapa e conversa no chat
      O comportamento está em js/paginas/cliente.js.
      ============================================================================= -->
@@ -59,16 +60,9 @@
         <form class="cartao cartao-pedido" id="formulario-pedido" autocomplete="off">
           <h2>Para onde vamos?</h2>
 
-          <!-- 1. Trajeto: lista de cartões (o <select> escondido guarda o valor; o JavaScript mantém os dois iguais) -->
-          <div class="grupo-campo">
-            <span class="rotulo-secao"><b>1</b> Escolha o trajeto</span>
-            <select id="pedido-trajeto" hidden aria-hidden="true" tabindex="-1"></select>
-            <div class="lista-trajetos" id="lista-trajetos" role="radiogroup" aria-label="Trajeto"></div>
-          </div>
-
           <!-- 2. De onde sai e para onde vai (as duas linhas ficam ligadas por um traço, como num mapa) -->
           <div class="grupo-campo">
-            <span class="rotulo-secao"><b>2</b> De onde sai e para onde vai</span>
+            <span class="rotulo-secao"><b>1</b> De onde sai e para onde vai</span>
             <div class="caixa-rota">
               <div class="linha-rota">
                 <span class="ponto ponto-origem" aria-hidden="true"></span>
@@ -77,7 +71,7 @@
               </div>
               <div class="linha-rota">
                 <span class="ponto ponto-destino" aria-hidden="true"></span>
-                <input class="campo-rota" id="pedido-destino" maxlength="200" placeholder="Destino (opcional)" aria-label="Endereço de destino (opcional)" />
+                <input class="campo-rota" id="pedido-destino" maxlength="200" placeholder="Endereço de destino" aria-label="Endereço de destino" />
               </div>
             </div>
             <small class="dica-campo" id="dica-localizacao" hidden></small>
@@ -85,7 +79,7 @@
 
           <!-- 3. Tipo de veículo -->
           <div class="grupo-campo">
-            <span class="rotulo-secao"><b>3</b> Tipo de veículo</span>
+            <span class="rotulo-secao"><b>2</b> Tipo de veículo</span>
             <div class="grade-servicos" id="pedido-servicos" role="radiogroup" aria-label="Tipo de veículo"></div>
           </div>
 

@@ -54,3 +54,4 @@ Decisões tomadas pelo Claude que você pode mudar: veja `DECISOES.md`.
 - 25-monitor-de-uso.sql — monitor de uso e limites (aba 'Uso e limites' do painel do dono)
 - 26-alertas-de-uso.sql — e-mail ao dono quando o uso passa de 80%/95% (pg_cron 'alertas-de-uso', de hora em hora)
 - 27-sem-valor-para-o-cliente.sql — o chat não mostra mais o total ao concluir a corrida (cliente não vê preço por enquanto)
+- 28-valor-definido-pelo-gestor.sql — cliente pede só com embarque e destino (sem trajeto nem preço); o gestor define o valor de cada corrida (corridas.valor_definido)

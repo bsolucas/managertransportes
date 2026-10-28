@@ -43,21 +43,10 @@
 /* Marca de "escolhido" (círculo com um visto) usada nos cartões de trajeto e nos azulejos de serviço */
 .marca-ok { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--azul); color: #fff; opacity: 0; transform: scale(0.6); transition: opacity 0.15s, transform 0.15s; flex: none; }
 .marca-ok .ico { width: 14px; height: 14px; stroke-width: 3; }
-.trajeto:has(input:checked) .marca-ok, .servico:has(input:checked) .marca-ok { opacity: 1; transform: scale(1); }
-.trajeto input, .servico input { position: absolute; opacity: 0; pointer-events: none; }
+.servico:has(input:checked) .marca-ok { opacity: 1; transform: scale(1); }
+.servico input { position: absolute; opacity: 0; pointer-events: none; }
 
-/* 1. Trajetos: um cartão por linha, com o valor bem visível à direita */
-.lista-trajetos { display: grid; gap: 10px; }
-.trajeto { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; border: 2px solid var(--borda); background: var(--superficie-2); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
-.trajeto:hover { background: var(--superficie-3); }
-.trajeto:active { transform: scale(0.99); }
-.trajeto:has(input:checked) { border-color: var(--azul); background: var(--azul-suave); }
-.trajeto:has(input:focus-visible), .servico:has(input:focus-visible) { outline: 3px solid var(--azul-claro); outline-offset: 2px; }
-.trajeto-icone { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--superficie-3); color: var(--azul-claro); flex: none; }
-.trajeto:has(input:checked) .trajeto-icone { background: var(--azul); color: #fff; }
-.trajeto-nome { flex: 1; font-weight: 600; line-height: 1.25; }
-
-/* 2. Embarque e destino: uma caixa só, com bolinha (origem) e quadradinho (destino) ligados por um traço */
+/* 1. Embarque e destino: uma caixa só, com bolinha (origem) e quadradinho (destino) ligados por um traço */
 .caixa-rota { position: relative; border-radius: 14px; background: var(--superficie-3); border: 1.5px solid transparent; transition: border-color 0.15s, box-shadow 0.15s; }
 .caixa-rota:focus-within { border-color: var(--azul); box-shadow: 0 0 0 4px var(--azul-suave); }
 .linha-rota { display: flex; align-items: center; gap: 12px; padding: 0 8px 0 16px; min-height: 54px; }
@@ -74,7 +63,7 @@
 .botao-gps.carregando { animation: pulsar 1s infinite; }
 @keyframes pulsar { 50% { opacity: 0.45; } }
 
-/* 3. Tipo de veículo: azulejos grandes, 2 por linha */
+/* 2. Tipo de veículo: azulejos grandes, 2 por linha */
 .grade-servicos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .servico { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; min-height: 108px; border-radius: 14px; border: 2px solid var(--borda); background: var(--superficie-2); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
 .servico:hover { background: var(--superficie-3); }

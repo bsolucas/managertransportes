@@ -139,7 +139,7 @@ App.nuvem = (function () {
       observacoes: l.observacoes || "", status: l.status,
       criadaEm: ms(l.criada_em), aceitaEm: ms(l.aceita_em), iniciadaEm: ms(l.iniciada_em),
       concluidaEm: ms(l.concluida_em), canceladaEm: ms(l.cancelada_em),
-      motivoCancelamento: l.motivo_cancelamento || "", valorEditadoEm: ms(l.valor_editado_em),
+      motivoCancelamento: l.motivo_cancelamento || "", valorEditadoEm: ms(l.valor_editado_em), valorDefinido: l.valor_definido !== false,
       comissaoPercentual: l.comissao_percentual === null || l.comissao_percentual === undefined ? null : Number(l.comissao_percentual),
       comissaoValor: l.comissao_valor === null || l.comissao_valor === undefined ? null : Number(l.comissao_valor),
       historico: l.historico || []

@@ -120,7 +120,8 @@
                (c.embarque ? "<br><span>Embarque:</span> " + u.escaparHtml(c.embarque) : "") + "</div>" +
              '<div class="item-corrida-rodape"><span>' + u.escaparHtml(nomeCliente(c)) +
                (c.motoristaId ? " • " + u.escaparHtml(nomeMotorista(c.motoristaId)) : "") + "</span>" +
-               '<span class="item-corrida-valor">' + u.moeda(App.precos.totalCorrida(c)) + "</span></div>" +
+               (c.valorDefinido === false ? '<span class="selo-valor-pendente">Definir valor</span>'
+                 : '<span class="item-corrida-valor">' + u.moeda(App.precos.totalCorrida(c)) + "</span>") + "</div>" +
            "</div>";
   }
 
@@ -383,8 +384,9 @@
       "</dl></div>" +
 
       '<div class="detalhe-bloco"><h3>Valores</h3>' + valorEditado +
-        '<div class="grupo-campo"><label class="rotulo" for="valor-corrida">Valor da corrida (pode ajustar)</label>' +
-          '<input class="campo" type="number" step="0.01" min="0" id="valor-corrida" value="' + valorEditando + '"' + (c.status === "cancelada" ? " disabled" : "") + " /></div>" +
+        (c.valorDefinido === false ? '<div class="aviso-valor-pendente"><strong>Valor a definir.</strong> Veja o destino do cliente e informe quanto vai custar esta corrida. O cliente não vê o valor.</div>' : "") +
+        '<div class="grupo-campo"><label class="rotulo" for="valor-corrida">' + (c.valorDefinido === false ? "Valor da corrida (R$)" : "Valor da corrida (pode ajustar)") + '</label>' +
+          '<input class="campo" type="number" step="0.01" min="0" inputmode="decimal" id="valor-corrida" placeholder="0,00" value="' + (c.valorDefinido === false && !valorEditando ? "" : valorEditando) + '"' + (c.status === "cancelada" ? " disabled" : "") + " /></div>" +
         '<label class="rotulo">Extras (somados ao valor)</label>' + htmlExtras +
         (c.status !== "cancelada" ? '<button class="botao botao-secundario botao-pequeno" data-acao="adicionar-extra">+ Adicionar extra</button>' : "") +
         '<table class="composicao-preco"><tr><td>Extras</td><td>' + u.moeda(totalExtras) + '</td></tr>' +
@@ -436,11 +438,13 @@
     }
     if (acao === "salvar-valores") {
       var valor = valorEditando;
+      var pendente = (nuvem.buscarCorrida(id) || {}).valorDefinido === false;
+      if (pendente && !(valor > 0)) { ui.aviso("Informe o valor da corrida (maior que zero).", "erro"); return; }
       var extras = extrasEditando.filter(function (e) { return e.descricao.trim() || Number(e.valor); })
         .map(function (e) { return { descricao: e.descricao.trim() || "Extra", valor: u.arredondar(Number(e.valor) || 0) }; });
       nuvem.alterarValores(id, valor, extras).then(function () {
         extrasEditando = JSON.parse(JSON.stringify(extras));
-        ui.aviso("Valores salvos.", "sucesso");
+        ui.aviso(pendente ? "Valor definido." : "Valores salvos.", "sucesso");
       }).catch(erro);
     }
     if (acao === "cancelar") {

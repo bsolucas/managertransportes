@@ -373,3 +373,7 @@ textarea.campo { resize: vertical; min-height: 70px; }
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 .faixa-som .ico { width: 18px; height: 18px; }
+
+/* Corrida pedida pelo cliente que ainda não tem valor (o gestor define olhando o destino) */
+.selo-valor-pendente { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; background: rgba(245, 165, 36, 0.16); color: var(--cor-aguardando); border: 1px solid rgba(245, 165, 36, 0.45); }
+.aviso-valor-pendente { margin: 0 0 12px; padding: 10px 12px; border-radius: var(--raio); font-size: 0.9rem; background: rgba(245, 165, 36, 0.12); border: 1px solid rgba(245, 165, 36, 0.45); }
