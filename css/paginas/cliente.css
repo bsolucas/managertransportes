@@ -56,7 +56,6 @@
 .trajeto-icone { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--superficie-3); color: var(--azul-claro); flex: none; }
 .trajeto:has(input:checked) .trajeto-icone { background: var(--azul); color: #fff; }
 .trajeto-nome { flex: 1; font-weight: 600; line-height: 1.25; }
-.trajeto-valor { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 /* 2. Embarque e destino: uma caixa só, com bolinha (origem) e quadradinho (destino) ligados por um traço */
 .caixa-rota { position: relative; border-radius: 14px; background: var(--superficie-3); border: 1.5px solid transparent; transition: border-color 0.15s, box-shadow 0.15s; }
@@ -99,10 +98,8 @@
 /* Barra de baixo: o valor e o botão acompanham a rolagem */
 .barra-pedido { position: sticky; bottom: 0; z-index: 5; margin: 0 -18px; padding: 14px 18px calc(14px + env(safe-area-inset-bottom)); background: var(--superficie); border-top: 1px solid var(--borda); border-radius: 0 0 var(--raio) var(--raio); box-shadow: 0 -12px 24px rgba(0, 0, 0, 0.35); }
 .barra-pedido .previa-preco { margin: 0 0 8px; padding: 0; border: 0; background: transparent; }
-.previa-linha { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .previa-rotulo { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--texto-suave); }
 .previa-nome { display: block; font-weight: 600; }
-.previa-valor { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 .previa-vazia { margin: 0 0 4px; }
 .barra-pedido .texto-pequeno { margin: 4px 0 10px; }
 .botao-grande { min-height: 52px; font-size: 1.05rem; border-radius: 14px; }

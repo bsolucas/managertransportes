@@ -80,7 +80,7 @@
       desenharTrajetos();
     }
 
-    /* Lista de trajetos em cartões (nome + valor). Tocar num cartão escolhe o trajeto no <select> escondido. */
+    /* Lista de trajetos em cartões (o cliente NÃO vê preço por enquanto). Tocar num cartão escolhe o trajeto no <select> escondido. */
     function desenharTrajetos() {
       var lista = trajetos(), caixa = document.getElementById("lista-trajetos");
       if (!lista.length) { caixa.innerHTML = '<p class="texto-suave">A empresa ainda não cadastrou trajetos.</p>'; return; }
@@ -88,7 +88,6 @@
         return '<label class="trajeto"><input type="radio" name="trajeto" value="' + u.escaparHtml(t.id) + '"' + (t.id === selTrajeto.value ? " checked" : "") + " />" +
           '<span class="trajeto-icone">' + App.icone("navigation") + "</span>" +
           '<span class="trajeto-nome">' + u.escaparHtml(t.nome) + "</span>" +
-          '<span class="trajeto-valor">' + u.moeda(t.valor) + "</span>" +
           '<span class="marca-ok">' + App.icone("check") + "</span></label>";
       }).join("");
     }
@@ -112,15 +111,14 @@
              '<span class="marca-ok">' + App.icone("check") + "</span></label>";
     }).join("");
 
-    /* Mostra o valor do trajeto antes de pedir. */
+    /* Resumo do trajeto escolhido (sem preço: o valor é combinado com a empresa). */
     function atualizarPrevia() {
       var t = trajetoEscolhido();
       document.getElementById("botao-pedir").disabled = !t;
       document.getElementById("previa-preco").innerHTML = t
-        ? '<div class="previa-linha"><div><span class="previa-rotulo">Valor da corrida</span><span class="previa-nome">' + u.escaparHtml(t.nome) + "</span></div>" +
-          '<strong class="previa-valor">' + u.moeda(t.valor) + "</strong></div>" +
-          '<p class="texto-suave texto-pequeno">Pedágios, esperas e outros extras podem ser somados depois.</p>'
-        : '<p class="texto-suave previa-vazia">Escolha o trajeto para ver o valor.</p>';
+        ? '<span class="previa-rotulo">Trajeto escolhido</span><span class="previa-nome">' + u.escaparHtml(t.nome) + "</span>" +
+          '<p class="texto-suave texto-pequeno">O valor é combinado com a empresa.</p>'
+        : '<p class="texto-suave previa-vazia">Escolha o trajeto para continuar.</p>';
     }
     selTrajeto.addEventListener("change", atualizarPrevia);
 
@@ -241,7 +239,7 @@
             (naoLidas ? '<span class="contador-nao-lidas">' + naoLidas + "</span>" : ui.seloStatus(c.status)) + "</div>" +
           '<div class="item-corrida-rota"><strong>' + u.escaparHtml(c.trajeto) + "</strong>" +
             (c.embarque ? "<br><span>Embarque:</span> " + u.escaparHtml(c.embarque) : "") + "</div>" +
-          '<div class="item-corrida-rodape"><span>' + u.dataHora(c.criadaEm) + '</span><span class="item-corrida-valor">' + u.moeda(App.precos.totalCorrida(c)) + "</span></div>" +
+          '<div class="item-corrida-rodape"><span>' + u.dataHora(c.criadaEm) + "</span></div>" +
         "</div>";
       }).join("") : '<div class="lista-vazia">Você ainda não pediu nenhuma corrida.</div>';
       if (chat.corridaAtual() !== corridaSelecionada) chat.abrir(corridaSelecionada);
@@ -284,8 +282,6 @@
           (c.destinoEndereco ? "<dt>Destino</dt><dd>" + u.escaparHtml(c.destinoEndereco) + "</dd>" : "") +
           "<dt>Serviço</dt><dd>" + App.SERVICOS[c.servico].icone + " " + App.SERVICOS[c.servico].rotulo + "</dd>" +
           (c.observacoes ? "<dt>Observações</dt><dd>" + u.escaparHtml(c.observacoes) + "</dd>" : "") +
-          "<dt>Valor</dt><dd>" + u.moeda(c.valor) + (App.precos.totalExtras(c) ? " + extras " + u.moeda(App.precos.totalExtras(c)) : "") +
-            " = <strong>" + u.moeda(App.precos.totalCorrida(c)) + "</strong></dd>" +
         "</dl>" +
         (podeCancelar ? '<div class="acoes-corrida"><button class="botao botao-perigo" id="cancelar-minha">Cancelar corrida</button></div>' : "");
 
