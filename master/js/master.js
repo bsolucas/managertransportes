@@ -241,6 +241,7 @@
     banco: 524288000,        // Supabase gratuito: 500 MB de banco
     usuarios: 50000,         // Supabase gratuito: 50 mil usuários ativos por mês
     mapas: 10000,            // Google Maps: 10 mil carregamentos grátis por mês
+    places: 10000,           // Google Places (sugestão de endereço): ~10 mil buscas grátis por mês (confira a cota atual no Google Cloud)
     emails: 100,             // Gmail pelo Apps Script: cerca de 100 e-mails por dia
     pushes: 20000            // Apps Script: cerca de 20 mil chamadas externas por dia
   };
@@ -275,8 +276,9 @@
     var dias = u.dias || [];                           // do mais antigo ao de hoje
     var hoje = dias[dias.length - 1] || {};
     var mapas30 = somar(dias, "google_maps");
+    var places30 = somar(dias, "places");
     var custoMapas = Math.max(0, mapas30 - LIMITES.mapas) / 1000 * 7;
-    $("uso-intro").textContent = "Contadores de Google Maps, e-mails, push e logins" + (u.desde ? " começam em " + data(u.desde + "T12:00:00") : "") +
+    $("uso-intro").textContent = "Contadores de Google Maps, sugestões de endereço, e-mails, push e logins" + (u.desde ? " começam em " + data(u.desde + "T12:00:00") : "") +
       ". Corridas, notificações, mensagens e cadastros vêm direto do banco, com todo o histórico. Você recebe um e-mail quando um limite passa de 80% e outro aos 95% (conferido de hora em hora).";
 
     $("uso-limites").innerHTML =
@@ -293,6 +295,10 @@
         (custoMapas > 0 ? " Estimativa do excesso: US$ " + custoMapas.toFixed(2).replace(".", ",") + "." : "") +
         " Estimativa nossa; o Google tem o número oficial.",
         "hoje: " + num(hoje.google_maps)) +
+      cartaoLimite("Sugestões de endereço (Google, 30 dias)", places30, LIMITES.places,
+        num(places30) + " <small>de ~" + num(LIMITES.places) + "</small>",
+        "Cada busca enquanto o cliente digita o endereço conta 1. Passando da cota gratuita o Google cobra por busca (confira o valor atual no Google Cloud). Se subir demais, dá para exigir mais letras antes de buscar ou desligar as sugestões.",
+        "hoje: " + num(hoje.places)) +
       cartaoLimite("E-mails hoje (Gmail do script)", hoje.email || 0, LIMITES.emails,
         num(hoje.email) + " <small>de ~" + num(LIMITES.emails) + " por dia</small>",
         "Limite da conta Google dona do script, somando todas as empresas. Perto de 70%, migre para domínio próprio + Resend.") +
@@ -302,7 +308,7 @@
         num(hoje.push_chamadas) + " pedidos ao script hoje");
 
     /* Tabela dia a dia, do mais recente ao mais antigo, com barrinhas proporcionais ao maior valor da coluna. */
-    var colunas = [["google_maps", "Google Maps"], ["login", "Logins"], ["email", "E-mails"], ["push", "Push"],
+    var colunas = [["google_maps", "Google Maps"], ["places", "Sugestões de endereço"], ["login", "Logins"], ["email", "E-mails"], ["push", "Push"],
                    ["corridas", "Corridas"], ["notificacoes", "Notificações"], ["mensagens", "Mensagens"], ["cadastros", "Cadastros"]];
     var maximos = {};
     colunas.forEach(function (c) { maximos[c[0]] = Math.max.apply(null, dias.map(function (d) { return Number(d[c[0]] || 0); }).concat([1])); });

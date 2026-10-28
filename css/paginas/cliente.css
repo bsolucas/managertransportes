@@ -92,3 +92,14 @@
 .previa-vazia { margin: 0 0 4px; }
 .barra-pedido .texto-pequeno { margin: 4px 0 10px; }
 .botao-grande { min-height: 52px; font-size: 1.05rem; border-radius: 14px; }
+
+/* Sugestões de endereço (js/enderecos.js): lista que abre logo abaixo do campo que está sendo digitado */
+.sugestoes { position: absolute; left: -1.5px; right: -1.5px; z-index: 30; margin: 6px 0 0; padding: 6px; list-style: none; border-radius: 14px; background: var(--superficie); border: 1px solid var(--borda); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55); }
+.sugestoes li[data-i] { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; cursor: pointer; }
+.sugestoes li[data-i]:hover, .sugestoes li.ativo { background: var(--azul-suave); }
+.sugestao-icone { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--superficie-3); color: var(--azul-claro); flex: none; }
+.sugestao-icone .ico { width: 17px; height: 17px; }
+.sugestao-texto { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.sugestao-texto strong { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugestao-texto small { color: var(--texto-suave); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sugestoes-rodape { padding: 4px 10px 2px; text-align: right; font-size: 0.7rem; letter-spacing: 0.04em; color: var(--texto-suave); }

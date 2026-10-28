@@ -88,6 +88,9 @@
     }
     campoEmbarque.addEventListener("input", atualizarPrevia);
     campoDestino.addEventListener("input", atualizarPrevia);
+    /* Sugestões de endereço enquanto digita (js/enderecos.js). Escolhido o embarque, o cursor vai para o destino. */
+    App.enderecos.ativar(campoEmbarque, { aoEscolher: function () { campoDestino.focus(); } });
+    App.enderecos.ativar(campoDestino);
 
     /* ========================================================================
        3. ENVIAR O PEDIDO
